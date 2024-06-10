@@ -1,0 +1,24 @@
+logging_level: DEBUG
+version: 0.0.1
+owl_env_path: ../.env
+# owl_agent_llm_client_class: athena.llm.agent_anthropic.AnthropicClient
+owl_agent_llm_client_class: athena.llm.agent_openai.OpenAIClient
+owl_agent_llm_model: gpt-3.5-turbo-0125
+owl_agent_decision_service_fct_name: athena.itg.decisions.nba_ds_dummy.callDecisionService
+owl_glossary_path: /app/athena/config/glossary.json
+owl_prompts_path: /app/athena/config/prompts.json
+owl_prompts_key_name: default_prompt
+#owl_agent_content_vstore_url: http://localhost:8005
+owl_agent_content_collection_name: base_collection
+owl_agent_content_file_path: /app/file_content
+owl_agent_vs_path: /app/chromadb
+owl_agent_vs_embedding_fct: OpenAIEmbeddings
+owl_agent_llm_history_length: 5
+
+#owl_agent_llm_client_class: athena.llm.agent_watsonx.WatsonXClient
+
+#owl_agent_llm_client_class: athena.dummy_agent.DummyAgent
+
+watsonx_ai_url: https://us-south.ml.cloud.ibm.com
+watsonx_ai_project_id: bddd370f-77c3-4b6e-a18b-3ef7f4ca1bae
+watsonx_ai_model: "ibm/granite-13b-instruct-v2"

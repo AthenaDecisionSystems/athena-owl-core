@@ -1,0 +1,30 @@
+import unittest
+import sys, os
+module_path = "./src"
+sys.path.append(os.path.abspath(module_path))
+os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
+from dotenv import load_dotenv
+load_dotenv("../../.env")
+from athena.llm.agent_openai import OpenAIClient
+from athena.routers.dto_models import ConversationControl, ChatRecord
+
+
+class TestConversation(unittest.TestCase):
+    """
+    Validate conversation with history
+    """
+    
+    def test_with_chat_history(self):
+        
+        cc = ConversationControl()
+        cc.prompt_ref = "default_prompt"
+        cc.chat_history = [
+            ChatRecord(role="system", content="Hello! How can I assist you today?"),
+            ChatRecord(role="human", content="Hi, I'm Bob and my last name is TheBuilder.")
+        ]
+        cc.query="What is my first name"
+        agent = OpenAIClient()
+        rep = agent.send_conversation(cc)
+        assert rep
+        assert "first name is Robert" in rep
+        print(rep)

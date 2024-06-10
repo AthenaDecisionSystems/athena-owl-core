@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: owl_agent_backend
+Version: 0.1.0
+Summary: The OWL Agent backend to support hybrid AI
+Author: Athena Decision Systems
+Requires-Dist: uvicorn
+Requires-Dist: fastapi
+Requires-Dist: langchain-openai
+Requires-Dist: langchain-anthropic
+Requires-Dist: langchain_ibm
+Requires-Dist: langchain_community
+Requires-Dist: pydantic
+Requires-Dist: python-multipart
+Requires-Dist: python-dotenv
+Requires-Dist: markdown
+Requires-Dist: chromadb
+Requires-Dist: pypdf

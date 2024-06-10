@@ -1,0 +1,8 @@
+{
+    "default_prompt": {
+        "en": "Answer the user's questions based on the below context:\n\n{context} and conversation history",
+        "fr": "Repond aux questions de l'utilisateur en prenant en compte le contexte: \n\n{context} et le contenu de la conversation",
+        "es": "Responda las preguntas del usuario según el siguiente contexto:\n\n{context} y el historial de conversaciones"
+    }
+
+}

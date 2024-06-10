@@ -1,0 +1,183 @@
+{
+    "example": {
+        "fr": "exemple",
+        "en": "example"
+    },
+    "Actions": {
+        "fr": "Actions",
+        "en": "Actions"
+    },
+    "NoClaims": {
+        "fr": "Pas de sinistre pour ce client",
+        "en": "No claims for this client"
+    },
+    "ClaimNotFound": {
+        "fr": "Sinistre $claim_id non trouvé pour le client $client_id",
+        "en": "Claim $claim_id not found for client $client_id"
+    },
+    "ClientNotFound": {
+        "fr": "Client $clientid non trouvé",
+        "en": "Client $clientid not found"
+    },
+    "Proposal": {
+        "fr": "une proposition commerciale",
+        "en": "a commercial proposal"
+    },
+    "AcknowledgmentOfReceipt": {
+        "fr": "un accusé de réception",
+        "en": "an acknowledgement of receipt"
+    },
+    "ClaimsExpert": {
+        "fr": "un conseiller sinistre",
+        "en": "a claims expert"
+    },
+    "ClientRepresentative": {
+        "fr": "un gestionnaire de compte",
+        "en": "a client representative"
+    },
+    "SorryAboutPerceptionButFair": {
+        "fr": "une note qui explique que nous sommes désolés de sa perception mais c'est le juste prix",
+        "en": "a note that explains that we are sorry about the perception but it is the fair price"
+    },
+    "Letter": {
+        "fr": "lettre",
+        "en": "letter"
+    },
+    "CommercialProposal": {
+        "fr": "une proposition commerciale",
+        "en": "a commercial proposal"
+    },
+    "SMS": {
+        "fr": "SMS",
+        "en": "SMS"
+    },
+    "Phone": {
+        "fr": "téléphone",
+        "en": "phone"
+    },
+    "analysis_gives": {
+        "fr": "L'analyse du cas du client donne :\n",
+        "en": "The analysis of the client case gives:\n"
+    },
+    "NoAction": {
+        "fr": "Pas d'action pour ce client",
+        "en": "No action for this client"
+    },
+    "CommunicateWithClient": {
+        "fr": "Communiquer avec le client par $channel $messageType",
+        "en": "Communicate with the client by $channel $messageType"
+    },
+    "PrepareProposal": {
+        "fr": "Préparer une proposition commerciale pour le client.",
+        "en": "Prepare a commercial proposal for the client."
+    },
+    "ResendTo": {
+        "fr": "Renvoyer à $recipient",
+        "en": "Resend to $recipient"
+    },
+    "CommercialEffort": {
+        "fr": "Envisager un effort commercial",
+        "en": "Consider a commercial effort"
+    },
+    "UpsellProposal": {
+        "fr": "Proposer une offre commerciale pour le produit $policyUpgrade pour le prix $price avec un offre supplémentaire $offer.  Le benefice pour le client est '$benefit'.",
+        "en": "Propose a commercial offer for the product $policyUpgrade for the price $price with an additional offer $offer.  The benefit for the client is '$benefit'."
+    },
+    "UnknownAction": {
+        "fr": "Action inconnue: $actionType",
+        "en": "Unknown action: $actionType"
+    },
+    "Explanation": {
+        "fr": "    Explication: $expl\n",
+        "en": "    Explanation: $expl\n"
+    },
+    "PolicyReference": {
+        "fr": "    Référence de la règle: $ref",
+        "en": "    Policy reference: $ref"
+    },
+    "AC-AUTO-SUBV-DISC": {
+        "en": "Propose a discount on a substitution vehicle for clients with high CLTV percentile that are unsatisfied with applied coverages",
+        "fr": "Proposer une remise pour un véhicle de substituion aux clients avec un percentile CLTV élevé qui ne sont pas satisfaits du niveau de couverture",
+        "es": "Proponer un descuento para un vehículo de substitución a los clients con un percentil CLTV alto que no estan satisfechos con el nivel de cobertura"
+    },
+    "AC-AUTO-SUBV-UP": {
+        "en": "Propose an upgrade of the policy to include a substitution vehicle for clients that are unsatisfied with applied coverages and have a good propensity to upgrade",
+        "fr": "Proposer une actualisation de la police d'assurance pour inclure un véhicle de substituion aux clients qui ne sont pas satisfaits du niveau de couverture et ont une bonne propension à l'achat",
+        "es": "Proponer una actualización de la poliza para incluir un vehículo de substitución a los clients que no estan satisfechos con el nivel de cobertura y tienen una buena propensión a la compra"
+    },
+    "AC-AUTO-TPL-1": {
+        "en": "For a client with an auto policy of type third party liability, responsible for the damage, with a low CLTV percentile and having shown no intention to leave, send an acknowledge of receipt of the complaint",
+        "fr": "Pour un client avec une police d'assurance auto au tiers, responsable du dommage, ayant un percentile CLTV bas et n'ayant pas menacé de partir, envoyer un message neutre accusant réception de la réclamation",
+        "es": "Para un cliente con una poliza auto a terceros, responsables del daño, con un percentil CLTV bajo y que no tenga intención de abandono, enviar un mensaje acusando recibo de la queja"
+    },
+    "AC-AUTO-TPL-2": {
+        "en": "For a client with an auto policy of type third party liability, responsible for the damage, with a high CLTV percentile and having shown no intention to leave, inform the client that a specialed sales rep will contact him/her shortly",
+        "fr": "Pour un client avec une police d'assurance auto au tiers, responsable du dommage, ayant un percentile CLTV élevé  et n'ayant pas menacé de partir, infomer le client qu'un conseiller spécialisé va le contacter rapidement",
+        "es": "Para un cliente con una poliza auto a terceros, responsables del daño y con un percentil CLTV alto y que no tenga intención de abandono, informar el cliente de que un asesor especializado le va a contactar en breve"
+    },
+    "AC-AUTO-TPL-3": {
+        "en": "For a client with an auto policy of type third party liability, responsible for the damage, with a low CLTV percentile and having shown an intention to leave, send an acknowledge of receipt of the complaint",
+        "fr": "Pour un client avec une police d'assurance auto au tiers, responsable du dommage, ayant un percentile CLTV bas et ayant menacé de partir, envoyer un message neutre accusant réception de la réclamation",
+        "es": "Para un cliente con una poliza auto a terceros, responsables del daño, con un percentil CLTV bajo y que tenga intención de abandono, enviar un mensaje acusando recibo de la queja"
+    },
+    "AC-AUTO-TPL-4": {
+        "en": "For a client with an auto policy of type third party liability, responsible for the damage, with a medium CLTV percentile and having shown an intention to leave, prepare a standard proposal",
+        "fr": "Pour un client avec une police d'assurance auto au tiers, responsable du dommage, ayant un percentile CLTV moyen  et ayant menacé de partir, préparer une proposition standard",
+        "es": "Para un cliente con una poliza auto a terceros, responsables del daño y con un percentil CLTV medio y que tenga intención de abandono, preparar una propuesta estandar"
+    },
+    "AC-AUTO-TPL-5": {
+        "en": "For a client with an auto policy of type third party liability, responsible for the damage, with a high CLTV percentile and having shown an intention to leave, inform the client that a specialed client rep will contact him/her shortly",
+        "fr": "Pour un client avec une police d'assurance auto au tiers, responsable du dommage, ayant un percentile CLTV élevé  et ayant menacé de partir, infomer le client qu'un conseiller spécialisé va le contacter rapidement",
+        "es": "Para un cliente con una poliza auto a terceros, responsables del daño y con un percentil CLTV alto y que tenga intención de abandono, informar el cliente de que un asesor especializado le va a contactar en breve"
+    },
+    "AC-DEFAULT": {
+        "en": "Resend to the claims department all the complaints related to applied coverages",
+        "fr": "Renvoyer au département de gestion des sinistres toutes les réclamations portant sur les couvertures appliquées",
+        "es": "Reenviar al departamento de gestión de siniestros todas las reclamaciones relacionadas con el nivel de cobertura"
+    },
+    "AC-HOME-CONT-UP": {
+        "en": "For a client with a home policy that only covers the buildings and unsatisfied with applied coverages, prepare an upsell proposal to include a coverage for the contents",
+        "fr": "Pour un client avec une assurance habitation ne couvrant pas le contenu et qui n'est pas satisfait avec le niveau de couverture, préparer une proposition d'upsell pour inclure une couverture du contenu",
+        "es": "Para un cliente con un seguro de hogar que no cubre el contenido y que no esta satisfecho con el nivel de cobertura, preparar una propuesta de upsell para incluir una cobertura del contenido"
+    },
+    "AC-HOME-CONT-VOUCHER": {
+        "en": "For a client with a home policy that only covers the buildings, unsatisfied with applied coverages and a high CLTV percentile, propose a voucher with an affiliate provider to try to repair the damage content",
+        "fr": "Pour un client avec une assurance habitation ne couvrant pas le contenu, qui n'est pas satisfait avec le niveau de couverture et ayant un percentile de CLTV élevé, proposer un chèque cadeau pour les services d'un fournisseur affilié qui essayer de réparer le dommage",
+        "es": "Para un cliente con un seguro de hogar que no cubre el contenido, que no esta satisfecho con el nivel de cobertura y tiene un percentil de CLTV alto, proponer un cheque regalo con un proveedor afiliado que pueda reparar totalmente o parcialmente el daño"
+    },
+    "HD-CCOM1": {
+        "en": "For a client not satisfied with claims handling delay and when the actual handling duration exceeds the target duration by at least 10 days, send an apology message and reassign to a specialized client representative",
+        "fr": "Pour un client qui n'est pas satisfait des délais de traitement de son sinistre et si la durée de traitement dépasse la durée cible d'au moins 10 jours, envoyer un message d'excuse et réassigner le dossier à un conseiller spécialisé",
+        "es": "Para un cliente que no esta satisfecho con los tiempos de tramitación de su siniestro y si el tiempo de tramitación supera el tiempo medio por al menos 10 días, enviar un mensaje de disculpa y reasignar el caso a un asesor especializado"
+    },
+    "HD-CCOM2": {
+        "en": "For a client not satisfied with claims handling delay and when the difference between the actual handling duration and the target duration is between 2 and 9 days, send an apology message",
+        "fr": "Pour un client qui n'est pas satisfait des délais de traitement de son sinistre et si la différence entre la durée de traitement et la durée cible est entre 2 et 9 jours, envoyer un message d'excuse",
+        "es": "Para un cliente que no esta satisfecho con los tiempos de tramitación de su siniestro y si la diferencia entre el tiempo de tramitación y el tiempo medio esta entre 2 y 9 días, enviar un mensaje de disculpa"
+    },
+    "HD-CCOM3": {
+        "en": "For a client not satisfied with claims handling delay and when the actual handling duration does not exceed the target duration by more than one day, send an acknowledgement of receipt",
+        "fr": "Pour un client qui n'est pas satisfait des délais de traitement de son sinistre et si la durée de traitement ne dépasse pas la durée cible de plus d'un jour, envoyer un message d'accusé de réception",
+        "es": "Para un cliente que no esta satisfecho con los tiempos de tramitación de su siniestro y si el tiempo de tramitación no supera el tiempo medio por más de un día, enviar un mensaje de acusado de recibo"
+    },
+    "QCS-ALL": {
+        "en": "For a client not satisfied with the quality of customer service, forward the case to a quality specialist for study",
+        "fr": "Pour un client qui n'est pas satisfait de la qualité du service client, envoyer le dossier à un spécialiste de la qualité",
+        "es": "Para un cliente que no esta satisfecho con la calidad del servicio al cliente, enviar el caso a un especialista de calidad"
+    },
+    "QCS-HIGH-CLTV": {
+        "en": "For a client not satisfied with the quality of customer service and a CLTV percentile above 40, forward the case to a specialized client representative",
+        "fr": "Pour un client qui n'est pas satisfait de la qualité du service client et ayant un percentile CLTV d'au moins 40, envoyer le dossier à un conseiller spécialisé",
+        "es": "Para un cliente que no esta satisfecho con la calidad del servicio al cliente y con un percentil CLTV mayor que 40, pasar el caso a un asesor especializado"
+    },
+    "RA-DEFAULT": {
+        "en": "For a client not satisfied with the reimbursed amount, forward the case to a claims expert",
+        "fr": "Pour un client qui n'est pas satisfait du montant remboursé, passer le dossier à un expert du département gestion des sinistres",
+        "es": "Para un cliente que no esta satisfecho del importe de la indemnización, pasar el caso a un experto en gestión de siniestros"
+    },
+    "RA-DED-UP": {
+        "en": "For a client not satisfied with the reimbursed amount, with a high CLTV percentile and a significant deductible, forward the case to a claims expert and then let a specialized client representative follow up to propose upgrade of the policy",
+        "fr": "Pour un client qui n'est pas satisfait du montant remboursé, ayant un percentile CLTV élevé et une francise significative à payer, passer le dossier à un expert du département gestion des sinistres et ensuite demander à un conseiller spécialisé d'assurer le suivi du dossier en proposant un upgrade de la police d'assurance",
+        "es": "Para un cliente que no esta satisfecho del importe de la indemnización, con un percentil CLTV alto y que tiene que pagar una franquicia significativa, pasar el caso a un experto en gestión de siniestros y pedir el seguimiento posterior por un asesor especializado para proponer un upgrade de la poliza"
+    }
+}

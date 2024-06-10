@@ -1,0 +1,15 @@
+uvicorn
+fastapi
+langchain-openai
+langchain-anthropic
+langchain_ibm
+langchain_community 
+langchain
+pydantic
+pydantic-settings
+pydantic_yaml
+python-multipart
+python-dotenv
+markdown
+chromadb
+pymupdf==1.24.3
