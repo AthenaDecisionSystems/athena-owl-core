@@ -14,7 +14,7 @@ class OpenAIClient(BaseOwlAgent):
 
     def get_model(self, stream, parameters: ModelParameters, callbacks):
         if parameters:
-            model = ChatOpenAI(model=get_config().owl_agent_llm_model, temperature= parameters.temperature, stream=stream, callbacks = callbacks)
+            model = ChatOpenAI(model=get_config().owl_agent_llm_model, temperature= parameters.temperature / 50, stream=stream, callbacks = callbacks)
         else:
             model = ChatOpenAI(model=get_config().owl_agent_llm_model, temperature=0, stream=stream, callbacks = callbacks)  
         return model

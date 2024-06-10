@@ -25,14 +25,14 @@ LOGGER = logging.getLogger(__name__)
 
 @tool
 def get_client_by_id(id: int) -> dict:
-    """get insurance client information given its unique client identifier id"""
+    """get client information given its unique client identifier id. Use only this tool if a unique identifier is provided."""
     client = {"id" : id, "name": "Smith", "firstName": "Robert"}
     return client
 
 @tool
 def get_client_by_name(name: str) -> dict:
-    """get client information given his or her name"""
-    client = {"id" : 2, "name": name, "firstName": "Robert"}
+    """get client information given his or her name. Use this tool only if you need to get information about a client."""
+    client = {"id" : 2, "name": name, "firstName": "Jules"}
     return client
 
 @tool

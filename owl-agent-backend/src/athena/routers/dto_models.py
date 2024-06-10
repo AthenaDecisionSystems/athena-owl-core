@@ -4,13 +4,9 @@ Copyright 2024 Athena Decision Systems
 """
 from pydantic import BaseModel
 from typing import List, Optional
- 
+from langchain_core.messages import BaseMessage
+    
 
-    
-class ChatRecord(BaseModel):
-    role: str
-    content: str
-    
 class ModelParameters(BaseModel):
     modelName: str = ""
     modelClass: str = "agent_openai"
@@ -25,10 +21,10 @@ class ConversationControl(BaseModel):
     locale: str = "en"
     query: str = ""
     type: str = "chat"
-    
+    reset: bool = False
     prompt_ref:  str = "openai_insurance_with_tool"
     modelParameters: Optional[ModelParameters] = None
-    chat_history: List[ChatRecord] = []
+    chat_history: List[BaseMessage] = []
 
 
 class ResponseChoice(BaseModel):
@@ -42,5 +38,6 @@ class ResponseControl(BaseModel):
     question_type: Optional[str] = ''
     possibleResponse: Optional[List[ResponseChoice]] = None
     error: Optional[str] = ''
+    chat_history: List[BaseMessage] = []
 
 

@@ -6,10 +6,10 @@ from langchain.agents import AgentExecutor
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from athena.llm.owl_agent import AgentInterface
 from athena.routers.dto_models import ConversationControl, ResponseControl
-from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage, BaseMessage
 from athena.llm.prompts.prompt_mgr import get_prompt_manager
 from athena.itg.tool_manager import get_tools_to_use
-
+from athena.app_settings import get_config
 import logging
 import asyncio
 
@@ -22,10 +22,11 @@ class BaseOwlAgent(AgentInterface):
     """
     Base Owl Agent to support chat bot conversation with history or Q&A and some basic tools or tool placeholders
     """
-
+    max_history=5
+    
     def __init__(self):
-        max_history = get_config()
-        pass
+        self.max_history -= get_config().owl_agent_llm_history_length
+        
 
 
     def build_agent_executor(self,controller:ConversationControl,stream = False, callbacks = None):
@@ -48,10 +49,12 @@ class BaseOwlAgent(AgentInterface):
     def send_conversation(self,controller:ConversationControl) -> ResponseControl:
 
         agent_executor =  self.build_agent_executor(controller,False)
-        chat_history=self.build_chat_history_for_llm(controller)
+        # chat_history=self.build_chat_history_for_llm(controller)
+        chat_history = controller.chat_history
         resp = ResponseControl()
         agentResponse=agent_executor.invoke({"input": controller.query, "chat_history":chat_history})
-        # conversationControl.chat_history
+        print(f"---> {agentResponse}")
+        resp.chat_history=agentResponse["chat_history"]
         # should we build the history here?
         resp.message=agentResponse["output"]
         LOGGER.debug(resp)
@@ -86,7 +89,7 @@ class BaseOwlAgent(AgentInterface):
     
     def build_chat_history_for_llm(self,controller:ConversationControl):
         ch = []
-        for cr in controller.chat_history:
+        for cr in controller.chat_history[self.max_history:]:
             if cr.role == "human" or cr.role == "user":
                 ch.append(HumanMessage(content=cr.content))
             else:

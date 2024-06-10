@@ -28,7 +28,7 @@ class AppSettings(BaseSettings):
     owl_agent_vs_path: str = "./chromadb"
     owl_agent_vs_url: str = ""
     owl_agent_vs_embedding_fct: str = ""
-
+    owl_agent_llm_history_length: int = 5
 
 _config = None
 

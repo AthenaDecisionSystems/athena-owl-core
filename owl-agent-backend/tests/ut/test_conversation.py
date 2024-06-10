@@ -6,8 +6,9 @@ os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 from dotenv import load_dotenv
 load_dotenv("../../.env")
 from athena.llm.agent_openai import OpenAIClient
-from athena.routers.dto_models import ConversationControl, ChatRecord
-
+from athena.routers.dto_models import ConversationControl
+from langchain_core.messages.ai import AIMessage
+from langchain_core.messages.human import HumanMessage
 
 class TestConversation(unittest.TestCase):
     """
@@ -19,12 +20,12 @@ class TestConversation(unittest.TestCase):
         cc = ConversationControl()
         cc.prompt_ref = "default_prompt"
         cc.chat_history = [
-            ChatRecord(role="system", content="Hello! How can I assist you today?"),
-            ChatRecord(role="human", content="Hi, I'm Bob and my last name is TheBuilder.")
+            AIMessage(content="Hello! How can I assist you today?"),
+            HumanMessage(content="Hi, I'm Bob and my last name is TheBuilder.")
         ]
-        cc.query="What is my first name"
+        cc.query="What is my last name?"
         agent = OpenAIClient()
         rep = agent.send_conversation(cc)
         assert rep
-        assert "first name is Robert" in rep
-        print(rep)
+        assert rep.message
+        assert "last name is TheBuilder" in rep.message
