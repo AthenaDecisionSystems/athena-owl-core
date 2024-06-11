@@ -4,9 +4,9 @@ Copyright 2024, Athena Decision Systems
 
 ---
 
-# This is the front-end for the OWL agent
+# This is the OWL Frontend
 
-It enables access to your custom demo based on the Owl Agent Backend
+It enables access to your custom demo based on the Owl Backend
 The demos are in this [repo](https://github.com/AthenaDecisionSystems/athena-owl-demos)
 
 
