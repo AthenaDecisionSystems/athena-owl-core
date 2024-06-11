@@ -42,7 +42,7 @@ Owl Platform portal includes an agent hub, that enterprise will offer to their e
 
 ### The OWL Backend
 
-The OWL Backend is not a runnable project. This is a template to be used for demos. See [Demos](https://github.com/AthenaDecisionSystems/athena-owl-demos) for examples.
+The OWL Backend is not a runnable project. This is a template to be used for building demos. See [Demos](https://github.com/AthenaDecisionSystems/athena-owl-demos) for examples.
 
 ### The OWL Frontend
 
