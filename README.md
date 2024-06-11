@@ -44,6 +44,8 @@ Owl Platform portal includes an agent hub, that enterprise will offer to their e
 
 ### The OWL Frontend
 
+[Read this to run the front-end](owl-agent-frontend/README.md)
+
 ## The journey to your demonstration
 
 The current repository to manage the different demonstration is in a separate [git repository (athena-owl-demos)](https://github.com/AthenaDecisionSystems/athena-owl-demos). See the instructions to create your own demonstration from the current backend.
