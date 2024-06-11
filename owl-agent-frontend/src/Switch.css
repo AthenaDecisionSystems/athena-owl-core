@@ -1,0 +1,31 @@
+/* Copyright 2024, Athena Decision Systems */
+/* @author Joel Milgram */
+
+.switch-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.switch-yesno {
+    margin-right: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.switch-box {
+    border: 1px #ddd solid;
+    position: relative;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.switch-circle {
+    border-radius: 100%;
+    position: absolute;
+    transition: 0.5s;
+}
+
+.switch-display-none {
+    display: none;
+}

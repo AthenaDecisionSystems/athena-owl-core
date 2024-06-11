@@ -1,0 +1,66 @@
+/* Copyright 2024, Athena Decision Systems */
+/* @author Joel Milgram */
+
+.attachments {
+    width: 40rem;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.attachments-hidden {
+    display: none;
+}
+
+.button-attach {
+    height: 2.6rem;
+    padding: 0.1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #726DA8;
+    background-color: #e9e9e9;
+    cursor: pointer;
+    margin-right: 1rem;
+}
+
+.button-attach:hover,
+.file-attached:hover {
+    background-color: #9f9f9f;
+}
+
+.button-attach:active,
+.file-attached:active {
+    background-color: #7D8CC4;
+}
+
+.attach {
+    display: flex;
+    width: 2.2rem;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.file-attached {
+    height: 2rem;
+    margin-left: 1rem;
+    margin-bottom: 0.3rem;
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #726DA8;
+    background-color: #e9e9e9;
+    color: black;
+    cursor: pointer;
+}
+
+.file-attached-not-visible {
+    height: 2rem;
+    margin-left: 1rem;
+    padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #656472;
+    background-color: #e9e9e9;
+    color: black;
+}

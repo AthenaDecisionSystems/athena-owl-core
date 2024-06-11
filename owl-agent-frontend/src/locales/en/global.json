@@ -1,0 +1,68 @@
+{
+    "__comments__": {
+        "@copyright": "Copyright 2024, Athena Decision Systems",
+        "@author": "Joel Milgram"
+    },
+    "app": {
+        "lbl.brand": "Claims Management Agent",
+        "msg.welcome": "## Hello,\n ### Welcome to the OwlAgent that combines Generative AI and IBM business rules.\n\n I am at your disposal for everything related to claims assistance on claims processing.  I have access to a database regarding your customers and their claims.\n I am trained to assist you on questions like:\n + How should I respond to a customer's email?\n + A customer has found another cheaper insurance elsewhere, what should I do?\n + A customer is unhappy with the handling of his claim, what should I do?\n",
+        "err.handlingYourRequest": "_There was an error handling your request._",
+        "msg.restartNeeded": "The conversation needs to be restarted.",
+        "alt.configuration": "Configuration",
+        "btn.displayRunSteps": "Show the run steps",
+        "btn.displayTools": "Show agent's tools",
+        "lbl.runStatus": "Run status: {{runStatus}}",
+        "msg.loading": "Thinking...",
+        "msg.responseTime": "Answer in {{seconds}}s",
+        "msg.enterYourMessage": "Enter your message...",
+        "alt.send": "Send",
+        "msg.chatGPTCanMakeMistakes": "ChatGPT can make mistakes about people, places, and facts.",
+        "msg.languageChanged": "You have chosen to change the language to {{language}}.",
+        "msg.newThreadCreated": "A new thread has been created. The chatbot has forgotten everything that was discussed previously.\nClick here to clear this panel.",
+        "btn.restartConversation": "Restart the conversation"
+    },
+    "assistant": {
+        "msg.agentConfiguredToUseODM": "The agent is configured to use business rules (IBM ODM).",
+        "msg.agentConfiguredNotToUseODM": "The agent is configured **NOT** to use business rules (IBM ODM).",
+        "msg.readyToUse": "The agent is ready for use.",
+        "msg.youCanEdit": "You can edit the instructions and adapt your own agent.",
+        "msg.defaultValuesReinitialized": "The default instructions have been reloaded. You can modify them and update the agent, or create a new one to become the default agent.",
+        "msg.defaultInstructionsultReinitialized": "The default instructions have been reloaded. You can modify them and update the agent, or create a new one to become the default agent.",
+        "lbl.title": "Agent",
+        "lbl.instructions": "Instructions",
+        "lbl.manageDocuments": "Manage documents",
+        "btn.reinitDefaultValues": "Cancel changes",
+        "btn.updateAssistant": "Update the agent",
+        "chk.useBusinessRules": "Use business rules (IBM ODM)?",
+        "chk.useFileSearch": "Use file search?",
+        "btn.reinitConversation": "New conversation"
+    },
+    "attachments": {
+        "msg.documentUploaded": "Document uploaded: *{{fileName}}*",
+        "err.errorReadingDocument": "Error reading the document: {{error}}",
+        "err.errorUploadingDocument": "Error uploading the document: *{{fileName}}*\n\n*{{message}}: {{error}}*",
+        "alt.loadDocuments": "Load documents"
+    },
+    "configuration": {
+        "lbl.language": "Language",
+        "lbl.serverURL": "Server URL",
+        "lbl.decisionServerURL": "Decision Server URL",
+        "lbl.model": "Model",
+        "lbl.temperature": "Temperature"
+    },
+    "commons": {
+        "alt.clickToDismiss": "Click to dismiss"
+    },
+    "runSteps": {
+        "lbl.steps": "Execution steps",
+        "lbl.nothingToDisplay": "Nothing to display"
+    },
+    "switch": {
+        "lbl.yes": "Yes",
+        "lbl.no": "No"
+    },
+    "tools": {
+        "lbl.steps": "Tools available",
+        "lbl.nothingToDisplay": "Nothing to display"
+    }
+}

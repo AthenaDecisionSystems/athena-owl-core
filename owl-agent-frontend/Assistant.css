@@ -1,0 +1,128 @@
+/* Copyright 2024, Athena Decision Systems */
+/* @author Joel Milgram */
+
+.assistant {
+    padding: 1rem;
+    margin: 1rem auto;
+    margin-top: 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(98, 98, 98, 1);
+    background: rgba(28, 30, 58, 1);
+}
+
+.assistant-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.assistant-button {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    padding: 0.5rem;
+    margin: 1rem auto;
+    border-radius: 0.5rem;
+    border: 2px solid rgba(148, 148, 148, 1);
+    background-color: rgba(28, 30, 58, 1);
+    cursor: pointer;
+}
+
+.assistant-small-button {
+    font-size: 1rem;
+    text-align: left;
+    padding: 0.4rem;
+    margin: 0.8rem auto;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(148, 148, 148, 1);
+    background-color: rgba(28, 30, 58, 1);
+    cursor: pointer;
+}
+
+.assistant-button-block {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: flex-start;
+}
+
+.assistant-button-in-block {
+    margin: 0 auto;
+    width: 48%;
+}
+
+.assistant-button:hover {
+    background-color: rgb(50, 54, 105);
+}
+
+.assistant-button:active {
+    background-color: rgb(100, 107, 205);
+}
+
+.assistant-label {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.assistant-separator {
+    margin-top: 1rem;
+}
+
+.assistant-label-block {
+    margin-top: 1rem;
+}
+
+.assistant-label-block-hidden {
+    display: none;
+
+}
+
+.assistant-label-no-margin-top {
+    margin-top: 0rem;
+}
+
+.assistant-input-zone {
+    margin-bottom: 1rem;
+}
+
+.assistant-input-zone-half-size input {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    font-family: 'Poppins', sans-serif;
+    width: 30rem;
+    background-color: gainsboro;
+}
+
+.assistant-one-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.assistant-input-zone textarea {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    font-family: 'Poppins', sans-serif;
+    width: 40rem;
+    background-color: gainsboro;
+}
+
+.assistant-input-zone select {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    font-family: 'Poppins', sans-serif;
+    width: 40rem;
+    background-color: gainsboro;
+}
+
+.assistant-object-visible {
+    display: block;
+}
+
+.assistant-object-hidden {
+    display: none;
+}
+
+.assistant-space-around {
+    margin: 2rem auto;
+}
