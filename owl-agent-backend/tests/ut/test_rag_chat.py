@@ -8,7 +8,7 @@ load_dotenv("../../.env")
 from athena.itg.store.content_mgr import get_content_mgr, FileDescription
 from athena.llm.base_owl_agent  import BaseOwlAgent
 from athena.llm.agent_openai  import OpenAIClient
-from athena.routers.dto_models import ConversationControl, ChatRecord
+from athena.routers.dto_models import ConversationControl
 
 class TestRagConversation(unittest.TestCase):
     

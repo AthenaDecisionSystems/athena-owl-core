@@ -3,8 +3,9 @@ Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
 """
 from pydantic import BaseModel
-from typing import List, Optional
-from langchain_core.messages import BaseMessage
+from typing import List, Optional, Union
+from langchain_core.messages.ai import AIMessage
+from langchain_core.messages.human import HumanMessage
     
 
 class ModelParameters(BaseModel):
@@ -24,7 +25,7 @@ class ConversationControl(BaseModel):
     reset: bool = False
     prompt_ref:  str = "openai_insurance_with_tool"
     modelParameters: Optional[ModelParameters] = None
-    chat_history: List[BaseMessage] = []
+    chat_history: List[Union[HumanMessage, AIMessage]] = []
 
 
 class ResponseChoice(BaseModel):
@@ -38,6 +39,6 @@ class ResponseControl(BaseModel):
     question_type: Optional[str] = ''
     possibleResponse: Optional[List[ResponseChoice]] = None
     error: Optional[str] = ''
-    chat_history: List[BaseMessage] = []
+    chat_history: List[Union[HumanMessage, AIMessage]] = []
 
 

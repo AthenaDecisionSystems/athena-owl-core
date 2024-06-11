@@ -27,7 +27,7 @@ OwlAgent includes:
 
 Owl Platform portal includes an agent hub, that enterprise will offer to their employees to select the best agent in the context of their process. The agent and all its components is a deployable unit, running on hybrid cloud.
 
-### ## High Level requirement for OwlAgent
+### High Level requirement for OwlAgent
 
 * [ ] Ability to access information from corporate IT systems (typically databases or systems that host key corporate data such as CRM, Maximo, or ERP systems)
 * [ ] Ability to leverage information found in corporate documents that help formulate responses or policy, on top of the formalized decisions made by decision services
