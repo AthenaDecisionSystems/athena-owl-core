@@ -29,3 +29,8 @@ class TestConversation(unittest.TestCase):
         assert rep
         assert rep.message
         assert "last name is TheBuilder" in rep.message
+        cc.reset=True
+        cc.query="Can you give me my last name?"
+        rep = agent.send_conversation(cc)
+        print(rep)
+    

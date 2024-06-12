@@ -50,7 +50,10 @@ class BaseOwlAgent(AgentInterface):
 
         agent_executor =  self.build_agent_executor(controller,False)
         # chat_history=self.build_chat_history_for_llm(controller)
-        chat_history = controller.chat_history
+        if controller.reset:
+            chat_history = []
+        else:
+            chat_history = controller.chat_history
         resp = ResponseControl()
         agentResponse=agent_executor.invoke({"input": controller.query, "chat_history":chat_history})
         print(f"---> {agentResponse}")
