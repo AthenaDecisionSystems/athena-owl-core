@@ -35,16 +35,24 @@ function App() {
 
   // State variables
   const [isLoading, setIsLoading] = useState(true);
+  const [displayConfigurationPanel, setDisplayConfigurationPanel] = useState(false);
+  const [useODM, setUseODM] = useState(false);
+  const [useFileSearch, setUseFileSearch] = useState(true);
+  const [resetHistory, setResetHistory] = useState(false);
 
   const [input, setInput] = useState("");
   const [lastMessage, setLastMessage] = useState("");
   const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true }]);
   const [chatHistory, setChatHistory] = useState([]);
 
-  const [displayConfigurationPanel, setDisplayConfigurationPanel] = useState(false);
-  const [useODM, setUseODM] = useState(false);
-  const [useFileSearch, setUseFileSearch] = useState(true)
-  const [temperature, setTemperature] = useState(0.5);  // eslint-disable-line
+  const [promptRef, setPromptRef] = useState("openai_insurance_with_tool");
+  const [modelParameters, setModelParameters] = useState({
+    "modelName": "",
+    "modelClass": "agent_openai",
+    "temperature": 0.5,
+    "top_k": 1,
+    "top_p": 1
+  });
 
   // Ref to component Assistant
   // When the language changes, the Assistant component must update its instructions
@@ -118,12 +126,22 @@ function App() {
     dispatch(setError(null));
 
     const body = {
-      "callWithVectorStore": (useFileSearch),
-      "callWithDecisionService": (useODM),
+      "callWithVectorStore": useFileSearch,
+      "callWithDecisionService": useODM,
       "locale": i18n.language,
       "query": text,
-      //"type": "qa",
-      "chat_history": chatHistory
+      "type": "chat",
+      "reset": resetHistory,
+      "prompt_ref": "openai_insurance_with_tool",
+      "modelParameters": {
+        "modelName": "",
+        "modelClass": "agent_openai",
+        "temperature": temperature,
+        "top_k": 1,
+        "top_p": 1
+      },
+      "chat_history": []
+      // "chat_history": chatHistory
     }
 
     const requestOptions = {
