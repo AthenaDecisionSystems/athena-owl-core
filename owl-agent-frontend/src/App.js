@@ -45,14 +45,16 @@ function App() {
   const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true }]);
   //  const [chatHistory, setChatHistory] = useState([]);
 
-  const [promptRef, setPromptRef] = useState("openai_insurance_with_tool");
+  //  const [promptRef, setPromptRef] = useState("openai_insurance_with_tool");
+  const [promptRef, setPromptRef] = useState("default_prompt");
   const [modelParameters, setModelParameters] = useState({
-    "modelName": "gpt-4o",
+    "modelName": "gpt-3.5-turbo-0125",
     "modelClass": "agent_openai",
+    "prompt_ref": promptRef,
     "temperature": 0,
     "top_k": 1,
     "top_p": 1
-  });
+  })
 
   // Ref to component Assistant
   // When the language changes, the Assistant component must update its instructions
@@ -135,8 +137,10 @@ function App() {
       "query": text,
       "type": "chat",
       "reset": resetHistory,
-      "prompt_ref": promptRef,
       "modelParameters": modelParameters,
+      "user_id": "user_1",
+      "assistant_id": "assistant_1",
+      "thread_id": "thread_1",
       "chat_history": [] // chatHistory
     }
     if (resetHistory) {
@@ -192,6 +196,14 @@ function App() {
     if (e.key === "Enter" && !e.shiftKey) await handleSend();
     // Arrow Up to get last message
     if ((e.key === "ArrowUp") && (input.trim() === "")) setInput(lastMessage);
+  };
+
+  const handleChangeInput = (e) => {
+    if (e.target.value.trim() === "demo") {
+      e.target.value = "David Martin is not happy with the settlement of his claim with id number 1.  " +
+        "He thinks the amount reimbursed is far too low. He is threatening to leave to the competition.";
+    }
+    setInput(e.target.value)
   };
 
   const handleConfiguration = () => {
@@ -279,7 +291,7 @@ function App() {
                 placeholder={t("app.msg.enterYourMessage")}
                 value={input}
                 rows={10}
-                onChange={(e) => setInput(e.target.value)}
+                onChange={handleChangeInput}
                 onKeyDown={handleEnter} />
               <button className="send" onClick={handleSend}><img src={sendBtn} alt={t("app.alt.send")} title={t("app.alt.send")} /></button>
             </div>
