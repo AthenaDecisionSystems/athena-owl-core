@@ -7,6 +7,7 @@ owl_agent_llm_model: gpt-3.5-turbo-0125
 owl_agent_decision_service_fct_name: athena.itg.decisions.nba_ds_dummy.callDecisionService
 owl_glossary_path: /app/athena/config/glossary.json
 owl_prompts_path: /app/athena/config/prompts.json
+owl_assistants_path: /app/athena/config/assistants.json
 owl_prompts_key_name: default_prompt
 #owl_agent_content_vstore_url: http://localhost:8005
 owl_agent_content_collection_name: base_collection

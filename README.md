@@ -9,12 +9,13 @@ The core OwlAgent framework interacts with key parts of the generative AI and de
 * Multiple model hosting environments (HuggingFace, IBM watsonx.ai, Modal, AWS Bedrock) or local model hosting (e.g. using Ollama)
 * Multiple BRMS systems for decision services (IBM ODM, DMOE, ADS + potentially others)
 
-The Athena OWL Core repository includes the generic code for OWL Agent backend and front end. The backend is, as of now, a *template project* to build custom solutions. Solutions can be a simple demonstration or a complex multi-agent implementations.
+The Athena OWL Core repository includes the generic code for OWL Assistant backend and front end. Solutions can be a simple mono-agent demonstration or a complex multi-agent implementation.
 
-### What OwlAgents are
+### What OwlAssistants are
 
-OwlAgent includes: 
+OwlAssistants includes: 
 
+* a set of agents and tasks, defined in an assistant definition
 * a set of tools usable by LLM agents
 * orchestration with langchain and LangGraph, 
 * prompts, 
@@ -25,9 +26,9 @@ OwlAgent includes:
 * vector store, 
 * LLM model reference to access via api. 
 
-Owl Platform portal includes an agent hub, that enterprise will offer to their employees to select the best agent in the context of their process. The agent and all its components is a deployable unit, running on hybrid cloud.
+Owl Platform portal includes an assistants, agents and tools hub, that enterprise will offer to their employees to select the best assistant in the context of their process. The OwAssistant server is a deployable unit, running on hybrid cloud.
 
-### High Level requirement for OwlAgent
+### High Level requirement for OwlAssistant
 
 * [ ] Ability to access information from corporate IT systems (typically databases or systems that host key corporate data such as CRM, Maximo, or ERP systems)
 * [ ] Ability to leverage information found in corporate documents that help formulate responses or policy, on top of the formalized decisions made by decision services
@@ -42,7 +43,7 @@ Owl Platform portal includes an agent hub, that enterprise will offer to their e
 
 ### The OWL Backend
 
-The OWL Backend is not currently a runnable project outside of a specific demo. It is a template that can be copied for building demos. See [Demos](https://github.com/AthenaDecisionSystems/athena-owl-demos) for examples and instructions of how to run each demo.
+The OWL Backend is a runnable server. See [readme file](owl-agent-backend/README.md) for  code explanations and how to run the backend in default mode.
 
 ### The OWL Frontend
 

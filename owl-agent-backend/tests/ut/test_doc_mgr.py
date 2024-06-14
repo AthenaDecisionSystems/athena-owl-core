@@ -24,7 +24,7 @@ class TestDocumentManager(unittest.TestCase):
         fd=FileDescription()
         fd.name="Claims-complaint-rules"
         fd.file_name="ibu-claims-complaint-rules.txt"
-        fd.file_base_uri="./tests/ut/documents/"
+        fd.file_base_uri="./tests/ut/documents"
         fd.type=type
         return fd
     

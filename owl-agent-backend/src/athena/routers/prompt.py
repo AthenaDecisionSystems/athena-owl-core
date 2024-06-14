@@ -15,6 +15,11 @@ class PromptRequest(BaseModel):
 
 router = APIRouter( prefix= get_config().api_route +"/a")
 
+
+@router.get( "/prompts/")
+def get_all_prompts(locale: str) -> str:
+    return get_prompt_manager().get_prompts()
+
 @router.get( "/prompts/{locale}")
 def get_prompt_for_ui(locale: str) -> str:
     return get_prompt_manager().get_prompt(get_config().owl_prompts_key_name,locale)

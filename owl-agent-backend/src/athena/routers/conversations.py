@@ -45,7 +45,7 @@ def init_logger():
 router = APIRouter( prefix=get_config().api_route + "/c",
                    dependencies=[Depends(get_config),Depends(init)])
 
-@router.post("/generic_qa")
+#@router.post("/generic_qa")
 def generic_qa(conversationControl: ConversationControl) -> ResponseControl:
     """
     supports Q&A interactions with the configured LLM. The conversation controller includes the
