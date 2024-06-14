@@ -8,7 +8,7 @@ from athena.app_settings import get_config
 from functools import lru_cache
 from pydantic import BaseModel, RootModel
 from typing import List
-import pydantic_core
+
 """
 Prompt manager manages different prompts and support CRUD for prompt. In this
 version the prompts is persisting on local file system.

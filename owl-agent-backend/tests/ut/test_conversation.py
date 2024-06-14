@@ -6,7 +6,7 @@ os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 from dotenv import load_dotenv
 load_dotenv("../../.env")
 from athena.llm.agent_openai import OpenAIClient
-from athena.routers.dto_models import ConversationControl
+from athena.routers.dto_models import ConversationControl, ModelParameters
 from langchain_core.messages.ai import AIMessage
 from langchain_core.messages.human import HumanMessage
 
@@ -18,7 +18,8 @@ class TestConversation(unittest.TestCase):
     def test_with_chat_history(self):
         
         cc = ConversationControl()
-        cc.prompt_ref = "default_prompt"
+        cc.modelParameters = ModelParameters()
+        cc.modelParameters.prompt_ref = "default_prompt"
         cc.chat_history = [
             AIMessage(content="Hello! How can I assist you today?"),
             HumanMessage(content="Hi, I'm Bob and my last name is TheBuilder.")

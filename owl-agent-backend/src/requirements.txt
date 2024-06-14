@@ -13,3 +13,6 @@ python-dotenv
 markdown
 chromadb
 pymupdf==1.24.3
+pyyaml
+lxml
+beautifulsoup4

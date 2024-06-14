@@ -16,6 +16,7 @@ class TestPromptsManager(unittest.TestCase):
         p_mgr=get_prompt_manager()
         l=p_mgr.get_prompts()
         assert l
+        assert l["default_prompt"]
 
     def test_get_default_prompt(self):
         # Should get the default prompt string

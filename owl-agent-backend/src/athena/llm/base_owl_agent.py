@@ -49,11 +49,7 @@ class BaseOwlAgent(AgentInterface):
     def send_conversation(self,controller:ConversationControl) -> ResponseControl:
 
         agent_executor =  self.build_agent_executor(controller,False)
-        # chat_history=self.build_chat_history_for_llm(controller)
-        if controller.reset:
-            chat_history = []
-        else:
-            chat_history = controller.chat_history
+        chat_history = controller.chat_history
         resp = ResponseControl()
         agentResponse=agent_executor.invoke({"input": controller.query, "chat_history":chat_history})
         print(f"---> {agentResponse}")
@@ -78,7 +74,7 @@ class BaseOwlAgent(AgentInterface):
         """
         Looking at the query and the fact to use decision service or not and vector store, select the matching prompt
         """
-        system_prompt = get_prompt_manager().get_prompt(controller.prompt_ref,controller.locale)
+        system_prompt = get_prompt_manager().get_prompt(controller.modelParameters.prompt_ref,controller.locale)
         # conversationControl.type does not seem necessary
         prompt = ChatPromptTemplate.from_messages([
             ("system", system_prompt),

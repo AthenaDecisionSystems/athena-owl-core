@@ -9,8 +9,9 @@ from langchain_core.messages.human import HumanMessage
     
 
 class ModelParameters(BaseModel):
-    modelName: str = ""
+    modelName: str = "gpt-3.5-turbo-0125"
     modelClass: str = "agent_openai"
+    prompt_ref:  str = "default_prompt"
     temperature: int = 0  # between 0 to 100 and will be converted depending of te LLM
     top_k: int = 1
     top_p: int = 1
@@ -22,8 +23,7 @@ class ConversationControl(BaseModel):
     locale: str = "en"
     query: str = ""
     type: str = "chat"
-    reset: bool = False
-    prompt_ref:  str = "openai_insurance_with_tool"
+    reset: bool = False  # to reset everything back to default config.
     modelParameters: Optional[ModelParameters] = None
     chat_history: List[Union[HumanMessage, AIMessage]] = []
 
