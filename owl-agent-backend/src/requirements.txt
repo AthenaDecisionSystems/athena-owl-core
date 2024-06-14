@@ -5,6 +5,7 @@ langchain-anthropic
 langchain_ibm
 langchain_community 
 langchain
+langgraph
 pydantic
 pydantic-settings
 pydantic_yaml

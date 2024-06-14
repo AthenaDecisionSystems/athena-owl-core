@@ -25,6 +25,9 @@ class ConversationControl(BaseModel):
     type: str = "chat"
     reset: bool = False  # to reset everything back to default config.
     modelParameters: Optional[ModelParameters] = None
+    user_id: str = "user_1"
+    assistant_id: str = "assistant_1"
+    thread_id: str = "thread_1"
     chat_history: List[Union[HumanMessage, AIMessage]] = []
 
 

@@ -8,7 +8,7 @@ load_dotenv("../../.env")
 from athena.itg.store.content_mgr import get_content_mgr, FileDescription
 from athena.llm.base_owl_agent  import BaseOwlAgent
 from athena.llm.agent_openai  import OpenAIClient
-from athena.routers.dto_models import ConversationControl
+from athena.routers.dto_models import ConversationControl, ModelParameters
 
 class TestRagConversation(unittest.TestCase):
     
@@ -29,7 +29,8 @@ class TestRagConversation(unittest.TestCase):
         cc.callWithVectorStore=True
         cc.locale="fr"
         cc.type="chat"
-        cc.prompt_ref="default_prompt"
+        cc.modelParameters = ModelParameters()
+        cc.modelParameters.prompt_ref = "default_prompt"
         cc.query="what is athena decision systems?"
         rep=agent.send_conversation(cc)
         print(rep)

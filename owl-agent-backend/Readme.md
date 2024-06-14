@@ -1,9 +1,9 @@
 #  OWL Backend
 
-Created 04/01/2024 - 
-Updated 6/04/24: extract insurance demo content to make it more generic
-Updated 6/6/24: remove main as it should be a code template or python module. work on unit tests and content management for RAG supporting pdf, text, and markdown
-Updated 6/13/24: Add assistant operations, and definition. 
+* Created 04/01/2024 - 
+* Updated 6/04/24: extract insurance demo content to make it more generic
+* Updated 6/6/24: remove main as it should be a code template or python module. work on unit tests and content management for RAG supporting pdf, text, and markdown
+* Updated 6/13/24: Add assistant operations, and definition. 
 
 This backend is based on LangChain Agent APIs. It uses FastAPI routers to defined the different APIs of an agent backend. 
 It is the generic implementation without any domain specific integration or decision service. See IBU insurance for a specific configuration of this server code.

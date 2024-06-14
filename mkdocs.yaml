@@ -1,0 +1,72 @@
+site_name: Athena Decision Systems Product Documentation
+copyright: Copyright &copy; 2024 Athena Decision Systems
+nav:
+  - Introduction: index.md
+  - Architecture: 
+    - Introduction: arch.md
+    - OwlAgent design: design.md
+  - Build:
+    - Build new solution: build_sol.md
+  - Enablement:
+    - Getting Started Gen AI: gen_ai_gs.md
+theme: 
+  name: material
+  logo: assets/owl.png
+  favicon: assets/owl.png
+  palette:
+    scheme: default
+  language: en
+  features:
+      - content.code.annotate
+      - content.tooltips
+      - search.highlight
+      - navigation.instant
+      - navigation.instant.progress
+      - navigation.tabs
+      - navigation.tabs.sticky
+      - navigation.instant
+      - navigation.tracking
+      # - navigation.sections
+      #- navigation.expand
+      - navigation.top
+      - navigation.footer
+extra_css: ["extra.css"]
+plugins:
+  - search:
+      lang: en
+  - minify:
+      minify_html: true
+  # - mermaid2
+  #- bibtex:
+  #    bib_file: "docs/refs.bib"
+markdown_extensions:
+  - abbr
+  - attr_list
+  - md_in_html
+  - admonition
+  - codehilite
+  - footnotes
+  - tables
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:mermaid2.fence_mermaid_custom
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.tabbed
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.details
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: 'https://github.com/stockcrack'
+    - icon: fontawesome/brands/linkedin
+      link: 'https://www.linkedin.com/company/athena-decision-systems/'

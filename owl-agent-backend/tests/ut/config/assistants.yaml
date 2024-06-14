@@ -1,0 +1,11 @@
+default_assistant:
+  assistant_id: b169d089-b32c-4eff-8cd7-39a6db7c0e5a
+  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
+  description: A default assistant to do simple LLM calls
+  name: default_assistant
+
+watson_assistant:
+  assistant_id: b169d089
+  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
+  description: A default assistant to do simple LLM calls using WatsonX API
+  name: watson_assistant

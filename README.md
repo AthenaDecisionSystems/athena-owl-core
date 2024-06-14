@@ -11,22 +11,8 @@ The core OwlAgent framework interacts with key parts of the generative AI and de
 
 The Athena OWL Core repository includes the generic code for OWL Assistant backend and front end. Solutions can be a simple mono-agent demonstration or a complex multi-agent implementation.
 
-### What OwlAssistants are
+[Read the documentation]()
 
-OwlAssistants includes: 
-
-* a set of agents and tasks, defined in an assistant definition
-* a set of tools usable by LLM agents
-* orchestration with langchain and LangGraph, 
-* prompts, 
-* agent definition, 
-* integration layer to connect to custom data sources and business services, 
-* rules to control next best action
-* document storage reference and configuration to build corpus and vector store, 
-* vector store, 
-* LLM model reference to access via api. 
-
-Owl Platform portal includes an assistants, agents and tools hub, that enterprise will offer to their employees to select the best assistant in the context of their process. The OwAssistant server is a deployable unit, running on hybrid cloud.
 
 ### High Level requirement for OwlAssistant
 

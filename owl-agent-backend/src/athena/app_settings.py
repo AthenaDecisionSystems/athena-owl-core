@@ -16,8 +16,6 @@ class AppSettings(BaseSettings):
     logging_level: str = "INFO"
     logging_level_int: int = 0
     owl_env_path: str = "../.env"
-    owl_agent_llm_client_class: str = "athena.llm.agent_openai.OpenAIClient"
-    owl_agent_llm_model: str = "gpt-3.5-turbo-0125"
     owl_agent_decision_service_fct_name: str = "athena.itg.decisions.nba_ds_dummy.callDecisionService"
     owl_glossary_path: str = "./athena/config/glossary.json"
     owl_prompts_path: str = "./athena/config/prompts.json"
