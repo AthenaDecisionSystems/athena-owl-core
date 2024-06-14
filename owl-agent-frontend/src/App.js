@@ -43,13 +43,13 @@ function App() {
   const [input, setInput] = useState("");
   const [lastMessage, setLastMessage] = useState("");
   const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true }]);
-  const [chatHistory, setChatHistory] = useState([]);
+  //  const [chatHistory, setChatHistory] = useState([]);
 
   const [promptRef, setPromptRef] = useState("openai_insurance_with_tool");
   const [modelParameters, setModelParameters] = useState({
-    "modelName": "",
+    "modelName": "gpt-4o",
     "modelClass": "agent_openai",
-    "temperature": 0.5,
+    "temperature": 0,
     "top_k": 1,
     "top_p": 1
   });
@@ -80,9 +80,11 @@ function App() {
     }
   }, [messages]); // eslint-disable-line
 
-  useEffect(() => {
-    console.log("useEffect: chatHistory=" + JSON.stringify(chatHistory));
-  }, [chatHistory]);
+  /*
+    useEffect(() => {
+      console.log("useEffect: chatHistory=" + JSON.stringify(chatHistory));
+    }, [chatHistory]);
+  */
 
   const changeLanguage = () => {
     // This is a called by the Configuration component.
@@ -99,6 +101,7 @@ function App() {
     // Inform the user
     console.log("informUser: " + message);
     if (message === "---Restart conversation---") {
+      setResetHistory(true);
       setMessages([...messages, { text: "Clear", isBot: true }]);
     } else {
       setMessages([...messages, { text: message, isBot: true }]);
@@ -132,16 +135,12 @@ function App() {
       "query": text,
       "type": "chat",
       "reset": resetHistory,
-      "prompt_ref": "openai_insurance_with_tool",
-      "modelParameters": {
-        "modelName": "",
-        "modelClass": "agent_openai",
-        "temperature": temperature,
-        "top_k": 1,
-        "top_p": 1
-      },
-      "chat_history": []
-      // "chat_history": chatHistory
+      "prompt_ref": promptRef,
+      "modelParameters": modelParameters,
+      "chat_history": [] // chatHistory
+    }
+    if (resetHistory) {
+      console.log("submitMessage: resetHistory=" + resetHistory);
     }
 
     const requestOptions = {
@@ -157,7 +156,8 @@ function App() {
         let answer = ""
         if (data.status === 200) {
           answer = data.message
-          setChatHistory([...chatHistory, { "role": "human", "content": text }, { "role": "assistant", "content": answer }]);
+          // setChatHistory([...chatHistory, { "role": "human", "content": text }, { "role": "assistant", "content": answer }]);
+          setResetHistory(false);
         } else {
           // Error 500 or other
           answer = "Status http " + data.status + ": " + data.message + "\n" + data.error
@@ -199,9 +199,8 @@ function App() {
     setDisplayConfigurationPanel(!displayConfigurationPanel);
   };
 
-  const changeTemperature = (value) => {
-    // Change the temperature
-    setTemperature(value);
+  const changeModelParameters = (value) => {
+    setModelParameters(value);
   }
 
   const dismissConfigurationIfDisplayed = (e) => {
@@ -215,7 +214,7 @@ function App() {
     return (
       <div className='upperSide brand'>
         <div className="configuration"><img src={configIcon} onClick={handleConfiguration} alt={t("app.alt.configuration")} /></div>
-        <div className={displayConfigurationPanel ? "visible" : "hidden"}><Configuration onDismiss={handleConfiguration} onChangeLanguage={changeLanguage} onChangeTemperature={changeTemperature} /></div>
+        <div className={displayConfigurationPanel ? "visible" : "hidden"}><Configuration onDismiss={handleConfiguration} onChangeLanguage={changeLanguage} onChangeModelParameters={changeModelParameters} /></div>
         <div>
           {t("app.msg.loading")}
           <div className="loader"><img src={loadingImage} alt={t("app.msg.loading")} /></div>
@@ -229,7 +228,7 @@ function App() {
       <Suspense fallback={null}>
         <div className="sideBar">
           <div className="configuration"><img src={configIcon} onClick={handleConfiguration} alt={t("app.alt.configuration")} /></div>
-          <div className={displayConfigurationPanel ? "visible" : "hidden"}><Configuration onDismiss={handleConfiguration} onChangeLanguage={changeLanguage} onChangeTemperature={changeTemperature} /></div>
+          <div className={displayConfigurationPanel ? "visible" : "hidden"}><Configuration onDismiss={handleConfiguration} onChangeLanguage={changeLanguage} onChangeModelParameters={changeModelParameters} /></div>
 
           <div className="upperSide">
             {/* Change the logo, the className, and the brand text */}
