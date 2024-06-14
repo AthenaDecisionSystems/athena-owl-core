@@ -9,6 +9,8 @@ nav:
     - Build new solution: build_sol.md
   - Enablement:
     - Getting Started Gen AI: gen_ai_gs.md
+    - Challenges- Use Cases: gen_ai_cus.md
+    - Rule based systems: brms.md
 theme: 
   name: material
   logo: assets/owl.png

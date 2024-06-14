@@ -6,10 +6,7 @@
 * [ ] Ability to leverage information found in corporate documents that help formulate responses or policy, on top of the formalized decisions made by decision services
 * [ ] Ability to access decision services by providing needed input parameters from a combination of chatbot context and enterprise IS data, and by injecting the decision service output back to the LLM’s conversation context for output text generation. 
 * [ ] Ability to host the chatbot in multiple environments, including public cloud, private cloud, or enterprise data center.
-* [ ] Support potentially hundreds of multiple users simultaneously.
-* [ ] Easily creating tool calls for decision services in multiple BRMS (and optimization models as well).
-* [ ] Hybrid Cloud deployment
-* [ ] Data lake and lake house support for document storage
+* [ ] Easily creating tool calls for decision services in multiple BRMS.
 
 ## System context
 
@@ -29,7 +26,7 @@ In this diagram we have the following external actors:
 1. Unstructured data, in the form of key-value pair are persisted in Document Database and accessible also via tool calling
 1. A OwlAgent is about integrating with rule based system, there will be a domain specific next-best action ruleset per deployed solution but the system integrates with existing decision services.
 1. A vector store to keep embedding of domain specific documentation and knowledge
-1. Knowledge graph to represent specific ontology. 
+
 
 ## Component View
 
@@ -45,16 +42,12 @@ To zoom now into the OwlAgent framework, we can highlight the following componen
 1. **Agent manager** component is responsible to define agent. It persists metadata about the agent. Agent is a prompt, a set of tools, tool mapping, a vector store reference or collection within a vector store, a LLM API reference, a LLM model reference. It is also a microservice, with CRUD operation on Agent. The code to support the integration of the agent is a dedicated class in the controller. Instantiation of this class is done via inversion of control and configuration. 
 1. **Prompt manager**, manage the different prompts with its metadata. Prompt instances are linked to the agent and use case to implement. THey may be localized. 
 1. **Locale manager** manages localization for English, French, Spanish for user interface elements
-1. **Conversation Orchestrator**, this component will have a base implementation to serve Q&A interaction and Chat based conversation. It may be unique per deployed solution as it defines tool and specific configuration.
+1. **Conversation Manager**, this component will have a base implementation to serve Q&A interaction and Chat based conversation. It may be unique per deployed solution as it defines tool and specific configuration.
 1. **Tool manager** manage tool definition and code reference to instantiate during orchestrator creation
 1. **Document management** is responsible to expose document upload management, storage to cloud storage, meta data management, and trigger embeddings. The document processing may be adapted to each deployment of the solution. This component should map the documents to domain vector store mapping.
 1. **Vector Store manager**, to get better RAG, we need to have dedicated, domain specific, vector store or collection within a vector store, so this component is responsible of the management of the metadata of the vector stores.
-1. **Policy manager**: to define business rules, we have to leverage existing business policies. This component manages the life cycle of the business policies for the symbolic AI component.
 1. **Decision Service Connector**: is a component that will do data mapping for the existing decision service to be integrated as tool in the Agent Graph. 
 1. **LLM connector** is an integration layer to the different LLMs. It could include existing LangChain constructs, or special API one, or locally deployed LLM. LLM connectors to support are WatsonX.ai, OpenAI, Anthropic, Mixtral, Llama3, and any open source models remotely accessible. 
-1. **Data source connectors** are also integration layer as tools need access to database, document oriented database or cloud object storage.
-
-The green components should be specific for each application, the framework define interface and base classes to support running a demo in one click.
 
 The platform supports services to address governance end-to-end, with security access control, logging and auditing. Conversation flows will be persisted for playbacks and lineage. Governance is a day one design decision for this platform.
 

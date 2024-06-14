@@ -8,3 +8,4 @@ owl_env/
 __pycache__/
 **/chromadb/
 **/file_content/
+site/

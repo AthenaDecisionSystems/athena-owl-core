@@ -1,4 +1,4 @@
-# Athena OWL Core
+# [Athena OWL Core](https://athenadecisionsystems.github.io/athena-owl-core/)
 
 OwlAgent is a framework for constructing interactive LLM-based applications (chatbots) that include support for calling external decision services via tool-calling to ensure precise decision-making at key moments by the interactive application.
 
@@ -11,7 +11,7 @@ The core OwlAgent framework interacts with key parts of the generative AI and de
 
 The Athena OWL Core repository includes the generic code for OWL Assistant backend and front end. Solutions can be a simple mono-agent demonstration or a complex multi-agent implementation.
 
-[Read the documentation]()
+[Read the documentation](https://athenadecisionsystems.github.io/athena-owl-core/)
 
 
 ### High Level requirement for OwlAssistant
@@ -52,3 +52,18 @@ The [contributing guidelines are in this note.](./CONTRIBUTING.md)
 
 * [01/2024] Creation
 * [05/2024] Integration of LangChain
+* [06/2024] Supporting assistants, agents APIs
+
+## Building this booklet locally
+
+The content of this repository is written with markdown files, packaged with [MkDocs](https://www.mkdocs.org/) and can be built into a book-readable format by MkDocs build processes.
+
+1. Install MkDocs locally following the [official documentation instructions](https://www.mkdocs.org/#installation).
+1. Install Material plugin for mkdocs:  `pip install -r requirements.txt ` 
+1. `mkdocs serve`
+1. Go to `http://127.0.0.1:8000/` in your browser.
+
+## Learn more about mkdocs
+
+* [Mkdocs](https://www.mkdocs.org/)
+* [Material for MkDocs](https://squidfunk.github.io/mkdocs-material)
