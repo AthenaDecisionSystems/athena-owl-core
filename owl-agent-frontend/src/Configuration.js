@@ -9,18 +9,21 @@ import { setServerUrl } from "./reducer/server_url.action";
 import { setLanguage } from "./reducer/language.action";
 import { useTranslation } from 'react-i18next';
 
-const MAX_SLIDER = 100;
-
-const Configuration = ({ onDismiss, onChangeLanguage, onChangeTemperature }) => {
+const Configuration = ({ onDismiss, onChangeLanguage, onChangeModelParameters }) => {
     const defaultServerUrl = "http://localhost:8000/api/v1/"
     const serverUrl = useSelector((state) => state.serverUrlReducer.serverUrl)
     // The following state is used to detect a change so the "Set" button is displayed
     const [serverUrlNewValue, setServerUrlNewValue] = useState(defaultServerUrl)
 
-    const [model, setModel] = useState("gpt-3.5-turbo-16k")
+    const [modelParameters, setModelParameters] = useState({
+        "modelName": "gpt-4o",
+        "modelClass": "agent_openai",
+        "temperature": 0,
+        "top_k": 1,
+        "top_p": 1
+    });
 
-    const [temperature, setTemperature] = useState(0.5)
-    const [sliderValue, setSliderValue] = useState(temperature * 100);
+    const [sliderValue, setSliderValue] = useState(modelParameters.temperature);
 
     const dispatch = useDispatch()
 
@@ -40,12 +43,30 @@ const Configuration = ({ onDismiss, onChangeLanguage, onChangeTemperature }) => 
     }
 
     const changeTemperatureValue = (value) => {
-        setTemperature(value);
-        onChangeTemperature(value);
+        let mp = {
+            "modelName": modelParameters.modelName,
+            "modelClass": modelParameters.modelClass,
+            "temperature": value,
+            "top_k": modelParameters.top_k,
+            "top_p": modelParameters.top_p
+        }
+        setModelParameters(mp);
+        onChangeModelParameters(mp);
+    }
+    const setModel = (value) => {
+        let mp = {
+            "modelName": value,
+            "modelClass": modelParameters.modelClass,
+            "temperature": modelParameters.temperature,
+            "top_k": modelParameters.top_k,
+            "top_p": modelParameters.top_p
+        }
+        setModelParameters(mp);
+        onChangeModelParameters(mp);
     }
 
     const getBackgroundSize = () => {
-        return { backgroundSize: `${(sliderValue * 100) / MAX_SLIDER}% 100%` };
+        return { backgroundSize: `${sliderValue}% 100%` };
     };
 
     return (
@@ -73,7 +94,7 @@ const Configuration = ({ onDismiss, onChangeLanguage, onChangeTemperature }) => 
 
             <div className="assistant-label">{t("configuration.lbl.model")}</div>
             <div className="assistant-input-zone">
-                <select name="model" value={model} onChange={(e) => { setModel(e.target.value) }}>
+                <select name="model" value={modelParameters.modelName} onChange={(e) => { setModel(e.target.value) }}>
                     <option value="ibm/granite-13b-instruct-v2">Watsonx/granite-20b-multilingual</option>
                     <option value="ibm/llama-3-8b-instruct">Watsonx/llama-3-8b-instruct</option>
                     <option value="ibm/mixtral-8x7b-instruct">Watsonx/mixtral-8x7b-instruct</option>
@@ -91,9 +112,9 @@ const Configuration = ({ onDismiss, onChangeLanguage, onChangeTemperature }) => 
                     <input
                         type="range"
                         min="0"
-                        max={MAX_SLIDER}
+                        max="100"
                         onChange={(e) => setSliderValue(e.target.value)}
-                        onMouseUp={(e) => changeTemperatureValue(e.target.value / 100)}
+                        onMouseUp={(e) => changeTemperatureValue(e.target.value)}
                         style={getBackgroundSize()}
                         value={sliderValue}
                     />
