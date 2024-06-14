@@ -1,5 +1,6 @@
 site_name: Athena Decision Systems Product Documentation
 copyright: Copyright &copy; 2024 Athena Decision Systems
+repo_url: https://github.com/AthenaDecisionSystems/athena-owl-core
 nav:
   - Introduction: index.md
   - Architecture: 
@@ -38,9 +39,7 @@ plugins:
       lang: en
   - minify:
       minify_html: true
-  # - mermaid2
-  #- bibtex:
-  #    bib_file: "docs/refs.bib"
+
 markdown_extensions:
   - abbr
   - attr_list
@@ -50,11 +49,6 @@ markdown_extensions:
   - footnotes
   - tables
   - pymdownx.smartsymbols
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: !!python/name:mermaid2.fence_mermaid_custom
   - toc:
       permalink: true
       toc_depth: 3
@@ -69,6 +63,6 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: 'https://github.com/stockcrack'
+      link: 'https://github.com/AthenaDecisionSystems'
     - icon: fontawesome/brands/linkedin
       link: 'https://www.linkedin.com/company/athena-decision-systems/'
