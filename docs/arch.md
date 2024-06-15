@@ -112,7 +112,10 @@ The conversation REST resource expose synchronous or async API and delegate to a
 
 The conversation parameter includes the user_id, so the server manages multiple users in parallel, the assistant_id as a conversation is linked to a use case so an assistant. To get the assistant executor the assistant manager creates one instance according to the AssistantEntity definition.
 
-Th assistant instance exposes `invoke` or `stream` methods to send query to LLM and stream or not the response.
+![](./images/conv_api.PNG)
+
+
+The assistant instance exposes `invoke` or `stream` methods to send query to LLM and stream or not the response.
 
 ### Assistant Manager
 
@@ -165,24 +168,31 @@ def get_all_assistants() -> List[OwlAssistantEntity]:
    ...
 ```
 
+![](./images/assist_api.PNG)
+
 The manager also includes a factory method to create an instance of the AssistantExecutor so a conversation can create this instance and process the query of the conversation.
 
 !!!- info "Not yet covered"
 
 ### Agent Manager
 
+Agent groups LLM reference, prompts, and tools declaration. The agent manager manages those metadata in the AgentEntity object. The application use agent executor instance.
+
 #### Requirements
 
 * [x] Defines some agents via config file in yaml format, loaded and cached in the agent manager
-* [ ] Agent references the prompt to use and the model parameters like model name, temperature, top K, top P...
+* [x] Agent manager manages CRUD operations of the AgentEntity
+* [x] AgentEntity references the prompt, to use and the model parameters like model name, temperature, top K, top P...
 
 
 #### Approach
 
+The implementation approach looks similar that the assistant manager. The agent manager has a constructor to create agent executor.
+
 ![](./diagrams/agent_mgr_class.drawio.png)
 
 
-
+![](./images/agent_api.PNG)
 
 ### Document manager
 
@@ -210,6 +220,10 @@ Expose a REST resource for document management with core processing dependent od
 - name of the embeddings to use
 - vector store used and path or URL when using remote access
 - 
+
+### Tool manager
+
+![](./images/tools_api.PNG)
 
 ### Prompt manager
 
