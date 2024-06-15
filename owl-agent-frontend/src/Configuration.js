@@ -10,8 +10,9 @@ import { setLanguage } from "./reducer/language.action";
 import { useTranslation } from 'react-i18next';
 
 const Configuration = ({ onDismiss, onChangeLanguage, onChangeModelParameters }) => {
-    const defaultServerUrl = "http://localhost:8000/api/v1/"
     const serverUrl = useSelector((state) => state.serverUrlReducer.serverUrl)
+    const defaultServerUrl = serverUrl
+
     // The following state is used to detect a change so the "Set" button is displayed
     const [serverUrlNewValue, setServerUrlNewValue] = useState(defaultServerUrl)
 
