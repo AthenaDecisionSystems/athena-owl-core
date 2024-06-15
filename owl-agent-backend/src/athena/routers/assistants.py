@@ -13,7 +13,7 @@ router = APIRouter( prefix= get_config().api_route +"/a")
 
 
 @router.get( "/assistants/")
-def get_all_assistants() -> List[OwlAssistantEntity]:
+def get_all_assistant_entities() -> List[OwlAssistantEntity]:
     all = get_assistant_manager().get_assistants()
     l = []
     for e in all.values():
@@ -21,11 +21,11 @@ def get_all_assistants() -> List[OwlAssistantEntity]:
     return l
 
 @router.get("/assistants/{id}")
-def get_assistant_by_id(id: str) -> OwlAssistantEntity:
+def get_assistant_entity_by_id(id: str) -> OwlAssistantEntity:
     return get_assistant_manager().get_assistant_by_id(id)
 
 @router.get("/assistants/name/{name}")
-def get_assistant_by_name(name: str) -> OwlAssistantEntity:
+def get_assistant_entity_by_name(name: str) -> OwlAssistantEntity | None:
     return get_assistant_manager().get_assistant_by_name(name)
 
 @router.post("/assistants/")

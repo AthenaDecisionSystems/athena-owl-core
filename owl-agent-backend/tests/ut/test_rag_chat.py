@@ -4,7 +4,7 @@ module_path = "./src"
 sys.path.append(os.path.abspath(module_path))
 os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 from dotenv import load_dotenv
-load_dotenv("../../.env")
+load_dotenv()
 from athena.itg.store.content_mgr import get_content_mgr, FileDescription
 from athena.llm.base_owl_agent  import BaseOwlAgent
 from athena.llm.agent_openai  import OpenAIClient

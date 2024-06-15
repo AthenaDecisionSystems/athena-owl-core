@@ -14,7 +14,7 @@ It is important to address the system context to define the OwlAgent's boundarie
 
 ![](./diagrams/system_context.drawio.png)
 
-As the system context diagram aids in identifying the interfaces with external systems and services, it helps to drive the components.
+The system context diagram aids in identifying the interfaces with external systems and services when the system is deployed.
 
 In this diagram we have the following external actors:
 
@@ -30,7 +30,7 @@ In this diagram we have the following external actors:
 
 ## Component View
 
-To zoom now into the OwlAgent framework, we can highlight the following components, outside of any technology choice:
+To zoom into the OwlAssistant server, we can highlight the following components, outside of any technology choice:
 
 ![](./diagrams/component-view.drawio.png){ width=800 }
 
@@ -58,66 +58,102 @@ The core server needs to support:
 * [x] The runtime as a web server serving OpenAPI REST apis. --> FastAPI is used with the main function using middleware and routers [athena.main](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/main.py). 
 * [x] Docker image packaging for easy deployment on any platform. --> [Dockerfile](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/Dockerfile) and how to use it in the context of a demonstration is illustrated in the [Docker-compose file](https://github.com/AthenaDecisionSystems/athena-owl-demos/blob/main/IBU-insurance-demo/deployment/local/docker-compose.yaml)
 
-    ```yaml
-    owl-backend:
-        hostname: owl-backend
-        image: athena/owl-backend
-        container_name: owl-backend
-        ports:
-        - 8000:8000
-        environment:
-        CONFIG_FILE: /app/config/config.yaml
-        OPENAI_API_KEY: $OPENAI_API_KEY
-        volumes:
-        - ../../ibu_backend/config:/app/config
-        - ../../.env:/app/.env
-        - ./data/file_content:/app/file_content
-        - ./data/chromadb:/app/chromadb
-        - ../../ibu_backend/src/ibu:/app/ibu
-    ```
+```yaml
+owl-backend:
+    hostname: owl-backend
+    image: athena/owl-backend
+    container_name: owl-backend
+    ports:
+    - 8000:8000
+    environment:
+    CONFIG_FILE: /app/config/config.yaml
+    OPENAI_API_KEY: $OPENAI_API_KEY
+    volumes:
+    - ../../ibu_backend/config:/app/config
+    - ../../.env:/app/.env
+    - ./data/file_content:/app/file_content
+    - ./data/chromadb:/app/chromadb
+    - ../../ibu_backend/src/ibu:/app/ibu
+```
 
     Configuration and code is mounted inside the docker container. The configuration defines the classes to instantiate in the different components that are linked to the specific assistant.
 
 * [x] Default server configurations for a specific assistant are defined in an external [config.yaml](https://github.com/AthenaDecisionSystems/athena-owl-demos/blob/main/IBU-insurance-demo/ibu_backend/config/config.yaml)
-* [ ] Server can have different assistants running in parallel in the context of user conversation. So a conversation is the glue to the assistant.
+* [x] Server can have different assistants running in parallel in the context of user conversation. So a conversation is the glue to the assistant.
+* [ ] Server supports multiple end user conversations.
+
 
 #### Approach
 
-When the process starts, it loads the server configuration and keeps the configuration as a singleton. It offers a set of health APIs and conversation API.
+When the process starts, it loads the server configuration and keeps the configuration as a singleton. The server offers a set of health APIs and conversation APIs.
 
 ![](./diagrams/owl_backend_class.drawio.png)
 
-### Assistant Manager
 
-A specific use case implementation is supported by an Assistant. It is not exactly at the same concept as the OpenAI assistant, but it may look more as a Crew of agents like in Crew.ai. Assistant defines one or more agent, and if orchestration is needed a dedicated class needs to be implemented.
+Each router api defines the VERB and resource path and then delegates to another service implementation. Those services are singletons.
 
-In the case of IBU insurance demo , we have one Assistant, one agent, one prompt, and 3 or 4 tools.
+### Conversation orchestration
 
-The default assistant use LangGraph to implement a simple assistant with a node which is an agent and tools to do a google search via Tavily API.
+The conversation is what links the assistant to a user. The user starts a conversation using a chatbot graphycal user interface. The context of the conversation should include the assistant_id, the user_id, and a thread_id to keep track of the conversation. As chat has history the chat_history is also kept. 
 
 #### Requirements
 
-* [x] Assistant can be defined by configuration, but also via CRUD APIs as REST resources. Assistant is defined by a unique id, a name, description, some metadata, a class to support the implementation and the list of agents and tools it may uses.
-* [ ] Assistant defines a set of agents, and tools an agent can use. Agent is linked to a LLM model. So assistant can be a group of agent using different LLMs. 
-* [x] Agent can be a LangGraph graph class with a contract to support invoke and stream. The class is instantiated at runtime from configuration.
-* [x] Support loading configuration for at least one assistants and cached in memory. 
-* [ ] Conversation uses the assistant_id to get an instance of the assistant executor, to pass the conversation context.
+* [x] The conversation supports synchronous chat API
+* [ ] The conversation supports asynchronous/ streaming chat API
+* [x] Need to identify a unique user to keep conversation states, and history
+* [ ] Conversation states are persisted in remote database
+* [x] Conversation uses the assistant_id to get an instance of the assistant executor, to pass the conversation context.
 
 #### Approach
 
-The assistant configuration includes yaml definition like:
+The conversation REST resource expose synchronous or async API and delegate to a conversation manager. 
+
+![](./diagrams/conversation_mgr.drawio.png)
+
+The conversation parameter includes the user_id, so the server manages multiple users in parallel, the assistant_id as a conversation is linked to a use case so an assistant. To get the assistant executor the assistant manager creates one instance according to the AssistantEntity definition.
+
+Th assistant instance exposes `invoke` or `stream` methods to send query to LLM and stream or not the response.
+
+### Assistant Manager
+
+A specific use case implementation is supported by one Assistant. It is not exactly the same concept as the OpenAI assistant, but it may look more as a Crew of agents like in Crew.ai. Assistant defines one or more agents, and if orchestration is needed a dedicated class needs to be implemented.
+
+Assistant will be LangGraph graph when it needs to be stateful, oe LangChain chain when stateless. LangGraph brings the persistence of the conversation with the thread_id and the ability to playback the conversation, therefore it will be the first implementation choice. 
+
+In the case of IBU insurance demo , we have one Assistant, one agent, one prompt, and 3 or 4 tools. The implementation of the assistant is a graph with two nodes: one LLM and one tool_calling node.
+
+There are a set of pre-defined assistants. See the [config file for assistants](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/config/assistants.yaml).
+
+| Assistant Name | Goal |
+| --- | --- |
+| Base Assistant | The base assistant uses LangGraph with one node to implement a simple assistant with a unique node which is an OpenAI agent |
+| Base Tool Assistant | Use a agent and a tool node to search with Tavily tool |
+
+
+#### Requirements
+
+* [x] Assistant can be defined by configuration, but also via CRUD APIs as REST resources. Assistant is defined by a unique id, a name, description, some metadata, a class to support the implementation and the list of agents.
+* [ ] Assistant defines a set of agents, and tools an agent can use. Agent is linked to a LLM model. So assistant can be a group of agent using different LLMs. 
+* [x] Agent can be a LangGraph graph class with a contract to support invoke and stream. The class is instantiated at runtime from configuration.
+* [x] Support loading configuration for at least one assistants and cached in memory. 
+
+
+#### Approach
+
+The assistant configuration includes a yaml definition such as:
 
 ```yaml
-default_assistant:
-  assistant_id: b169d089-b32c-4eff-8cd7-39a6db7c0e5a
-  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
-  description: A default assistant to do simple LLM calls
-  name: default_assistant
+base_tool_assistant:
+  assistant_id: base_tool_assistant
+  class_name: athena.llm.assistants.BaseToolAssistant.BaseToolAssistant
+  description: A default assistant use LLM and tool to do web search
+  name: Default tool assistant
+  agent_id: anthropic_claude_3
 ```
 
 ![](./diagrams/assistant_mgr_class.drawio.png)
 
-The assistant REST resource define the FastAPI router (code `routers/assistants.py`) and the CRUD verbs. The code delegate to a repository. The entity is `OwlAssistantEntity`.
+The assistant REST resource defines the FastAPI router (see code `routers/assistants.py`) and the CRUD verbs. The code delegates to a repository. The entity is `OwlAssistantEntity` which maps the definition of the yaml above.
 
 ```python
    
@@ -129,7 +165,9 @@ def get_all_assistants() -> List[OwlAssistantEntity]:
    ...
 ```
 
-The manager also includes a factory method to create an instance of the Assistant run time so a conversation can create this instance and process the query of the conversation.
+The manager also includes a factory method to create an instance of the AssistantExecutor so a conversation can create this instance and process the query of the conversation.
+
+!!!- info "Not yet covered"
 
 ### Agent Manager
 
@@ -143,17 +181,7 @@ The manager also includes a factory method to create an instance of the Assistan
 
 ![](./diagrams/agent_mgr_class.drawio.png)
 
-### Conversation orchestration
 
-The conversation is what links the assistant to a user. The user starts a conversation using a chatbot interface. The context of the conversation should include the assistant_id, the user_id, and a thread_id to keep track of the conversation. As chat has history the chat_history is also kept. 
-
-#### Requirements
-
-* [x] The conversation support synchronous chat API
-* [ ] The conversation support asynchronous/ streaming chat API
-* [ ] Need to identify a unique user to keep conversation states, and history
-
-#### Approach
 
 
 ### Document manager

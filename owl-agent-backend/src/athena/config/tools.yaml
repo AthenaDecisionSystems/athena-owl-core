@@ -1,0 +1,7 @@
+tavily:
+  tool_id: tavily
+  tool_class_name: langchain_community.tools.tavily_search.TavilySearchResults
+  tool_description: 'A search engine optimized for comprehensive, accurate, and trusted results'
+  tool_fct_name: ''
+  tool_id: tavily
+  tool_name: "tavily search"

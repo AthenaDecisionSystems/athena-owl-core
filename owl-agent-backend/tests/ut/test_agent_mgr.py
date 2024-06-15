@@ -23,6 +23,7 @@ class TestAgentsManager(unittest.TestCase):
     def test_create_delete_agent_entity(self):
         oae = OwlAgentEntity()
         oae.name="test_agent"
+        oae.description="an openai based agent"
         mgr = get_agent_manager()
         oad_id=mgr.save_agent(oae)
         assert oad_id
@@ -42,9 +43,15 @@ class TestAgentsManager(unittest.TestCase):
         # Should get the default assistant definition
         mgr=get_agent_manager()
         assert mgr
-        p=mgr.get_agent_by_name("default_agent")
+        p=mgr.get_agent_by_name("open_ai_gpt35")
         assert p
         assert "openai" in p.description
+        
+    def test_read_tool_list(self):
+        mgr=get_agent_manager()
+        p=mgr.get_agent_by_name("anthropic_claude_3")
+        assert type(p) == OwlAgentEntity
+        print(p)
     
 if __name__ == '__main__':
     unittest.main()

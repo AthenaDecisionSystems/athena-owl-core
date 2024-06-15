@@ -3,8 +3,6 @@ import unittest, sys, os
 module_path = "./src"
 sys.path.append(os.path.abspath(module_path))
 os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
-from dotenv import load_dotenv
-load_dotenv("../../.env")
 from athena.glossary import glossary_mgr
 
 

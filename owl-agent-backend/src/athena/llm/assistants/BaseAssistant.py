@@ -1,53 +1,54 @@
+"""
+Copyright 2024 Athena Decision Systems
+@author Jerome Boyer
+"""
+from typing import Annotated
 
 from typing_extensions import TypedDict
-from athena.llm.assistants.assistant_mgr import OwlAssistant
-from typing import Annotated
-from langgraph.graph import StateGraph, END
-from langgraph.graph.message import add_messages
-from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, ToolMessage
-from langchain_openai import ChatOpenAI
 
-class AgentState(TypedDict):
-    messages: Annotated[list[AnyMessage], add_messages]
+from langgraph.graph import StateGraph
+from langgraph.graph.message import add_messages
+from langgraph.checkpoint.sqlite import SqliteSaver
+
+
+from athena.llm.assistants.assistant_mgr import OwlAssistant
+
     
+"""
+The simples assistant use one LLM
+"""
+
+
+class State(TypedDict):
+    # Messages have the type "list". The `add_messages` function
+    # appends messages to the list of messages
+    messages: Annotated[list, add_messages]
+
+
+
+
+
 class BaseAssistant(OwlAssistant):
     
-    def __init__(self):
-        self.system= "a prompt"
-        self.model = ChatOpenAI(model="gpt-3.5-turbo")
-        graph = StateGraph(AgentState)
-        graph.add_node("llm", self.call_llm)
-        graph.add_node("action", self.take_action)
-        graph.add_conditional_edges(
-            "llm",
-            self.exists_action,
-            {True: "action", False: END}
-        )
-        graph.add_edge("action", "llm")
-        graph.set_entry_point("llm")
-        self.graph = graph.compile()
+    def __init__(self, agent):
+        self.memory = SqliteSaver.from_conn_string(":memory:")
+        self.llm = agent.get_runnable()
+        graph_builder = StateGraph(State)
+        graph_builder.add_node("chatbot", self.call_chatbot)
+        graph_builder.set_entry_point("chatbot")
+        graph_builder.set_finish_point("chatbot")
+        self.graph = graph_builder.compile(checkpointer=self.memory)
+        
+        
+        
+    def call_chatbot(self, state: State):
+        return {"messages": [self.llm.invoke(state["messages"])]}
     
-    def call_llm(self, state: AgentState):
-        messages = state['messages']
-        print(messages)
-        if self.system:
-            messages = [SystemMessage(content=self.system)] + messages
-        message = self.model.invoke(messages)
-        return {'messages': [message]}
     
-    def take_action(self, state: AgentState):
-         pass
+    def invoke(self, query: str, thread_id: str) -> str:
+        self.config = {"configurable": {"thread_id": thread_id}}
+        resp= self.graph.invoke({"messages": ("user", query)}, self.config)
+        return resp
     
-    def exists_action(self, state: AgentState):
-        result = state['messages'][-1]
-        return len(result.tool_calls) > 0
-    
-     
-    def stream(self,query: str) -> str:
-        return "response to query"
-    
-    def invoke(self, query: str) -> str:
-        m=HumanMessage(content=query)
-        result = self.graph.invoke({"messages": [m]})
-        return result['messages'][-1].content
-    
+    def get_state(self):
+        return self.graph.get_state(self.config)

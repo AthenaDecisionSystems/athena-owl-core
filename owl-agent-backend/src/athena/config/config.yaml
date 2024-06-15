@@ -9,6 +9,7 @@ owl_glossary_path: /app/athena/config/glossary.json
 owl_prompts_path: /app/athena/config/prompts.json
 owl_assistants_path: /app/athena/config/assistants.yaml
 owl_agents_path: /app/athena/config/agents.yaml
+owl_tools_path: /app/athena/config/tools.yaml
 owl_prompts_key_name: default_prompt
 #owl_agent_content_vstore_url: http://localhost:8005
 owl_agent_content_collection_name: base_collection

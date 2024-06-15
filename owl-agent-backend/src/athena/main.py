@@ -4,7 +4,7 @@ Copyright 2024 Athena Decision Systems
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from athena.routers import conversations, documents, prompts, assistants, agents
+from athena.routers import conversations, documents, prompts, assistants, agents, tools
 from athena.app_settings import get_config
 from dotenv import load_dotenv
 import os
@@ -36,6 +36,7 @@ app.include_router(documents.router)
 app.include_router(prompts.router)
 app.include_router(assistants.router)
 app.include_router(agents.router)
+app.include_router(tools.router)
 
 @app.get(get_config().api_route + "/health")
 def alive() -> dict[str,str]:

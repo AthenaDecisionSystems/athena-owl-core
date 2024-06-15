@@ -13,7 +13,7 @@ router = APIRouter( prefix= get_config().api_route +"/a")
 
 
 @router.get( "/agents/")
-def get_all_agents() -> List[OwlAgentEntity]:
+def get_all_agent_entities() -> List[OwlAgentEntity]:
     all = get_agent_manager().get_agents()
     l = []
     for e in all.values():
@@ -21,11 +21,11 @@ def get_all_agents() -> List[OwlAgentEntity]:
     return l
 
 @router.get("/agents/{id}")
-def get_agent_by_id(id: str) -> OwlAgentEntity:
+def get_agent_entity_by_id(id: str) -> OwlAgentEntity:
     return get_agent_manager().get_agent_by_id(id)
 
 @router.get("/agents/name/{name}")
-def get_agent_by_name(name: str) -> OwlAgentEntity:
+def get_agent_entity_by_name(name: str) -> OwlAgentEntity | None:
     return get_agent_manager().get_agent_by_name(name)
 
 @router.post("/agents/")

@@ -1,9 +1,17 @@
+"""
+Copyright 2024 Athena Decision Systems
+@author Jerome Boyer
+"""
 from pydantic import BaseModel
 import uuid, yaml
 from functools import lru_cache
 from athena.app_settings import get_config
 from importlib import import_module
 from  athena.routers.dto_models import ConversationControl, ResponseControl, ModelParameters
+from athena.llm.prompts.prompt_mgr import get_prompt_manager
+from athena.llm.tools.tool_mgr import get_tool_manager
+# HACK
+from langchain_community.tools.tavily_search import TavilySearchResults
 
 class OwlAgentInterface:
     def send_query(self,controller: ConversationControl) -> ResponseControl:
@@ -30,14 +38,15 @@ class OwlAgentInterface:
     
 class OwlAgentEntity(BaseModel):
     agent_id: str = str(uuid.uuid4())
-    name: str = "DefaultAgent"
-    description: str = "The default agent uses openai"
-    model_name: str = "gpt-3.5-turbo-0125"
+    name: str = ""
+    description: str = ""
+    modelName: str = ""
     class_name: str = "athena.llm.agents.agent_openai.OpenAIClient"
     prompt_ref:  str = "default_prompt"
     temperature: int = 0  # between 0 to 100 and will be converted depending of te LLM
     top_k: int = 1
     top_p: int = 1
+    tools: list[str] = []
     
     
 class AgentManager():
@@ -76,20 +85,43 @@ class AgentManager():
         return "Done"
     
     def get_or_build_agent(self, agent_id : str) -> OwlAgentInterface | None:
-        oa = self.get_agent_by_id(agent_id)
-        if oa is not None:
-            module_path, class_name = oa.class_name.rsplit('.',1)
+        """_summary_
+        Factory to create agent from its definition
+        Args:
+            agent_id (str): _description_
+
+        Returns:
+            OwlAgentInterface | None: _description_
+        """
+        agent_entity = self.get_agent_by_id(agent_id)
+        if agent_entity is not None:
+            module_path, class_name = agent_entity.class_name.rsplit('.',1)
             mod = import_module(module_path)
             klass = getattr(mod, class_name)
-            return klass()
+            sys_prompt = get_prompt_manager().get_prompt(agent_entity.prompt_ref,"en")
+            tool_list=self.create_tools(agent_entity.tools)
+            return klass(agent_entity.modelName, sys_prompt, agent_entity.temperature, agent_entity.top_p, tool_list)
         return None
     
-    
+    def create_tools(self, tool_ids: list[str]):
+        tool_list=[]
+        for tid in tool_ids:
+            tool_entity = get_tool_manager().get_tool_by_id(tid)
+            # TO DO HACK
+            if tid == "tavily":
+                tool_list.append(TavilySearchResults(max_results=2))
+            else:
+                module_path, class_name = tool_entity.tool_class_name.rsplit('.',1)
+                mod = import_module(module_path)
+                klass = getattr(mod, class_name)
+                tool_list.append(klass)
+        return tool_list
+            
 _instance = None
 
 @lru_cache
 def get_agent_manager() -> AgentManager:
-    """ Factory to get access to unique instance of Prompts manager"""
+    """ Factory to get access to unique instance of Agent manager"""
     global _instance
     if _instance is None:
         path = get_config().owl_agents_path

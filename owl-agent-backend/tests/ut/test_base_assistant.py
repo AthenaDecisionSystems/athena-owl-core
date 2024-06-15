@@ -3,6 +3,8 @@ import unittest, sys, os
 os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 module_path = "./src"
 sys.path.append(os.path.abspath(module_path))
+from dotenv import load_dotenv
+load_dotenv()
 
 from athena.llm.assistants.assistant_mgr import get_assistant_manager
 from importlib import import_module
@@ -14,11 +16,11 @@ class TestBaseOwlAssistant(unittest.TestCase):
     
     def test_calling_base_agent(self):
         mgr = get_assistant_manager()
-        oae = mgr.get_assistant_by_name("default_assistant")
-        default_assistant = mgr.get_or_build_assistant(oae.assistant_id)
-        assert default_assistant
+        oae = mgr.get_assistant_by_name("base assistant")
+        base_assistant = mgr.get_or_build_assistant(oae.assistant_id)
+        assert base_assistant
         # Default assistant has one LLM and one tool to search the web
-        rep = default_assistant.invoke("what is langgraph?")
+        rep = base_assistant.invoke("what is langgraph?","thread_test")
         print(rep)
         
 if __name__ == '__main__':

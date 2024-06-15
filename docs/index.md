@@ -14,18 +14,23 @@ The core OwlAgent framework interacts with key parts of the generative AI and de
 
 ### What OwlAssistants are
 
-OwlAssistants includes: 
+OwlAssistant includes: 
 
 * a set of agents and tasks, defined in an assistant definition
 * a set of tools usable by LLM agents
-* orchestration with langchain and LangGraph, 
-* prompts, 
-* agent definition, 
+* orchestration with LangGraph as stateful graph, or langchain as stateless chain 
+
+OwlAgent includes:
+
+* agent definition
+
+Tools could be:
+
 * integration layer to connect to custom data sources and business services, 
 * rules to control next best action
 * document storage reference and configuration to build corpus and vector store, 
-* vector store, 
-* LLM model reference to access via api. 
+* vector store
 
-Owl Platform portal includes an assistants, agents and tools hub, that enterprise will offer to their employees to select the best assistant in the context of their process. The OwAssistant server is a deployable unit, running on hybrid cloud.
+
+Owl Platform portal includes an assistants, agents and tools hub, that enterprise offers to their employees to select the best assistant in the context of their business processes. The OwAssistant server is a deployable unit, running on hybrid cloud.
 

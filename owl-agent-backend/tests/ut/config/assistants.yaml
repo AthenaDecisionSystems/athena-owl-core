@@ -1,11 +1,13 @@
-default_assistant:
-  assistant_id: b169d089-b32c-4eff-8cd7-39a6db7c0e5a
+base_tool_assistant:
+  assistant_id: base_tool_assistant
+  class_name: athena.llm.assistants.BaseToolAssistant.BaseToolAssistant
+  description: A default assistant use LLM and tool to do web search
+  name: Default tool assistant
+  agent_id: anthropic_claude_3
+
+base_assistant:
+  assistant_id: base_assistant
   class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
   description: A default assistant to do simple LLM calls
-  name: default_assistant
-
-watson_assistant:
-  assistant_id: b169d089
-  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
-  description: A default assistant to do simple LLM calls using WatsonX API
-  name: watson_assistant
+  name: 'base assistant'
+  agent_id: open_ai_gpt35

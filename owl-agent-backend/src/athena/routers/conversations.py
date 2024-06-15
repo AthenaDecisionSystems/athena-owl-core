@@ -11,6 +11,7 @@ from importlib import import_module
 from athena.routers.dto_models import ResponseControl, ConversationControl
 from athena.app_settings import get_config
 from athena.glossary.glossary_mgr import build_get_glossary
+from athena.llm.conversations.conversation_mgr import get_or_start_conversation
 
 """
 Routes for the conversations. There is one instance created per request
@@ -45,32 +46,17 @@ def init_logger():
 router = APIRouter( prefix=get_config().api_route + "/c",
                    dependencies=[Depends(get_config),Depends(init)])
 
-#@router.post("/generic_qa")
-def generic_qa(conversationControl: ConversationControl) -> ResponseControl:
-    """
-    supports Q&A interactions with the configured LLM. The conversation controller includes the
-    query and flags to control a demonstration: using RAG and using decision service for best action
-    """
-    global owl_agent
-    LOGGER.debug(f"Input= {conversationControl}")
-    resp = ResponseControl()
-    try:
-        resp = owl_agent.send_query(conversationControl)
-    except Exception as e:
-        LOGGER.debug(str(e))
-        resp.status = 500
-        resp.message = f"ERROR: backend exception {str(e)}"
-
-    LOGGER.debug(resp)
-    return resp
 
 @router.post("/generic_chat")
-def generic_chat(conversationControl: ConversationControl) -> ResponseControl:
+def synchronous_chat_with_owl(conversationControl: ConversationControl) -> ResponseControl:
     global owl_agent
     LOGGER.debug(f"Input from chat UI= {conversationControl}")
     resp = ResponseControl()
     try:
-        resp = owl_agent.send_conversation(conversationControl)
+        if conversationControl.thread_id is not None or conversationControl.thread_id is not "":
+            resp = get_or_start_conversation(conversationControl)
+        else:
+            resp = owl_agent.send_conversation(conversationControl)
     except Exception as e:
         LOGGER.debug(str(e))
         resp.status = 500
@@ -80,7 +66,7 @@ def generic_chat(conversationControl: ConversationControl) -> ResponseControl:
 
 
 @router.post("/chat")
-async def chat_with_owl(conversationControl: ConversationControl) -> Response:
+async def async_chat_with_owl(conversationControl: ConversationControl) -> Response:
     global owl_agent
     LOGGER.debug(f"Stream input from chat UI= {conversationControl}")
     async def event_stream() -> AsyncGenerator[str, None]:

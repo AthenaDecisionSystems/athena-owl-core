@@ -1,9 +1,22 @@
 open_ai:
-  agent_id: 8bbf0c11-192a-450a-8959-779fe67e2563
-  class_name: athena.llm.agents.agent_openai.OpenAIClient
-  model_name: gpt-3.5-turbo-0125
+  agent_id: open_ai_gpt35
+  name: open_ai_gpt35
+  description: openai based agent with simple prompt 
+  class_name: athena.llm.agents.agent_openai.OpenAIAgent
+  modelName: gpt-3.5-turbo-0125
   prompt_ref: default_prompt
   temperature: 0
   top_k: 1
   top_p: 1
 
+anthropic_claude_3:
+  agent_id: anthropic_claude_3
+  name: anthropic_claude_3
+  class_name: athena.llm.agents.agent_anthropic.AnthropicAgent
+  modelName: claude-3-opus-20240229
+  prompt_ref: default_prompt
+  temperature: 0
+  top_k: 1
+  top_p: 1
+  tools:
+  - tavily

@@ -1,16 +1,23 @@
+"""
+Copyright 2024 Athena Decision Systems
+@author Jerome Boyer
+"""
 from pydantic import BaseModel
 import uuid, yaml
 from functools import lru_cache
 from athena.app_settings import get_config
 from importlib import import_module
-
+from athena.llm.agents.agent_mgr import get_agent_manager
 
 class OwlAssistant():
     
-    def stream(query: str) -> str:
+    def stream(self, query: str, thread_id: str) -> str:
         pass
     
-    def invoke(query: str) -> str:
+    def invoke(self, query: str, thread_id: str) -> str:
+        pass
+    
+    def get_state(self):
         pass
     
 class OwlAssistantEntity(BaseModel):
@@ -21,7 +28,7 @@ class OwlAssistantEntity(BaseModel):
     name: str = "default_assistant"
     description: str = "A default assistant to do simple LLM calls"
     class_name : str = "athena.llm.assistants.BaseAssistant.BaseAssistant"
-    
+    agent_id: str = ""
     
 class AssistantManager():
     """
@@ -77,7 +84,11 @@ class AssistantManager():
             module_path, class_name = oa.class_name.rsplit('.',1)
             mod = import_module(module_path)
             klass = getattr(mod, class_name)
-            return klass()
+            if oa.agent_id and oa.agent_id != "":
+                agent=get_agent_manager().get_or_build_agent(oa.agent_id)
+                return klass(agent)
+            else:
+                return klass()
         return None
 
 
@@ -86,7 +97,7 @@ _instance = None
 
 @lru_cache
 def get_assistant_manager() -> AssistantManager:
-    """ Factory to get access to unique instance of Prompts manager"""
+    """ Factory to get access to unique instance of assistant manager"""
     global _instance
     if _instance is None:
         path = get_config().owl_assistants_path

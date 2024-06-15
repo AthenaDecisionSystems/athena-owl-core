@@ -35,11 +35,7 @@ class TestAssistantsManager(unittest.TestCase):
         oad = obj["default_assistant"] 
         oa = OwlAssistantEntity.model_validate(oad)  # now it is a OwlAssistant
         print(oa.description)
-        module_path, class_name = oa.class_name.rsplit('.',1)
-        mod = import_module(module_path)
-        klass = getattr(mod, class_name)
-        owl_assistant= klass()
-        print(owl_assistant.invoke("a test"))
+
     
     def test_define_new_assistant(self):
         mgr=get_assistant_manager()
@@ -69,9 +65,9 @@ class TestAssistantsManager(unittest.TestCase):
         # Should get the default assistant definition
         mgr=get_assistant_manager()
         assert mgr
-        p=mgr.get_assistant_by_name("default_assistant")
+        p=mgr.get_assistant_by_name("base_assistant")
         assert p
-        assert "default assistant" in p.description
+        assert "base assistant" in p.description
         
 
 
