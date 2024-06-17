@@ -3,13 +3,15 @@ Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
 """
 from pydantic import BaseModel
-import uuid, yaml
+import uuid, yaml, logging
 from functools import lru_cache
 from athena.app_settings import get_config
 from importlib import import_module
 from athena.llm.agents.agent_mgr import get_agent_manager
 from  athena.routers.dto_models import ConversationControl, ResponseControl
 from typing import Any
+
+LOGGER = logging.getLogger(__name__)
 
 class OwlAssistant():
     
@@ -85,10 +87,12 @@ class AssistantManager():
         
     def get_or_build_assistant(self, assistant_id : str) -> OwlAssistant:
         oa = self.get_assistant_by_id(assistant_id)
+        LOGGER.debug(f"--> in get_or_build_assistant {oa}")
         if oa is not None:
             module_path, class_name = oa.class_name.rsplit('.',1)
             mod = import_module(module_path)
             klass = getattr(mod, class_name)
+            LOGGER.debug(f"--> {class_name} created")
             if oa.agent_id and oa.agent_id != "":
                 agent=get_agent_manager().get_or_build_agent(oa.agent_id)
                 return klass(agent)

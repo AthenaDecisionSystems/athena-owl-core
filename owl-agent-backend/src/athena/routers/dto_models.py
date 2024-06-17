@@ -20,15 +20,15 @@ class ModelParameters(BaseModel):
 class ConversationControl(BaseModel):
     callWithVectorStore: bool = False
     callWithDecisionService: bool = False
-    locale: str = "en"
+    locale: Optional[str] = "en"
     query: str = ""
     type: str = "chat"
     reset: bool = False  # to reset everything back to default config.
     modelParameters: Optional[ModelParameters] = None
-    user_id: str = ""
-    assistant_id: str = ""
-    thread_id: str = ""
-    chat_history: List[Union[HumanMessage, AIMessage]] = []
+    user_id: Optional[str] = ""
+    assistant_id: Optional[str] = ""
+    thread_id: Optional[str] = ""
+    chat_history:  Optional[List[str]] = []
 
 
 class ResponseChoice(BaseModel):
@@ -42,9 +42,9 @@ class ResponseControl(BaseModel):
     question_type: Optional[str] = ''
     possibleResponse: Optional[List[ResponseChoice]] = None
     error: Optional[str] = ''
-    chat_history: List[Union[HumanMessage, AIMessage]] = []
-    assistant_id: str = ""
-    thread_id: str = ""
-    user_id: str = ""
+    chat_history: Optional[List[str]] = []
+    user_id: Optional[str] = ""
+    assistant_id: Optional[str] = ""
+    thread_id: Optional[str] = ""
 
 

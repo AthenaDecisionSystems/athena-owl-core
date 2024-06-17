@@ -10,7 +10,7 @@ from langgraph.graph.message import add_messages
 from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, ToolMessage
 from langgraph.pregel.types import StateSnapshot
 from langgraph.checkpoint.sqlite import SqliteSaver
-from  athena.routers.dto_models import ConversationControl, ResponseControl, ModelParameters
+from  athena.routers.dto_models import ConversationControl, ResponseControl
 import json
 import langchain
 
@@ -83,8 +83,11 @@ class BaseToolAssistant(OwlAssistant):
     def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
         graph_rep= self.invoke(controller.query, controller.thread_id)
         resp = ResponseControl()
-        resp.chat_history=graph_rep["chat_history"]
-        resp.message=graph_rep["output"]
+        resp.message=graph_rep["messages"][-1].content
+        resp.chat_history=[ m.json() for m in graph_rep["messages"]]
+        resp.assistant_id=controller.assistant_id
+        resp.thread_id=controller.thread_id
+        resp.user_id = controller.user_id
         return resp
          
     def get_state(self) -> StateSnapshot:

@@ -26,7 +26,7 @@ def init():
     klass = getattr(mod, class_name)
     owl_agent= klass()
     init_logger()
-    LOGGER.debug(f"OWL Agent used is {klass}")
+    LOGGER.debug(f"\n@@@> OWL Agent used is {klass}")
 
 def init_logger():
     LOGGER.setLevel(get_config().logging_level_int)
@@ -39,7 +39,7 @@ def init_logger():
     LOGGER.addHandler(console_handler)
     LOGGER.addHandler(file_handler)
     LOGGER.debug(
-        f"Logging level: {LOGGER.getEffectiveLevel()}, should be " + str(get_config().logging_level_int)
+        f"\n@@@> Logging level: {LOGGER.getEffectiveLevel()}, should be " + str(get_config().logging_level_int)
     )
 
 
@@ -50,25 +50,25 @@ router = APIRouter( prefix=get_config().api_route + "/c",
 @router.post("/generic_chat")
 def synchronous_chat_with_owl(conversationControl: ConversationControl) -> ResponseControl:
     global owl_agent
-    LOGGER.debug(f"Input from chat UI= {conversationControl}")
+    LOGGER.debug(f"\n@@@> Input from chat UI= {conversationControl}")
     resp = ResponseControl()
     try:
-        if conversationControl.thread_id is not None or conversationControl.thread_id != "":
+        if conversationControl.assistant_id != "":
             resp = get_or_start_conversation(conversationControl)
         else:
             resp = owl_agent.send_conversation(conversationControl)
     except Exception as e:
-        LOGGER.debug(str(e))
+        LOGGER.debug(f"\n@@@> Exception in chat conversation with error: {str(e)}")
         resp.status = 500
         resp.error = f"ERROR: backend exception {str(e)}"
-    LOGGER.debug(resp)
+    LOGGER.debug(f"\n@@@> {resp}")
     return resp
 
 
 @router.post("/chat")
 async def async_chat_with_owl(conversationControl: ConversationControl) -> Response:
     global owl_agent
-    LOGGER.debug(f"Stream input from chat UI= {conversationControl}")
+    LOGGER.debug(f"\n@@@> Stream input from chat UI= {conversationControl}")
     async def event_stream() -> AsyncGenerator[str, None]:
         async for chunk in owl_agent.conversation_stream(conversationControl):
             yield chunk

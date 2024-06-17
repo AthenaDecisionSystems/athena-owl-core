@@ -2,13 +2,13 @@
 import unittest
 from dotenv import load_dotenv
 import sys,os
-os.environ["CONFIG_FILE"] = "./tests/it/config/config.yaml"
+os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 from dotenv import load_dotenv
 load_dotenv("./.env")
 sys.path.append('./src')
 from athena.main import app
 from athena.app_settings import  get_config
-from athena.routers.prompt import PromptRequest
+from athena.routers.prompts import PromptRequest
 from fastapi.testclient import TestClient
 
 """
@@ -27,7 +27,7 @@ class TestPromptApi(unittest.TestCase):
 
     def test_get_default_prompt(self):
         response = self.client.get(get_config().api_route +"/a/prompts/default_prompt/en")
-        print(response.json())
+        print(f" --it--> {response.json()}")
         assert response is not None
         assert response.status_code == 200
         assert "below context" in response.json()
@@ -38,7 +38,7 @@ class TestPromptApi(unittest.TestCase):
         assert response is not None
         assert response.status_code == 200
         response = self.client.get(get_config().api_route + "/a/prompts/test_prompt/en")
-        print(response.json())
+        print(f" --it--> {response.json()}")
         assert "helpful assistant" in response.json()
 
 
@@ -46,13 +46,16 @@ class TestPromptApi(unittest.TestCase):
     def test_prompt_for_ui(self):
         response = self.client.get( get_config().api_route + "/a/prompts/en").content.decode()
         assert response is not None
-        print(response)
+        print(f" --it--> {response}")
         assert response.find("questions based") > 0
         response =  self.client.get( get_config().api_route + "/a/prompts/fr").content.decode()
         assert response is not None
-        print(response)
+        print(f" --it--> {response}")
         assert response.find("utilisateur") > 0
         response = self.client.get( get_config().api_route + "/a/prompts/es").content.decode()
         assert response is not None
-        print(response)
+        print(f" --it--> {response}")
         assert response.find("siguiente") > 0
+        
+if __name__ == '__main__':
+    unittest.main()

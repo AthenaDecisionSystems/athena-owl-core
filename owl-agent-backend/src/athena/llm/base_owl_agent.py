@@ -47,12 +47,12 @@ class BaseOwlAgent(AgentInterface):
         return resp
 
     def send_conversation(self,controller:ConversationControl) -> ResponseControl:
-
+        LOGGER.debug(f"In send_conversation legacy {controller}")
         agent_executor =  self.build_agent_executor(controller,False)
         chat_history = controller.chat_history
         resp = ResponseControl()
         agentResponse=agent_executor.invoke({"input": controller.query, "chat_history":chat_history})
-        print(f"---> {agentResponse}")
+        LOGGER.debug(f"---> {agentResponse}")
         resp.chat_history=agentResponse["chat_history"]
         # should we build the history here?
         resp.message=agentResponse["output"]
