@@ -8,6 +8,8 @@ from functools import lru_cache
 from athena.app_settings import get_config
 from importlib import import_module
 from athena.llm.agents.agent_mgr import get_agent_manager
+from  athena.routers.dto_models import ConversationControl, ResponseControl
+from typing import Any
 
 class OwlAssistant():
     
@@ -16,6 +18,9 @@ class OwlAssistant():
     
     def invoke(self, query: str, thread_id: str) -> str:
         pass
+    
+    def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
+        pass 
     
     def get_state(self):
         pass
@@ -78,7 +83,7 @@ class AssistantManager():
         return path
 
         
-    def get_or_build_assistant(self, assistant_id : str) -> OwlAssistant | None:
+    def get_or_build_assistant(self, assistant_id : str) -> OwlAssistant:
         oa = self.get_assistant_by_id(assistant_id)
         if oa is not None:
             module_path, class_name = oa.class_name.rsplit('.',1)

@@ -2,14 +2,14 @@
 Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
 """
-from typing import Annotated
+from typing import Annotated, Any
 
 from typing_extensions import TypedDict
 
 from langgraph.graph import StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.checkpoint.sqlite import SqliteSaver
-
+from langgraph.pregel.types import StateSnapshot
 
 from athena.llm.assistants.assistant_mgr import OwlAssistant
 
@@ -45,10 +45,10 @@ class BaseAssistant(OwlAssistant):
         return {"messages": [self.llm.invoke(state["messages"])]}
     
     
-    def invoke(self, query: str, thread_id: str) -> str:
+    def invoke(self, query: str, thread_id: str) -> dict[str, Any] | Any:
         self.config = {"configurable": {"thread_id": thread_id}}
         resp= self.graph.invoke({"messages": ("user", query)}, self.config)
         return resp
     
-    def get_state(self):
+    def get_state(self) -> StateSnapshot:
         return self.graph.get_state(self.config)

@@ -53,7 +53,7 @@ def synchronous_chat_with_owl(conversationControl: ConversationControl) -> Respo
     LOGGER.debug(f"Input from chat UI= {conversationControl}")
     resp = ResponseControl()
     try:
-        if conversationControl.thread_id is not None or conversationControl.thread_id is not "":
+        if conversationControl.thread_id is not None or conversationControl.thread_id != "":
             resp = get_or_start_conversation(conversationControl)
         else:
             resp = owl_agent.send_conversation(conversationControl)

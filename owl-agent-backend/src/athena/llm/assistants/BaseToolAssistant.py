@@ -4,11 +4,13 @@ Copyright 2024 Athena Decision Systems
 """
 from typing_extensions import TypedDict
 from athena.llm.assistants.assistant_mgr import OwlAssistant
-from typing import Annotated, Literal
+from typing import Annotated, Any, Literal
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
 from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, ToolMessage
+from langgraph.pregel.types import StateSnapshot
 from langgraph.checkpoint.sqlite import SqliteSaver
+from  athena.routers.dto_models import ConversationControl, ResponseControl, ModelParameters
 import json
 import langchain
 
@@ -72,13 +74,20 @@ class BaseToolAssistant(OwlAssistant):
         return {'messages': [message]}
     
 
-    def invoke(self, query: str, thread_id: str) -> str:
+    def invoke(self, query: str, thread_id: str) -> dict[str, Any] | Any:
         self.config = {"configurable": {"thread_id": thread_id}}
         m=HumanMessage(content=query)
         resp= self.graph.invoke({"messages":[m]}, self.config)
         return resp
     
-    def get_state(self):
+    def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
+        graph_rep= self.invoke(controller.query, controller.thread_id)
+        resp = ResponseControl()
+        resp.chat_history=graph_rep["chat_history"]
+        resp.message=graph_rep["output"]
+        return resp
+         
+    def get_state(self) -> StateSnapshot:
         return self.graph.get_state(self.config)
     
     
