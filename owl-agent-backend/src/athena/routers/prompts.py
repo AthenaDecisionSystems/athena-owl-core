@@ -6,7 +6,7 @@ from pydantic import BaseModel
 from athena.app_settings import get_config
 from fastapi import APIRouter
 from athena.llm.prompts.prompt_mgr import get_prompt_manager
-
+from typing import Any
 
 class PromptRequest(BaseModel):
     prompt_key: str
@@ -17,7 +17,7 @@ router = APIRouter( prefix= get_config().api_route +"/a")
 
 
 @router.get( "/prompts/")
-def get_all_prompt_entities(locale: str) -> str:
+def get_all_prompt_entities(locale: str) -> dict[str,Any]:
     return get_prompt_manager().get_prompts()
 
 @router.get( "/prompts/{locale}")
