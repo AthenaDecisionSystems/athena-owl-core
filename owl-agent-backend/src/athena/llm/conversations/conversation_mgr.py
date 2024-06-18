@@ -23,7 +23,7 @@ def get_or_start_conversation(cc: ConversationControl) -> ResponseControl | None
     assistant: OwlAssistant
     if not _ACTIVE_CONV or _ACTIVE_CONV[cc.thread_id] is None:
         assistant_mgr = get_assistant_manager()
-        assistant = assistant_mgr.get_or_build_assistant(cc.assistant_id)
+        assistant = assistant_mgr.get_or_build_assistant(cc.assistant_id, cc.locale)
         _ACTIVE_CONV[cc.thread_id]= assistant
     else:
         assistant=_ACTIVE_CONV[cc.thread_id]

@@ -40,3 +40,8 @@ def update_tool_entity(id: str, e: OwlToolEntity) -> str:
 @router.delete("/tools/{id}")
 def delete_tool_entity(id: str) -> str:
     return get_tool_manager().delete_tool(id)
+
+
+@router.post("/tools/reset")
+def reset_from_files():
+    return get_tool_manager().load_tools(get_config().owl_tools_path)

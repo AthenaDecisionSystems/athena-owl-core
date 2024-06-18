@@ -10,8 +10,6 @@ from importlib import import_module
 from  athena.routers.dto_models import ConversationControl, ResponseControl, ModelParameters
 from athena.llm.prompts.prompt_mgr import get_prompt_manager
 from athena.llm.tools.tool_mgr import get_tool_manager
-# HACK
-from langchain_community.tools.tavily_search import TavilySearchResults
 
 class OwlAgentInterface:
     def send_query(self,controller: ConversationControl) -> ResponseControl:
@@ -84,9 +82,10 @@ class AgentManager():
             del self.AGENTS[key]
         return "Done"
     
-    def get_or_build_agent(self, agent_id : str) -> OwlAgentInterface | None:
+    def get_or_build_agent(self, agent_id : str, locale: str) -> OwlAgentInterface | None:
         """_summary_
-        Factory to create agent from its definition
+        Factory to create agent from its definition. Agent has a class to support the implementation.
+        Prompt is the string, tools is a list of unique tool_id to get the definition within the agent class.
         Args:
             agent_id (str): _description_
 
@@ -98,24 +97,12 @@ class AgentManager():
             module_path, class_name = agent_entity.class_name.rsplit('.',1)
             mod = import_module(module_path)
             klass = getattr(mod, class_name)
-            sys_prompt = get_prompt_manager().get_prompt(agent_entity.prompt_ref,"en")
-            tool_list=self.create_tools(agent_entity.tools)
-            return klass(agent_entity.modelName, sys_prompt, agent_entity.temperature, agent_entity.top_p, tool_list)
+            sys_prompt = get_prompt_manager().get_prompt(agent_entity.prompt_ref, locale)
+            tools = []
+            for tid in agent_entity.tools:
+                tools.append(get_tool_manager().get_tool_by_id(tid))
+            return klass(agent_entity.modelName, sys_prompt, agent_entity.temperature, agent_entity.top_p, tools)
         return None
-    
-    def create_tools(self, tool_ids: list[str]):
-        tool_list=[]
-        for tid in tool_ids:
-            tool_entity = get_tool_manager().get_tool_by_id(tid)
-            # TO DO HACK
-            if tid == "tavily":
-                tool_list.append(TavilySearchResults(max_results=2))
-            else:
-                module_path, class_name = tool_entity.tool_class_name.rsplit('.',1)
-                mod = import_module(module_path)
-                klass = getattr(mod, class_name)
-                tool_list.append(klass)
-        return tool_list
             
 _instance = None
 

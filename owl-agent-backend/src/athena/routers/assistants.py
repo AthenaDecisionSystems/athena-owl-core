@@ -40,3 +40,7 @@ def update_assistant_entity(id: str, e: OwlAssistantEntity) -> str:
 @router.delete("/assistants/{id}")
 def delete_assistant_entity(id: str) -> str:
     return get_assistant_manager().delete_assistant(id)
+
+@router.post("/assistants/reset")
+def reset_from_files():
+    return get_assistant_manager().load_assistants(get_config().owl_assistants_path)

@@ -1,5 +1,5 @@
 logging_level: DEBUG
-version: 0.0.1
+version: v0.0.2
 owl_env_path: ../.env
 # owl_agent_llm_client_class: athena.llm.agent_anthropic.AnthropicClient
 owl_agent_llm_client_class: athena.llm.agent_openai.OpenAIClient

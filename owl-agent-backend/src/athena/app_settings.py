@@ -17,16 +17,21 @@ class AppSettings(BaseSettings):
     logging_level_int: int = 0
     owl_env_path: str = "../.env"
     owl_agent_decision_service_fct_name: str = "athena.itg.decisions.nba_ds_dummy.callDecisionService"
-    owl_glossary_path: str = "./athena/config/glossary.json"
-    owl_prompts_path: str = "./athena/config/prompts.json"
+    owl_glossary_path: str = "/app/athena/config/glossary.json"
+    owl_prompts_path: str = "/app/athena/config/prompts.json"
     owl_prompts_key_name: str = "default_prompt"
-
+    owl_assistants_path: str = "/app/athena/config/assistants.yaml"
+    owl_agents_path: str = "/app/athena/config/agents.yaml"
+    owl_tools_path: str = "/app/athena/config/tools.yaml"
     owl_agent_content_collection_name: str = "base_collection"
-    owl_agent_content_file_path: str = "./file_content"
+    owl_agent_content_file_path: str = "/app/file_content"
     owl_agent_vs_path: str = "./chromadb"
     owl_agent_vs_url: str = ""
+    owl_agent_vs_embedding_fct: str = "OpenAIEmbeddings"
     owl_agent_vs_embedding_fct: str = ""
+    owl_agent_llm_client_class: str = ""
     owl_agent_llm_history_length: int = 5
+    owl_agent_llm_model: str = ""
 
 _config = None
 

@@ -27,7 +27,7 @@ class TestPromptApi(unittest.TestCase):
 
     def test_get_default_prompt(self):
         response = self.client.get(get_config().api_route +"/a/prompts/default_prompt/en")
-        print(f" --it--> {response.json()}")
+        print(f"\n--it--> {response.json()}")
         assert response is not None
         assert response.status_code == 200
         assert "below context" in response.json()
@@ -38,7 +38,7 @@ class TestPromptApi(unittest.TestCase):
         assert response is not None
         assert response.status_code == 200
         response = self.client.get(get_config().api_route + "/a/prompts/test_prompt/en")
-        print(f" --it--> {response.json()}")
+        print(f"\n--it--> {response.json()}")
         assert "helpful assistant" in response.json()
 
 
@@ -46,15 +46,15 @@ class TestPromptApi(unittest.TestCase):
     def test_prompt_for_ui(self):
         response = self.client.get( get_config().api_route + "/a/prompts/en").content.decode()
         assert response is not None
-        print(f" --it--> {response}")
+        print(f"\n--it--> {response}")
         assert response.find("questions based") > 0
         response =  self.client.get( get_config().api_route + "/a/prompts/fr").content.decode()
         assert response is not None
-        print(f" --it--> {response}")
+        print(f"\n--it--> {response}")
         assert response.find("utilisateur") > 0
         response = self.client.get( get_config().api_route + "/a/prompts/es").content.decode()
         assert response is not None
-        print(f" --it--> {response}")
+        print(f"\n--it--> {response}")
         assert response.find("siguiente") > 0
         
 if __name__ == '__main__':
