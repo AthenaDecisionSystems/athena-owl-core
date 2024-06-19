@@ -6,21 +6,50 @@ Copyright 2024, Athena Decision Systems
 
 # This is the OWL Frontend
 
-It enables access to your custom demo based on the Owl Backend
-The demos are in this [repo](https://github.com/AthenaDecisionSystems/athena-owl-demos)
+It enables access to your custom demo based on the Owl Backend.  The demos are in this [Git repository](https://github.com/AthenaDecisionSystems/athena-owl-demos).
+
+The Frontend is developped in Javascript and leverages the [React library](https://react.dev/).
+
+To run it, two options (detailed below):
+1. As a Docker container
+2. With [Node.js Javascript runtime environment](https://nodejs.org/)
+
+> Choose option 2. if you plan to modify the Frontend's code.
+
+---
+
+### Git archive: [athena-owl-core/owl-agent-frontend](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-frontend)
 
 
-## How it works
+## 1. As a Docker container
 
-1. Install Node.js (contains npm)
-2. Clone this Git archive
-3. From a terminal, enter the following commands:
-4. `cd owl-agent-frontend`
-5. `npm i` (Sync Javascript libraries)
-6. `npm start` (Run project)
-7. The frontend should show up in your browser [http://localhost:3000](http://localhost:3000)
-8. Each time you pull new changes, run npm i in case there are new packages to install
+> In the `owl-agent-frontend`folder, build the Docker image and run it!
 
-The front-end assumes that the backend runs on port 8000. This is a parameter that you can edit on the front-end.
+From a terminal, enter the following commands:
+```
+cd owl-agent-frontend
+docker build -t athena/owl-frontend:latest .
+docker run -d -p 3000:80 athena/owl-frontend
+```
 
-Alternately, you can run the front-end as a docker image running NGinX with the Dockerfile in src/.
+## 2. With Node.js (Javascript runtime environment)
+
+> Install Node.js, import the packages (`npm i`) and start the Dev environment (`npm start`).
+
+2.1. Install [Node.js](https://nodejs.org/)
+
+2.2. From a terminal, enter the following commands:
+
+```
+cd owl-agent-frontend
+npm i
+npm start
+```
+
+Whenever a subsequent `git pull` changes the dependency list (`package.json`), then the command `npm i`, that installs packages, must be launched again.
+
+---
+
+Invoke the Frontend from your browser: [http://localhost:3000](http://localhost:3000).
+
+The Frontend assumes that the Backend runs on port 8000. This is a parameter that you can edit on the Frontend's configuration panel.
