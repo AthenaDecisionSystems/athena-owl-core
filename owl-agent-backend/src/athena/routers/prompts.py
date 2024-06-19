@@ -17,7 +17,7 @@ router = APIRouter( prefix= get_config().api_route +"/a")
 
 
 @router.get( "/prompts/")
-def get_all_prompt_entities(locale: str) -> dict[str,Any]:
+def get_all_prompt_entities() -> dict[str,Any]:
     return get_prompt_manager().get_prompts()
 
 @router.get( "/prompts/{locale}")

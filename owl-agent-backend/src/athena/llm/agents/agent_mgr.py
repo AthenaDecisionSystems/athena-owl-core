@@ -7,7 +7,7 @@ import uuid, yaml
 from functools import lru_cache
 from athena.app_settings import get_config
 from importlib import import_module
-from  athena.routers.dto_models import ConversationControl, ResponseControl, ModelParameters
+from athena.routers.dto_models import ConversationControl, ResponseControl, ModelParameters
 from athena.llm.prompts.prompt_mgr import get_prompt_manager
 from athena.llm.tools.tool_mgr import get_tool_manager
 

@@ -11,32 +11,14 @@ from langchain_core.messages.ai import AIMessage
 from langchain_core.messages.human import HumanMessage
 from athena.llm.conversations.conversation_mgr import get_or_start_conversation
 
-class TestConversation(unittest.TestCase):
+class TestConversationWithTool(unittest.TestCase):
     """
-    Validate conversation with history
+    Validate conversation with tool to get news from search
     """
     
-    def test_base_assistant_with_chat_history(self):
-        
+    def test_conversation_with_base_tool_assistant(self):
         cc = ConversationControl()
-        cc.assistant_id="base_assistant"
-        cc.user_id="unit_test"
-        cc.thread_id="1"
-        cc.chat_history=[]
-        cc.query="Hi, I'm Bob and my last name is TheBuilder."
-        rep = get_or_start_conversation(cc)
-        print(f"Assistant --> {rep.message}") 
-        
-        cc.chat_history=rep.chat_history
-        cc.query="What is my last name?"
-        rep = get_or_start_conversation(cc)
-        print(rep)  
-        assert "last name is TheBuilder" in rep.message
-
-    
-    def test_start_conversation_with_base_assistant(self):
-        cc = ConversationControl()
-        cc.assistant_id="base_assistant"
+        cc.assistant_id="base_tool_assistant"
         cc.user_id="unit_test"
         cc.thread_id="1"
         cc.chat_history=[]
@@ -44,7 +26,6 @@ class TestConversation(unittest.TestCase):
         rep = get_or_start_conversation(cc)
         assert rep
         print(f"Assistant --> {rep.message}")        
- 
         
 if __name__ == '__main__':
     unittest.main()

@@ -23,6 +23,7 @@ class AgentState(TypedDict):
 class BasicToolNode:
     """A node that runs the tools requested in the last AIMessage."""
     def __init__(self, tools: list) -> None:
+        # build a dict tool name: tool
         self.tools_by_name = {tool.name: tool for tool in tools}
 
     def __call__(self, inputs: dict):

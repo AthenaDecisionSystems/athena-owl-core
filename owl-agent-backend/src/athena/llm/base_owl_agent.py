@@ -37,15 +37,6 @@ class BaseOwlAgent(AgentInterface):
         agent = self.get_agent(model, prompt, tools)
         return AgentExecutor(agent=agent, tools=tools, verbose=True)
 
-    def send_query(self,controller:ConversationControl) -> ResponseControl:
-        LOGGER.debug(controller)
-        agent_executor =  self.build_agent_executor(controller)
-        resp = ResponseControl()
-        agentResponse=agent_executor.invoke({"input": controller.query})
-        resp.message=agentResponse["output"]
-        LOGGER.debug(resp)
-        return resp
-
     def send_conversation(self,controller:ConversationControl) -> ResponseControl:
         LOGGER.debug(f"In send_conversation legacy {controller}")
         agent_executor =  self.build_agent_executor(controller,False)
