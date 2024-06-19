@@ -43,7 +43,7 @@ function App() {
   const [input, setInput] = useState("");
   const [lastMessage, setLastMessage] = useState("");
   const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true }]);
-  //  const [chatHistory, setChatHistory] = useState([]);
+  const [chatHistory, setChatHistory] = useState([]);
 
   //  const [promptRef, setPromptRef] = useState("openai_insurance_with_tool");
   const [promptRef, setPromptRef] = useState("default_prompt");
@@ -138,18 +138,15 @@ function App() {
       "type": "chat",
       "reset": resetHistory,
       "modelParameters": modelParameters,
-      "user_id": "user_1",
-      "assistant_id": "assistant_1",
-      "thread_id": "thread_1",
-      "chat_history": [] // chatHistory
-    }
-    if (resetHistory) {
-      console.log("submitMessage: resetHistory=" + resetHistory);
+      "user_id": "",
+      "assistant_id": "",
+      "thread_id": "",
+      "chat_history": (resetHistory ? [] : chatHistory)
     }
 
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'accept': 'application/ json' },
+      headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
       body: JSON.stringify(body)
     };
 
@@ -161,6 +158,7 @@ function App() {
         if (data.status === 200) {
           answer = data.message
           // setChatHistory([...chatHistory, { "role": "human", "content": text }, { "role": "assistant", "content": answer }]);
+          setChatHistory(data.chat_history)
           setResetHistory(false);
         } else {
           // Error 500 or other
