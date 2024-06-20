@@ -7,6 +7,7 @@ nav:
     - Introduction: arch.md
     - OwlAgent design: design.md
   - Build:
+    - IBU Insurance demo: ibu_ins.md
     - Build new solution: build_sol.md
   - Enablement:
     - Getting Started Gen AI: gen_ai_gs.md

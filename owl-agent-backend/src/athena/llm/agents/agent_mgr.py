@@ -33,6 +33,8 @@ class OwlAgentInterface:
     def get_agent(self, model, prompt, tools ):
         return None 
     
+    def invoke(self, query: str) -> str:
+        return ""
     
 class OwlAgentEntity(BaseModel):
     agent_id: str = str(uuid.uuid4())
@@ -82,7 +84,7 @@ class AgentManager():
             del self.AGENTS[key]
         return "Done"
     
-    def get_or_build_agent(self, agent_id : str, locale: str) -> OwlAgentInterface | None:
+    def build_agent(self, agent_id : str, locale: str) -> OwlAgentInterface | None:
         """_summary_
         Factory to create agent from its definition. Agent has a class to support the implementation.
         Prompt is the string, tools is a list of unique tool_id to get the definition within the agent class.

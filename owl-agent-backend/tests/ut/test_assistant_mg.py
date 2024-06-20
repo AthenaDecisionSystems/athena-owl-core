@@ -6,11 +6,12 @@ sys.path.append(os.path.abspath(module_path))
 import yaml,json
 from yaml import BaseLoader
 from athena.llm.assistants.assistant_mgr import get_assistant_manager, OwlAssistantEntity
-from importlib import import_module
+from athena.routers.dto_models import ConversationControl
+from typing import Optional 
 
 class TestAssistantsManager(unittest.TestCase):
     """
-    Validate the assistant manager manages assistant meta data and can create assistant runtime to support a conversation.
+    Validate the assistant manager manages assistant entity and can create assistant runtime to support a conversation.
     """
     
     def test_owl_assistant(self):
@@ -40,14 +41,15 @@ class TestAssistantsManager(unittest.TestCase):
     def test_define_new_assistant(self):
         mgr=get_assistant_manager()
         oa = OwlAssistantEntity()
-        oa.name= "base_assistant"
-        oa.description="a base assistant for demo"
+        oa.name= "test_assistant"
+        oa.description="a test base assistant for demo"
         oa.class_name="athena.llm.assistants.BaseAssistant.BaseAssistant"
         oad_id=mgr.save_assistant(oa)
         assert oad_id
         oa2 = mgr.get_assistant_by_id(oad_id)
         assert oa2
-        assert "base assistant" in oa2.description
+        assert "test base assistant" in oa2.description
+        mgr.delete_assistant(oad_id)
     
     def test_validate_loading_from_yaml_file(self):
         mgr=get_assistant_manager()
@@ -56,7 +58,6 @@ class TestAssistantsManager(unittest.TestCase):
         print(f"--> {all}")
         l = []
         for e in all.values():
-            print(e)
             l.append(OwlAssistantEntity.model_validate(e))
        
         print(str(l))
@@ -65,11 +66,21 @@ class TestAssistantsManager(unittest.TestCase):
         # Should get the default assistant definition
         mgr=get_assistant_manager()
         assert mgr
-        p=mgr.get_assistant_by_name("base_assistant")
+        p=mgr.get_assistant_by_name("Base assistant")
         assert p
         assert "base assistant" in p.description
         
-
+    def test_calling_base_agent(self):
+        mgr = get_assistant_manager()
+        oae: Optional[OwlAssistantEntity] = mgr.get_assistant_by_name("Base assistant")
+        if oae is None:
+            raise ValueError("Base assistant not found")
+        base_assistant = mgr.build_assistant(oae.assistant_id,"en")
+        assert base_assistant
+        # Default assistant has one LLM and one tool to search the web
+        cc = ConversationControl(query="what is langgraph?", thread_id="thread_test")
+        rep = base_assistant.send_conversation(cc)
+        print(rep)
 
 if __name__ == '__main__':
     unittest.main()

@@ -25,6 +25,9 @@ class TestConversation(unittest.TestCase):
         cc.chat_history=[]
         cc.query="Hi, I'm Bob and my last name is TheBuilder."
         rep = get_or_start_conversation(cc)
+        assert rep
+        assert rep.message
+        
         print(f"Assistant --> {rep.message}") 
         
         cc.chat_history=rep.chat_history

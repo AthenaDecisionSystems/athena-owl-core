@@ -1,7 +1,7 @@
 #!/bin/bash
 scriptDir=$(dirname $0)
 
-IMAGE_NAME=athena/owl-backend
+IMAGE_NAME=jbcodeforce/athena-owl-backend
 
 if [[ $# -eq 1 ]]
 then

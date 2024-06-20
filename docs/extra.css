@@ -54,12 +54,13 @@ code>* {
 
 
 :root {
-  --md-default-bg-color: #f4f4f4;
+  --md-default-bg-color: #faf9f9;
 }
 
 :root>* {
-  --md-accent-fg-color: #030303;
+  --md-accent-fg-color: #163dec;
 }
+
 
 .md-nav {
   font-size: .75rem;
@@ -75,7 +76,7 @@ li .md-nav__item--active {
 }
 
 .md-nav__item .md-nav__link--active {
-  color: #161616;
+  color: #1d2bf059;
   font-weight: 600;
 }
 
@@ -173,7 +174,7 @@ span.md-ellipsis {
 
 /* center colum white */
 .md-content {
-  background-color: #fff;
+  background-color: #f5e9e9;
 }
 
 /* adjust center column */

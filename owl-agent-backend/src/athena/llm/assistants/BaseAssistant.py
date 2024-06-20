@@ -2,7 +2,7 @@
 Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
 """
-from typing import Annotated, Any
+from typing import Annotated, Any, Optional
 import json
 from typing_extensions import TypedDict
 import logging
@@ -11,6 +11,7 @@ from langgraph.graph.message import add_messages
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.pregel.types import StateSnapshot
 from langchain_core.messages import HumanMessage
+from langchain_core.runnables.config import RunnableConfig
 from athena.llm.assistants.assistant_mgr import OwlAssistant
 from athena.routers.dto_models import ConversationControl, ResponseControl
     
@@ -42,8 +43,8 @@ class BaseAssistant(OwlAssistant):
         return {"messages": [self.llm.invoke(state["messages"])]}
     
     
-    def invoke(self, query: str, thread_id: str) -> dict[str, Any] | Any:
-        self.config = {"configurable": {"thread_id": thread_id}}
+    def invoke(self, query: str, thread_id: Optional[str]) -> dict[str, Any] | Any:
+        self.config: RunnableConfig = {"configurable": {"thread_id": thread_id}}
         m=HumanMessage(content=query)
         resp= self.graph.invoke({"messages":[m]}, self.config)
         return resp
@@ -58,7 +59,7 @@ class BaseAssistant(OwlAssistant):
         resp = ResponseControl()
 
         resp.message=graph_rep["messages"][-1].content
-        resp.chat_history=str([ m.json() for m in graph_rep["messages"]])
+        resp.chat_history=[ m.json() for m in graph_rep["messages"]]
         resp.assistant_id=controller.assistant_id
         resp.thread_id=controller.thread_id
         resp.user_id = controller.user_id

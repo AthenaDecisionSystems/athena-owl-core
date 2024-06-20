@@ -4,13 +4,15 @@ os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 module_path = "./src"
 sys.path.append(os.path.abspath(module_path))
 import yaml,json
+from typing import Optional 
 from yaml import BaseLoader
 from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgentEntity
-from importlib import import_module
 
 class TestAgentsManager(unittest.TestCase):
-    
-    def test_owl_agent_entity(self):
+    """
+    Validate CRUD on agent entity and factory of agent instance
+    """
+    def test_owl_agent_entity_to_json_to_yaml(self):
         oae = OwlAgentEntity()
         assert oae.agent_id
         oae_json = oae.model_dump()
@@ -20,7 +22,7 @@ class TestAgentsManager(unittest.TestCase):
         print(yaml.dump(json.dumps(more_oas)))
         print(yaml.dump(more_oas))
         
-    def test_create_delete_agent_entity(self):
+    def test_create_get_by_id_delete_agent_entity(self):
         oae = OwlAgentEntity()
         oae.name="test_agent"
         oae.description="an openai based agent"
@@ -38,6 +40,7 @@ class TestAgentsManager(unittest.TestCase):
         mgr = get_agent_manager()
         l = mgr.get_agents()
         assert l
+        assert len(l) >= 2
     
     def test_get_assistant_by_name(self):
         # Should get the default assistant definition
@@ -51,7 +54,20 @@ class TestAgentsManager(unittest.TestCase):
         mgr=get_agent_manager()
         p=mgr.get_agent_by_name("anthropic_claude_3")
         assert type(p) == OwlAgentEntity
+        assert p.tools
         print(p)
+        
+    def test_calling_fake_agent(self):
+        mgr = get_agent_manager()
+        oae: Optional[OwlAgentEntity] = mgr.get_agent_by_id("fake_agent")
+        if oae is None:
+            raise ValueError("Fake agent not found")
+        fake_assistant = mgr.build_agent(oae.agent_id,"en")
+        assert fake_assistant
+        rep = fake_assistant.invoke("what is langgraph?")
+        assert "one" == rep
+        rep = fake_assistant.invoke("really?")
+        assert "two" == rep
     
 if __name__ == '__main__':
     unittest.main()

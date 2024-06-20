@@ -19,7 +19,7 @@ Goals:
 * validate health and version paths
 * address a general query to using the default prompt so it can validate reaching the selected LLM
 """
-class TestAssistants(unittest.TestCase):
+class TestAssistantsAPIs(unittest.TestCase):
     
     @classmethod
     def setUpClass(self):
@@ -44,11 +44,21 @@ class TestAssistants(unittest.TestCase):
         print(f"\n--it--> {response.content}")
         assert response
         assert response.status_code == 200
-        
+    
+    def test_fake_assistant(self):
+        ctl = self.build_ConversationControl()
+        ctl.assistant_id="fake_assistant"
+        ctl.thread_id="2"
+        ctl.query="You are an expert in AI, can you answer this question: What is the value proposition of LangChain?"
+        response=self.client.post(get_config().api_route + "/c/generic_chat", json= ctl.model_dump())
+        print(f"\n--it--> {response.content}")
+        assert response
+        assert response.status_code == 200
         
     def test_basic_tool_assistant(self):
         ctl = self.build_ConversationControl()
         ctl.assistant_id="base_tool_assistant"
+        ctl.thread_id="3"
         ctl.query="You are an expert in AI, can you answer this question: What is Athena Decision Systems?"
         response=self.client.post(get_config().api_route + "/c/generic_chat", json= ctl.model_dump())
         print(f"\n--it--> {response.content}")

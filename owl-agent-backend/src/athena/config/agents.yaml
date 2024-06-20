@@ -9,9 +9,34 @@ open_ai:
   top_k: 1
   top_p: 1
 
+open_ai_tool:
+  agent_id: open_ai_tool
+  name: open_ai_gpt35
+  description: openai based agent with prompt coming from langchain hub  and tool
+  class_name: athena.llm.agents.tool_agent_openai.OpenAIToolAgent
+  modelName: gpt-3.5-turbo-0125
+  prompt_ref: hwchase17/openai-functions-agent
+  temperature: 0
+  top_k: 1
+  top_p: 1
+  tools:
+  - tavily
+
+fake_agent:
+  agent_id: fake_agent
+  name: fake_agent
+  description: Fake agent for testing 
+  class_name: athena.llm.agents.fake_agent.FakeAgent
+  modelName: not_needed
+  prompt_ref: default_prompt
+  temperature: 0
+  top_k: 1
+  top_p: 1
+
 anthropic_claude_3:
   agent_id: anthropic_claude_3
   name: anthropic_claude_3
+  description: Claude 3 with tool calling
   class_name: athena.llm.agents.agent_anthropic.AnthropicAgent
   modelName: claude-3-opus-20240229
   prompt_ref: default_prompt

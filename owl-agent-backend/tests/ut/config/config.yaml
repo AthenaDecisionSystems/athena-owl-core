@@ -1,12 +1,12 @@
 version: t0.0.1
 logging_level: DEBUG
 logging_level_int: 10
-owl_glossary_path: ./tests/ut/config/glossary.json
+owl_glossary_path: ./src/athena/config/glossary.json
 owl_prompts_path: ./tests/ut/config/prompts.json
 owl_prompts_key_name: default_prompt
-owl_assistants_path: ./tests/ut/config/assistants.yaml
-owl_agents_path: ./tests/ut/config/agents.yaml
-owl_tools_path: ./tests/ut/config/tools.yaml
+owl_assistants_path: ./src/athena/config/assistants.yaml
+owl_agents_path: ./src/athena/config/agents.yaml
+owl_tools_path: ./src/athena/config/tools.yaml
 owl_agent_llm_client_class: athena.llm.agent_openai.OpenAIClient
 owl_agent_llm_model: gpt-3.5-turbo-0125
 owl_agent_llm_history_length: 5

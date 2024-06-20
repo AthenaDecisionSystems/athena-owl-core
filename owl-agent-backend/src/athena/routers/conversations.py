@@ -18,6 +18,7 @@ Routes for the conversations. There is one instance created per request
 """
 LOGGER = logging.getLogger(__name__)
 
+# DEPRECATED
 def init():
     global owl_agent
     build_get_glossary(get_config().owl_glossary_path)

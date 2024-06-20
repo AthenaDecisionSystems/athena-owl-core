@@ -18,14 +18,9 @@ class OwlAssistant():
     def stream(self, query: str, thread_id: str) -> str:
         pass
     
-    def invoke(self, query: str, thread_id: str) -> str:
-        pass
-    
     def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
         pass 
     
-    def get_state(self):
-        pass
     
 class OwlAssistantEntity(BaseModel):
     """
@@ -85,7 +80,16 @@ class AssistantManager():
         return path
 
         
-    def get_or_build_assistant(self, assistant_id : str, locale: str) -> OwlAssistant:
+    def build_assistant(self, assistant_id : str, locale: str) -> OwlAssistant:
+        """
+        A factory method to create an assistant executor using the AssistantEntity information
+        Args:
+            assistant_id (str): _description_
+            locale (str): _description_
+
+        Returns:
+            OwlAssistant: _description_
+        """
         oa = self.get_assistant_by_id(assistant_id)
         LOGGER.debug(f"--> in get_or_build_assistant {oa}")
         if oa is not None:
@@ -94,7 +98,7 @@ class AssistantManager():
             klass = getattr(mod, class_name)
             LOGGER.debug(f"--> {class_name} created")
             if oa.agent_id and oa.agent_id != "":
-                agent=get_agent_manager().get_or_build_agent(oa.agent_id, locale)
+                agent=get_agent_manager().build_agent(oa.agent_id, locale)
                 return klass(agent)
             else:
                 return klass()
