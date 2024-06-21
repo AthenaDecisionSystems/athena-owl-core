@@ -46,7 +46,7 @@ class BasicToolNode:
         return {"messages": outputs}
     
     
-class BaseToolAssistant(OwlAssistant):
+class BaseToolGraphAssistant(OwlAssistant):
     """
     An assistant using an agent with tools and tool node to execute the tool call
     """
@@ -78,7 +78,7 @@ class BaseToolAssistant(OwlAssistant):
     def invoke(self, query: str, thread_id: str) -> dict[str, Any] | Any:
         self.config = {"configurable": {"thread_id": thread_id}}
         m=HumanMessage(content=query)
-        resp= self.graph.invoke({"messages":[m]}, self.config)
+        resp= self.graph.invoke({"messages": [m]}, self.config)
         return resp
     
     def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:

@@ -4,6 +4,7 @@ Copyright 2024 Athena Decision Systems
 """
 from pydantic import BaseModel
 import uuid, yaml
+from typing import Optional
 from functools import lru_cache
 from athena.app_settings import get_config
 from importlib import import_module
@@ -27,20 +28,24 @@ class OwlAgentInterface:
         pass
 
     
-    def get_model(self, stream, parameters: ModelParameters, callbacks):
-        return None  
+    def get_tools(self):
+        return self.tools
     
-    def get_agent(self, model, prompt, tools ):
-        return None 
+    def get_model(self):
+        return self.model
+    
+    def get_prompt(self):
+        return self.prompt
     
     def invoke(self, query: str) -> str:
-        return ""
+        return self.get_runnable().invoke(query)
     
 class OwlAgentEntity(BaseModel):
     agent_id: str = str(uuid.uuid4())
     name: str = ""
-    description: str = ""
+    description: Optional[str] = None
     modelName: str = ""
+    modelClassName: Optional[str] = None
     class_name: str = "athena.llm.agents.agent_openai.OpenAIClient"
     prompt_ref:  str = "default_prompt"
     temperature: int = 0  # between 0 to 100 and will be converted depending of te LLM
@@ -103,7 +108,8 @@ class AgentManager():
             tools = []
             for tid in agent_entity.tools:
                 tools.append(get_tool_manager().get_tool_by_id(tid))
-            return klass(agent_entity.modelName, sys_prompt, agent_entity.temperature, agent_entity.top_p, tools)
+            return klass(agent_entity, sys_prompt, tools)
+            #return klass(agent_entity.modelName, sys_prompt, agent_entity.temperature, tools)
         return None
             
 _instance = None

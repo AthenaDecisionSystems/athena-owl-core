@@ -1,34 +1,42 @@
 base_tool_assistant:
   assistant_id: base_tool_assistant
-  class_name: athena.llm.assistants.BaseToolAssistant.BaseToolAssistant
+  class_name: athena.llm.assistants.BaseToolGraphAssistant.BaseToolGraphAssistant
   description: A default assistant that uses LLM and search tool to do web search
   name: Default tool assistant
   agent_id: open_ai_tool
 
 fake_assistant:
   assistant_id: fake_assistant
-  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
+  class_name: athena.llm.assistants.BaseGraphAssistant.BaseGraphAssistant
   description: A default assistant that uses fake LLM
   name: Fake assistant
   agent_id: fake_agent
 
 claude3_tool_assistant:
   assistant_id: claude3_tool_assistant
-  class_name: athena.llm.assistants.BaseToolAssistant.BaseToolAssistant
+  class_name: athena.llm.assistants.BaseToolGraphAssistant.BaseToolGraphAssistant
   description: An assistant that uses Claude 3 LLM and search tool to do web search
   name: Claude 3 with tool assistant
   agent_id: anthropic_claude_3
 
-base_assistant:
-  assistant_id: base_assistant
-  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
-  description: A base assistant to do simple LLM calls
+base_graph_assistant:
+  assistant_id: base_graph_assistant
+  class_name: athena.llm.assistants.BaseGraphAssistant.BaseGraphAssistant
+  description: A base assistant to do simple LLM calls using LangGraph
   name: Base assistant
   agent_id: open_ai_gpt35
 
 
 watson_assistant:
   assistant_id: b169d089
-  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
+  class_name: athena.llm.assistants.BaseGraphAssistant.BaseGraphAssistant
   description: A default assistant to do simple LLM calls using WatsonX API
   name: watson_assistant
+
+
+mistral_tool_assistant:
+  assistant_id: mistral_tool_assistant
+  class_name: athena.llm.assistants.IBU_Assistant_LG.BaseToolGraphAssistant
+  description: A default assistant that uses Mistral on Ollama and search tool to do web search
+  name: Mistral Ollama tool assistant
+  agent_id: ollama_mistral

@@ -7,10 +7,7 @@
         "fr": "Actions",
         "en": "Actions"
     },
-    "NoClaims": {
-        "fr": "Pas de sinistre pour ce client",
-        "en": "No claims for this client"
-    },
+
     "ClaimNotFound": {
         "fr": "Sinistre $claim_id non trouvé pour le client $client_id",
         "en": "Claim $claim_id not found for client $client_id"

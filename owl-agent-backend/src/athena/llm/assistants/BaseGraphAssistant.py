@@ -26,7 +26,7 @@ class State(TypedDict):
     # appends messages to the list of messages
     messages: Annotated[list, add_messages]
 
-class BaseAssistant(OwlAssistant):
+class BaseGraphAssistant(OwlAssistant):
     
     def __init__(self, agent):
         self.memory = SqliteSaver.from_conn_string(":memory:")

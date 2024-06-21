@@ -1,6 +1,8 @@
 import unittest, sys, os
 # Order of the following code is important to make the tests working
 os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
+from dotenv import load_dotenv
+load_dotenv()
 module_path = "./src"
 sys.path.append(os.path.abspath(module_path))
 import yaml,json
@@ -43,7 +45,7 @@ class TestAssistantsManager(unittest.TestCase):
         oa = OwlAssistantEntity()
         oa.name= "test_assistant"
         oa.description="a test base assistant for demo"
-        oa.class_name="athena.llm.assistants.BaseAssistant.BaseAssistant"
+        oa.class_name="athena.llm.assistants.BaseGraphAssistant.BaseGraphAssistant"
         oad_id=mgr.save_assistant(oa)
         assert oad_id
         oa2 = mgr.get_assistant_by_id(oad_id)
@@ -75,6 +77,18 @@ class TestAssistantsManager(unittest.TestCase):
         oae: Optional[OwlAssistantEntity] = mgr.get_assistant_by_name("Base assistant")
         if oae is None:
             raise ValueError("Base assistant not found")
+        base_assistant = mgr.build_assistant(oae.assistant_id,"en")
+        assert base_assistant
+        # Default assistant has one LLM and one tool to search the web
+        cc = ConversationControl(query="what is langgraph?", thread_id="thread_test")
+        rep = base_assistant.send_conversation(cc)
+        print(rep)
+        
+    def _calling_mistral_ollama_agent(self):
+        mgr = get_assistant_manager()
+        oae: Optional[OwlAssistantEntity] = mgr.get_assistant_by_id("mistral_tool_assistant")
+        if oae is None:
+            raise ValueError("mistral_tool_assistant not found")
         base_assistant = mgr.build_assistant(oae.assistant_id,"en")
         assert base_assistant
         # Default assistant has one LLM and one tool to search the web

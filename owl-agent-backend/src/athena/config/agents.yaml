@@ -22,6 +22,18 @@ open_ai_tool:
   tools:
   - tavily
 
+ollama_mistral:
+  agent_id: ollama_mistral
+  name: "ollama mistral"
+  description: Mistral model running locally with Ollama
+  class_name: athena.llm.agents.owl_tool_agent.OwlToolAgent
+  modelName: mistral
+  modelClassName: langchain_community.chat_models.ChatOllama
+  prompt_ref: hwchase17/openai-functions-agent
+  temperature: 0
+  top_k: 1
+  top_p: 1
+
 fake_agent:
   agent_id: fake_agent
   name: fake_agent
