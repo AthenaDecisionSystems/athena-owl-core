@@ -24,7 +24,7 @@ LOGGER = logging.getLogger(__name__)
 class State(TypedDict):
     # Messages have the type "list". The `add_messages` function
     # appends messages to the list of messages
-    messages: Annotated[list, add_messages]
+    input: str
 
 class BaseGraphAssistant(OwlAssistant):
     
@@ -40,13 +40,12 @@ class BaseGraphAssistant(OwlAssistant):
         
         
     def call_chatbot(self, state: State):
-        return {"messages": [self.llm.invoke(state["messages"])]}
+        return {"input": [self.llm.invoke(state["input"])]}
     
     
-    def invoke(self, query: str, thread_id: Optional[str]) -> dict[str, Any] | Any:
+    def invoke(self, request, thread_id: Optional[str]) -> dict[str, Any] | Any:
         self.config: RunnableConfig = {"configurable": {"thread_id": thread_id}}
-        m=HumanMessage(content=query)
-        resp= self.graph.invoke({"messages":[m]}, self.config)
+        resp= self.graph.invoke(request, self.config)
         return resp
     
     def get_state(self) -> StateSnapshot:
@@ -55,7 +54,8 @@ class BaseGraphAssistant(OwlAssistant):
     
     def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
         LOGGER.debug(f"\n@@@> query assistant {controller.query}")
-        graph_rep= self.invoke(controller.query, controller.thread_id)
+        request = { "input": controller.query, "chat_history" : controller.chat_history }
+        graph_rep= self.invoke(request, controller.thread_id)
         resp = ResponseControl()
 
         resp.message=graph_rep["messages"][-1].content

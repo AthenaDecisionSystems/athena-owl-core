@@ -12,15 +12,16 @@ from athena.routers.dto_models import ConversationControl, ResponseControl, Mode
 from athena.llm.prompts.prompt_mgr import get_prompt_manager
 from athena.llm.tools.tool_mgr import get_tool_manager
 
-class OwlAgentInterface:
-    def send_query(self,controller: ConversationControl) -> ResponseControl:
+class OwlAgentInterface(object):
+    
+    def send_query(self,controller: ConversationControl) -> ResponseControl | None:
         """
         Send the given query to a backend LLM, as the conversation control may have settings for RAG and decision services
         then the others functions of this class may be called. This method needs to be overridden for each different LLM
         """
         pass
 
-    def send_conversation(self, controller: ConversationControl) -> ResponseControl:
+    def send_conversation(self, controller: ConversationControl) -> ResponseControl | None:
         """
         Send the current chat conversation with history and query to a backend LLM, as the conversation control may have settings for RAG and decision services
         then the others functions of this class may be called. This method needs to be overridden for each different LLM
@@ -54,7 +55,7 @@ class OwlAgentEntity(BaseModel):
     tools: list[str] = []
     
     
-class AgentManager():
+class AgentManager(object):
     
     def __init__(self):
         self.AGENTS: dict = dict()

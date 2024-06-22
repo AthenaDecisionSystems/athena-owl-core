@@ -24,7 +24,7 @@ class TestPromptsManager(unittest.TestCase):
         assert p_mgr
         p=p_mgr.get_prompt("default_prompt")
         assert p
-        assert "questions based" in p
+        assert "question based" in p
 
     def test_create_new_prompt(self):
         prompts = get_prompt_manager()

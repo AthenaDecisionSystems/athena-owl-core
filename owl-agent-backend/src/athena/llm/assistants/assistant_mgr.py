@@ -13,7 +13,7 @@ from typing import Any
 
 LOGGER = logging.getLogger(__name__)
 
-class OwlAssistant():
+class OwlAssistant(object):
     
     def stream(self, query: str, thread_id: str) -> str:
         pass
@@ -32,7 +32,7 @@ class OwlAssistantEntity(BaseModel):
     class_name : str = "athena.llm.assistants.BaseAssistant.BaseAssistant"
     agent_id: str = ""
     
-class AssistantManager():
+class AssistantManager(object):
     """
     A repository to manage OwlAssistant Entity
     """
@@ -72,6 +72,7 @@ class AssistantManager():
         entry = self.ASSISTANTS.get(key, None)
         if entry != None:
             del self.ASSISTANTS[key]
+        return "Done!"
     
     def save_assistants(self, path: str = "assistants.yaml"):
         """Save the entire prompts in external file."""

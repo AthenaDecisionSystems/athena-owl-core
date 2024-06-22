@@ -12,8 +12,8 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "env": { "PYTHONPATH": "${workspaceRoot}/owl-agent-backend/src"},
-            //"cwd": "${workspaceRoot}/owl-agent-backend"
-            "cwd": "${workspaceRoot}/../athena-owl-demos/IBU-insurance-demo/ibu_backend"
+            "cwd": "${workspaceRoot}/owl-agent-backend"
+            //"cwd": "${workspaceRoot}/../athena-owl-demos/IBU-insurance-demo/ibu_backend"
         }
     ]
 }

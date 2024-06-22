@@ -68,13 +68,13 @@ class TestAssistantsManager(unittest.TestCase):
         # Should get the default assistant definition
         mgr=get_assistant_manager()
         assert mgr
-        p=mgr.get_assistant_by_name("Base assistant")
+        p=mgr.get_assistant_by_name("Base openai assistant")
         assert p
-        assert "base assistant" in p.description
+        assert "default assistant" in p.description
         
     def test_calling_base_agent(self):
         mgr = get_assistant_manager()
-        oae: Optional[OwlAssistantEntity] = mgr.get_assistant_by_name("Base assistant")
+        oae: Optional[OwlAssistantEntity] = mgr.get_assistant_by_id("base_openai_tool_assistant")
         if oae is None:
             raise ValueError("Base assistant not found")
         base_assistant = mgr.build_assistant(oae.assistant_id,"en")
@@ -82,9 +82,11 @@ class TestAssistantsManager(unittest.TestCase):
         # Default assistant has one LLM and one tool to search the web
         cc = ConversationControl(query="what is langgraph?", thread_id="thread_test")
         rep = base_assistant.send_conversation(cc)
+        assert rep
         print(rep)
         
     def _calling_mistral_ollama_agent(self):
+        # THIS TEST FAILS because the langchain api does not have a bind_tools method on ollama chat. 
         mgr = get_assistant_manager()
         oae: Optional[OwlAssistantEntity] = mgr.get_assistant_by_id("mistral_tool_assistant")
         if oae is None:

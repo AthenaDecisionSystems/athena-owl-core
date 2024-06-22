@@ -1,20 +1,23 @@
-open_ai:
-  agent_id: open_ai_gpt35
+openai_chain:
+  agent_id: openai_chain
   name: open_ai_gpt35
   description: openai based agent with simple prompt 
-  class_name: athena.llm.agents.agent_openai.OpenAIAgent
+  #class_name: athena.llm.agents.agent_openai.OpenAIAgent
+  class_name: athena.llm.agents.base_chain_agent.OwlAgent
+  modelClassName: langchain_openai.ChatOpenAI
   modelName: gpt-3.5-turbo-0125
   prompt_ref: default_prompt
   temperature: 0
   top_k: 1
   top_p: 1
 
-open_ai_tool:
-  agent_id: open_ai_tool
+openai_tool_chain:
+  agent_id: openai_tool_chain
   name: open_ai_gpt35
   description: openai based agent with prompt coming from langchain hub  and tool
-  class_name: athena.llm.agents.tool_agent_openai.OpenAIToolAgent
+  class_name: athena.llm.agents.base_chain_agent.OwlAgent
   modelName: gpt-3.5-turbo-0125
+  modelClassName: langchain_openai.ChatOpenAI
   prompt_ref: hwchase17/openai-functions-agent
   temperature: 0
   top_k: 1
@@ -22,11 +25,23 @@ open_ai_tool:
   tools:
   - tavily
 
+anthropic_claude_3_base:
+  agent_id: anthropic_claude_3_base
+  name: claude-3-opus
+  description: Anthropic Claude 3 based agent with simple prompt 
+  class_name: athena.llm.agents.base_chain_agent.OwlAgent
+  modelClassName: langchain_anthropic.ChatAnthropic
+  modelName: claude-3-opus-20240229
+  prompt_ref: default_prompt
+  temperature: 0
+  top_k: 1
+  top_p: 1
+
 ollama_mistral:
   agent_id: ollama_mistral
   name: "ollama mistral"
   description: Mistral model running locally with Ollama
-  class_name: athena.llm.agents.owl_tool_agent.OwlToolAgent
+  class_name: athena.llm.agents.base_chain_agent.OwlAgent
   modelName: mistral
   modelClassName: langchain_community.chat_models.ChatOllama
   prompt_ref: hwchase17/openai-functions-agent

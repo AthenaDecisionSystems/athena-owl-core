@@ -28,7 +28,7 @@ class ConversationControl(BaseModel):
     user_id: Optional[str] = ""
     assistant_id: Optional[str] = ""
     thread_id: Optional[str] = ""
-    chat_history:  Optional[List[str]] = []
+    chat_history:   List[AIMessage | HumanMessage] = []
 
 
 class ResponseChoice(BaseModel):
@@ -42,7 +42,7 @@ class ResponseControl(BaseModel):
     question_type: Optional[str] = ''
     possibleResponse: Optional[List[ResponseChoice]] = None
     error: Optional[str] = ''
-    chat_history: Optional[List[str]] = []
+    chat_history: List[AIMessage | HumanMessage] = []
     user_id: Optional[str] = ""
     assistant_id: Optional[str] = ""
     thread_id: Optional[str] = ""
