@@ -10,6 +10,7 @@ class BaseAssistant(OwlAssistant):
     """
     Assistant based on chaining with prompt, llm and potentially retriever.
     Assistants are created via the assistant manager factory method
+    Agent may use tools or not.
     """
     
     def __init__(self, agent):

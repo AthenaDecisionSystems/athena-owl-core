@@ -6,12 +6,10 @@ nav:
   - Architecture: 
     - Introduction: arch.md
     - OwlAgent design: design.md
-  - Build:
-    - IBU Insurance demo: ibu_ins.md
-    - Build new solution: build_sol.md
   - Enablement:
     - Gen AI review: gen_ai_gs.md
     - Rule based systems: brms.md
+    - Build your own solution: https://AthenaDecisionSystems.github.io/athena-owl-demos
 theme: 
   name: material
   logo: assets/owl.png

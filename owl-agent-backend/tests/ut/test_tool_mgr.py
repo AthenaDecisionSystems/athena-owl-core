@@ -30,7 +30,7 @@ class TestToolManager(unittest.TestCase):
     def test_crd_operations(self):
         mgr = get_tool_manager()
         entity = OwlToolEntity()
-        entity.tool_name = "tool test"
+        entity.tool_fct_name = "tool_test"
         tid=mgr.save_tool(entity)
         assert tid
         e2 = mgr.get_tool_by_id(tid)

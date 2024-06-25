@@ -4,7 +4,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain.agents import create_tool_calling_agent, AgentExecutor
-
+import logging
 
 from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
 from langchain.agents.output_parsers.tools import ToolsAgentOutputParser
@@ -16,16 +16,20 @@ from athena.app_settings import get_config, AppSettings
 from typing import Optional, Any
 from importlib import import_module
 
+LOGGER = logging.getLogger(__name__)
 
 class OwlAgent(OwlAgentInterface):
     tools = None
     
     def __init__(self, agentEntity: OwlAgentEntity, prompt: BasePromptTemplate, tool_instances: Optional[list[Any]]):
+        LOGGER.debug("Initialing base chain OwlAgent")
         self.prompt = prompt
         self.model=self._instantiate_model(agentEntity.modelName, agentEntity.modelClassName, agentEntity.temperature)
         if tool_instances:
             self.tools = tool_instances
-            llm_with_tools = self.model.bind_tools(self.tools)
+            #llm_with_tools = self.model.bind_tools(self.tools)
+            """
+      
             agent = (
                                 {
                                     "input": lambda x: x["input"],
@@ -38,7 +42,8 @@ class OwlAgent(OwlAgentInterface):
                                 | llm_with_tools
                                 | ToolsAgentOutputParser()
                             )
-            #create_tool_calling_agent(self.model, self.tools, self.prompt)
+            """
+            agent = create_tool_calling_agent(self.model, self.tools, self.prompt)
             self.llm = AgentExecutor(agent= agent, tools=self.tools, verbose=True)
             
         else:

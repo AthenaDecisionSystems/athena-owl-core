@@ -30,7 +30,7 @@ class ToolManager():
     
     def get_tool_by_name(self, name: str) -> OwlToolEntity | None:
         for e in self.TOOLS:
-            if self.TOOLS[e].tool_name == name:
+            if self.TOOLS[e].tool_fct_name == name:
                 return self.TOOLS[e]
         return None
     

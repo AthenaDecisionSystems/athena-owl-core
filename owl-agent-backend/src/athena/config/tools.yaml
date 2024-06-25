@@ -4,4 +4,3 @@ tavily:
   tool_description: 'A search engine optimized for comprehensive, accurate, and trusted results'
   tool_fct_name: ''
   tool_id: tavily
-  tool_name: "tavily search"

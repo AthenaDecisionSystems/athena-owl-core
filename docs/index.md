@@ -6,31 +6,31 @@ The core OwlAgent framework interacts with key parts of the generative AI and de
 
 * LangChain, LangGraph
 * Multiple large language models that support tool calling
-* Multiple model hosting environments (HuggingFace, IBM watsonx.ai, Modal, AWS Bedrock) or local model hosting (e.g. using Ollama)
-* Multiple BRMS systems for decision services (IBM ODM, DMOE, ADS + potentially others)
+* Multiple model hosting environments (HuggingFace, IBM WatsonX.ai, Modal, AWS Bedrock) or local model hosting (e.g. using Ollama)
+* Multiple Business Rule Management Systems for decision services (IBM ODM, DMOE, ADS + potentially others)
 
 ## What is in this documentation?
-
 
 ### What OwlAssistants are
 
 OwlAssistant includes: 
 
-* a set of agents and tasks, defined in an assistant definition
-* a set of tools usable by LLM agents
-* orchestration with LangGraph as stateful graph, or langchain as stateless chain 
+* a set of agents and tasks, defined in an assistant definition manifest.
+* a set of tool definitions usable by LLM agents.
+* an orchestration with LangGraph for stateful graph, or langchain as stateless chain.
 
-OwlAgent includes:
+[See architecture notes for details](arch.md).
 
-* agent definition
 
 Tools could be:
 
-* integration layer to connect to custom data sources and business services, 
-* rules to control next best action
+* integration layer to connect to custom data sources, business services, or decision services.
+* rules to control next best action.
 * document storage reference and configuration to build corpus and vector store, 
-* vector store
+* vector store with different collections
 
+Owl Platform portal includes assistants, agents and tools hub, that enterprise offers to their employees to select the best assistant in the context of their business processes. The OwAssistant server is a deployable unit, running on hybrid cloud.
 
-Owl Platform portal includes an assistants, agents and tools hub, that enterprise offers to their employees to select the best assistant in the context of their business processes. The OwAssistant server is a deployable unit, running on hybrid cloud.
+## Contact us
 
+We are here to help you seamlessly integrate this innovative framework into your operations. For a customized proof of concept or production deployment, feel free to reach out to the expert team at [Athena Decision Systems](https://athenadecisions.com/contact-us). With their deep industry knowledge and tailored solutions, they will ensure a smooth and successful implementation that drives tangible value for your business.
