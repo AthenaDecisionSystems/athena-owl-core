@@ -54,6 +54,12 @@ class TestPromptsManager(unittest.TestCase):
         assert locales
         assert locales["en"]
         
+    def test_build_prompt_from_prompt_entity(self):
+        print("\n\n --- test_build_prompt_instance_from_prompt_entity")
+        p_mgr=get_prompt_manager()
+        prompt = p_mgr.build_prompt("default_prompt","en")
+        print(type(prompt))
+        print(prompt)
 
 if __name__ == '__main__':
     unittest.main()

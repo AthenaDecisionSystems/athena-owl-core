@@ -1,8 +1,8 @@
 {
     "default_prompt": {
         "en": "Answer the user's question based on the conversation history: {chat_history} \n\n question: {input}",
-        "fr": "Repond aux questions de l'utilisateur en prenant en compte le contexte: \n\n{context} et le contenu de la conversation: {chat_history} \n\n la question: {input}",
-        "es": "Responda las preguntas del usuario según el siguiente contexto:\n\n{context} y el historial de conversaciones  {chat_history} \n\n question: {input}"
+        "fr": "Repond aux questions de l'utilisateur en prenant en compte le historique de la conversation: \n\n{chat_history}  \n\n et la question: {input}",
+        "es": "Responda las preguntas del usuario según el historial de conversaciones  {chat_history} \n\n question: {input}"
     }
 
 }

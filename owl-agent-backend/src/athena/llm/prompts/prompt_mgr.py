@@ -5,6 +5,8 @@ Copyright 2024 Athena Decision Systems
 from athena.glossary.glossary_mgr import CURRENT_LOCALE, DEFAULT_LOCALE
 import json
 from athena.app_settings import get_config
+from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain import hub
 from functools import lru_cache
 from pydantic import BaseModel, RootModel
 from typing import List
@@ -50,7 +52,7 @@ class Prompts:
         entry[locale] = prompt
 
 
-    def get_prompt(self, prompt_key: str, locale: str = CURRENT_LOCALE) -> str:
+    def get_prompt(self, prompt_key: str, locale: str = CURRENT_LOCALE) -> BaseModel:
         entry = self.PROMPTS.get(prompt_key, None)
         if entry == None:
             return "None"
@@ -60,6 +62,26 @@ class Prompts:
                 return "None"
             else:
                 return res
+
+    def build_prompt(self, prompt_key: str, locale: str = CURRENT_LOCALE) -> BaseModel:
+        if "/" in prompt_key:
+            return hub.pull(prompt_key)
+        else:
+            entry = self.PROMPTS.get(prompt_key, None)
+            if entry == None:
+                return "None"
+            else:
+                res = entry.get(locale, entry.get(DEFAULT_LOCALE, None))
+                if res == None:
+                    return "None"
+                else:
+                    return ChatPromptTemplate.from_messages([
+                        ("system", res),
+                        MessagesPlaceholder(variable_name="chat_history", optional=True),
+                        ("human", "{input}"),
+                        MessagesPlaceholder(variable_name="agent_scratchpad", optional=True),
+                    ])
+        
     
     def get_prompt_locales(self, prompt_key: str) -> dict[str,str]:
         return self.PROMPTS.get(prompt_key, None)

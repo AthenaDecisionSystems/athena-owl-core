@@ -105,11 +105,12 @@ class AgentManager(object):
             module_path, class_name = agent_entity.class_name.rsplit('.',1)
             mod = import_module(module_path)
             klass = getattr(mod, class_name)
-            sys_prompt = get_prompt_manager().get_prompt(agent_entity.prompt_ref, locale)
+            prompt = get_prompt_manager().build_prompt(agent_entity.prompt_ref, locale)
             tools = []
             for tid in agent_entity.tools:
                 tools.append(get_tool_manager().get_tool_by_id(tid))
-            return klass(agent_entity, sys_prompt, tools)
+            tool_instances=get_config().get_tool_factory().build_tool_instances(tools)
+            return klass(agent_entity, prompt, tool_instances)
             #return klass(agent_entity.modelName, sys_prompt, agent_entity.temperature, tools)
         return None
             

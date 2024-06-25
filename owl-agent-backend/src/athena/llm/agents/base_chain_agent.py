@@ -1,40 +1,30 @@
 
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
+
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate
+
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain.agents import create_tool_calling_agent, AgentExecutor
-from langchain import hub
-from langchain_community.tools.tavily_search import TavilySearchResults
-from langchain_core.language_models.chat_models import BaseChatModel
-from langchain_community.chat_models import ChatOllama
+
+
 from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
 from langchain.agents.output_parsers.tools import ToolsAgentOutputParser
-
+from langchain_core.prompts import BasePromptTemplate
 from athena.llm.agents.agent_mgr import OwlAgentInterface, OwlAgentEntity
-from athena.llm.tools.tool_mgr import OwlToolEntity
 
-
-from typing import Optional
+# TODO assess if there is not a better approach
+from athena.app_settings import get_config, AppSettings
+from typing import Optional, Any
 from importlib import import_module
 
 
 class OwlAgent(OwlAgentInterface):
     tools = None
     
-    def __init__(self, agentEntity: OwlAgentEntity, system_prompt: str, tool_entities: Optional[list[OwlToolEntity]]):
-        if "/" in system_prompt:
-            self.prompt = hub.pull(system_prompt)
-        else:
-            self.prompt = ChatPromptTemplate.from_messages([
-                ("system", system_prompt),
-                MessagesPlaceholder(variable_name="chat_history", optional=True),
-                ("human", "{input}"),
-                MessagesPlaceholder(variable_name="agent_scratchpad", optional=True),
-            ])
+    def __init__(self, agentEntity: OwlAgentEntity, prompt: BasePromptTemplate, tool_instances: Optional[list[Any]]):
+        self.prompt = prompt
         self.model=self._instantiate_model(agentEntity.modelName, agentEntity.modelClassName, agentEntity.temperature)
-        if tool_entities:
-            self.tools = self.build_tool_instances(tool_entities)
+        if tool_instances:
+            self.tools = tool_instances
             llm_with_tools = self.model.bind_tools(self.tools)
             agent = (
                                 {
@@ -66,12 +56,3 @@ class OwlAgent(OwlAgentInterface):
     
 
     
-    def build_tool_instances(self, tool_entities: list[OwlToolEntity]):
-        tool_list=[]
-        for tool_entity in tool_entities:
-            # TO DO rethink about this approach
-            if tool_entity.tool_id == "tavily":
-                tool_list.append(TavilySearchResults(max_results=2))
-            else:
-                raise Exception("Not yet implemented")
-        return tool_list

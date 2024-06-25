@@ -5,7 +5,8 @@ module_path = "./src"
 sys.path.append(os.path.abspath(module_path))
 import yaml,json
 from yaml import BaseLoader
-from athena.llm.tools.tool_mgr import get_tool_manager, OwlToolEntity
+from athena.llm.tools.tool_mgr import get_tool_manager
+from athena.llm.tools.tool_factory import OwlToolEntity
 from importlib import import_module
 
 class TestToolManager(unittest.TestCase):

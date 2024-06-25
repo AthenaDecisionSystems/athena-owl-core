@@ -7,6 +7,7 @@ from functools import lru_cache
 from pydantic_settings import BaseSettings
 from pydantic import ConfigDict
 from pydantic_yaml import parse_yaml_raw_as
+from importlib import import_module
 
 class AppSettings(BaseSettings):
     model_config = ConfigDict(extra='allow')  # authorize adding attributes dynamically
@@ -32,7 +33,15 @@ class AppSettings(BaseSettings):
     owl_agent_llm_client_class: str = ""
     owl_agent_llm_history_length: int = 5
     owl_agent_llm_model: str = ""
+    owl_agent_tool_factory_class: str = "athena.llm.tools.tool_mgr.BaseToolInstanceFactory"
 
+    def get_tool_factory(self):
+        module_path, class_name = self.owl_agent_tool_factory_class.rsplit('.',1)
+        mod = import_module(module_path)
+        klass = getattr(mod, class_name)
+        return klass()
+        
+        
 _config = None
 
 # configuration is loaded only once and subsequent requests will use the cached configuration
@@ -60,3 +69,5 @@ def get_config():
 def set_config(config):
     global _config
     _config = config
+    
+    

@@ -84,3 +84,15 @@ This process is supported by tools for documents ingestion, splitting, embedding
 RAG systems work well because LLMs has the in-context learning capability, which allows models to use previously unseen data to perform accurate predictions without weight training.
 
 As LLM increase the context window size over new release, RAG can add more new data to it. 
+
+### Challenges
+
+Naive RAG has very important limitations which has generated some adoption challenges:
+
+* It is hard to do a reliable, scalable RAG on a large knowledge corpus
+* Limited to single-shot prompt
+* No query understanding, just a sematic search
+* No query decomposition for planning
+* No tool use, to query an external data source to enrich the context
+* No reflection and error correction to improve the quality of the response.
+* No persistence or memory of previous queries

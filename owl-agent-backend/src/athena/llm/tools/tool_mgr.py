@@ -2,14 +2,9 @@ from pydantic import BaseModel
 from functools import lru_cache
 from athena.app_settings import get_config
 import uuid, yaml
+from athena.llm.tools.tool_factory import ToolInstanceFactoryInterface, OwlToolEntity
+from langchain_community.tools.tavily_search import TavilySearchResults
 
-class OwlToolEntity(BaseModel):
-    tool_id: str = str(uuid.uuid4())
-    tool_name: str = ""
-    tool_description: str = ""
-    tool_class_name: str = ""
-    tool_fct_name: str = ""
-    
 class ToolManager():
     
     def __init__(self):
@@ -60,3 +55,16 @@ def get_tool_manager() -> ToolManager:
         _instance = ToolManager()
         _instance.load_tools(path)
     return _instance
+
+
+class BaseToolInstanceFactory(ToolInstanceFactoryInterface):
+    
+    def build_tool_instances(self, tool_entities: list[OwlToolEntity]):
+        tool_list=[]
+        for tool_entity in tool_entities:
+            # TO DO rethink about this approach
+            if tool_entity.tool_id == "tavily":
+                tool_list.append(TavilySearchResults(max_results=2))
+            else:
+                raise Exception("Not yet implemented")
+        return tool_list
