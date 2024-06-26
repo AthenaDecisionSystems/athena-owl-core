@@ -3,7 +3,7 @@
 }
 
 :root>* {
-  --md-primary-fg-color: #252829;
+  --md-primary-fg-color: #b8e3f2;
   --md-primary-fg-color--light: #b5e3fd;
   --md-primary-fg-color--dark: #220390;
   --md-primary-font-color: #220390;
@@ -72,7 +72,7 @@ code>* {
 }
 
 li .md-nav__item--active {
-  background-color: #e0e0e0;
+  background-color: #f7f7f7;
 }
 
 .md-nav__item .md-nav__link--active {
@@ -81,7 +81,7 @@ li .md-nav__item--active {
 }
 
 .md-clipboard {
-  color: #161616;
+  color: #d36161;
 }
 
 .md-tabs__link {
@@ -174,7 +174,7 @@ span.md-ellipsis {
 
 /* center colum white */
 .md-content {
-  background-color: #f5e9e9;
+  background-color: #f4f0f0;
 }
 
 /* adjust center column */

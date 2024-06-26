@@ -3,25 +3,36 @@ Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
 """
 from typing_extensions import TypedDict
-from athena.llm.assistants.assistant_mgr import OwlAssistant
+
 from typing import Annotated, Any, Literal
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
-from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, ToolMessage
+from langchain_core.messages import AnyMessage, HumanMessage, ToolMessage
 from langgraph.pregel.types import StateSnapshot
 from langgraph.checkpoint.sqlite import SqliteSaver
-from  athena.routers.dto_models import ConversationControl, ResponseControl
-import json
+
+from athena.llm.assistants.assistant_mgr import OwlAssistant
+from athena.routers.dto_models import ConversationControl, ResponseControl
+from athena.app_settings import get_config
+import json, logging
 import langchain
 
-langchain.debug=True
+if get_config().logging_level == "DEBUG":
+    langchain.debug=True
 
+LOGGER = logging.getLogger(__name__)
+
+"""
+Assistant using LangGraph with a tool node to call one of the defined tools and a chat node
+"""
 class AgentState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
 
 
 class BasicToolNode:
-    """A node that runs the tools requested in the last AIMessage."""
+    """A node that runs the tools requested in the last AIMessage.
+    return the new state for the graph
+    """
     def __init__(self, tools: list) -> None:
         # build a dict tool name: tool
         self.tools_by_name = {tool.name: tool for tool in tools}
@@ -69,27 +80,19 @@ class BaseToolGraphAssistant(OwlAssistant):
         
     
     def call_llm(self, state: AgentState):
+        """return the new state for the graph"""
         messages = state['messages']
-        print(messages)
+        #msg = state["input"]
+        LOGGER.debug(f"@@@ > call_chatbot in Base Graph Assistant: {messages}")
         message = self.llm.invoke(messages)
         return {'messages': [message]}
     
 
-    def invoke(self, query: str, thread_id: str) -> dict[str, Any] | Any:
+    def invoke(self, request, thread_id: str) -> dict[str, Any] | Any:
         self.config = {"configurable": {"thread_id": thread_id}}
-        m=HumanMessage(content=query)
+        m=HumanMessage(content=request["input"])
         resp= self.graph.invoke({"messages": [m]}, self.config)
-        return resp
-    
-    def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
-        graph_rep= self.invoke(controller.query, controller.thread_id)
-        resp = ResponseControl()
-        resp.message=graph_rep["messages"][-1].content
-        resp.chat_history=[ m.json() for m in graph_rep["messages"]]
-        resp.assistant_id=controller.assistant_id
-        resp.thread_id=controller.thread_id
-        resp.user_id = controller.user_id
-        return resp
+        return  resp["messages"][-1].content
          
     def get_state(self) -> StateSnapshot:
         return self.graph.get_state(self.config)

@@ -17,7 +17,7 @@ base_tool_graph_assistant:
   class_name: athena.llm.assistants.BaseToolGraphAssistant.BaseToolGraphAssistant
   description: A default assistant that uses LLM and search tool to do web search
   name: Default tool assistant
-  agent_id: open_ai_tool
+  agent_id: openai_tool_chain
 
 fake_assistant:
   assistant_id: fake_assistant

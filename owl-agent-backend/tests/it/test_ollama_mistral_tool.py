@@ -16,6 +16,7 @@ class TestMistralToolOllama(unittest.TestCase):
         }'
         rep = requests.post(IBU_BASE_URL + "/c/generic_chat", data=data, headers = {"Content-Type": "application/json"}).content.decode()
         print(f"\n@@@> {rep}")
+        assert rep
         
         
 if __name__ == "__main__":

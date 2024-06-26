@@ -30,7 +30,7 @@ class TestPromptApi(unittest.TestCase):
         print(f"\n--it--> {response.json()}")
         assert response is not None
         assert response.status_code == 200
-        assert "below context" in response.json()
+        assert "conversation" in response.json()
 
     def test_post_new_instruction(self):
         pr= PromptRequest(prompt_key="test_prompt", prompt_locale="en", prompt_content="You are an helpful assistant")
@@ -47,7 +47,7 @@ class TestPromptApi(unittest.TestCase):
         response = self.client.get( get_config().api_route + "/a/prompts/en").content.decode()
         assert response is not None
         print(f"\n--it--> {response}")
-        assert response.find("questions based") > 0
+        assert response.find("question based") > 0
         response =  self.client.get( get_config().api_route + "/a/prompts/fr").content.decode()
         assert response is not None
         print(f"\n--it--> {response}")

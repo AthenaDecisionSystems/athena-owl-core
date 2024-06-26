@@ -90,7 +90,7 @@ When the process starts, it loads the server configuration and keeps the configu
 ![](./diagrams/owl_backend_class.drawio.png)
 
 
-Each router api defines the VERB and resource path and then delegates to another service implementation. Those services are singletons.
+Each router api defines the HTTP verb and resource path and then delegates to another service implementation. Those services are singletons.
 
 ### Conversation orchestration
 
@@ -113,7 +113,6 @@ The conversation REST resource expose synchronous or async API and delegate to a
 The conversation parameter includes the user_id, so the server manages multiple users in parallel, the assistant_id as a conversation is linked to a use case so an assistant. To get the assistant executor the assistant manager creates one instance according to the AssistantEntity definition.
 
 ![](./images/conv_api.PNG)
-
 
 The assistant instance exposes `invoke` or `stream` methods to send query to LLM and stream or not the response.
 

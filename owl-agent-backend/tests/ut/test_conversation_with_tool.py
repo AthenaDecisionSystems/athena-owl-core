@@ -6,16 +6,14 @@ os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 from dotenv import load_dotenv
 load_dotenv()
 from athena.llm.agent_openai import OpenAIClient
-from athena.routers.dto_models import ConversationControl, ModelParameters
-from langchain_core.messages.ai import AIMessage
-from langchain_core.messages.human import HumanMessage
+from athena.routers.dto_models import ConversationControl, ModelParameters, ChatMessage
 from athena.llm.conversations.conversation_mgr import get_or_start_conversation
 
 class TestConversationWithTool(unittest.TestCase):
     """
     Validate conversation with tool to get news from search
     """
-    def test_base_assistant_with_chat_history(self):
+    def test_base_assistant_with_openai_tool_chain(self):
         """
         Validate conversation with history. BaseAssistant uses openai agent with a prompt with chat history
         """
@@ -54,6 +52,19 @@ class TestConversationWithTool(unittest.TestCase):
         assert rep.chat_history
         assert rep.message
         print(f"Assistant --> {rep}")        
+    
+    def _test_conversation_with_tool_graph_assistant(self):
+        cc = ConversationControl()
+        cc.assistant_id="base_tool_graph_assistant"
+        cc.user_id="unit_test"
+        cc.thread_id="1"
+        cc.chat_history=[]
+        cc.query="What is Athena Decision Systems?"
+        rep = get_or_start_conversation(cc)
+        assert rep
+        assert rep.chat_history
+        assert rep.message
+        print(f"Assistant --> {rep}")
         
 if __name__ == '__main__':
     unittest.main()

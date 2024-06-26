@@ -7,7 +7,10 @@ from typing import List, Optional, Union
 from langchain_core.messages.ai import AIMessage
 from langchain_core.messages.human import HumanMessage
     
-
+class ChatMessage(BaseModel):
+    content: str
+    role: str
+    
 class ModelParameters(BaseModel):
     modelName: str = "gpt-3.5-turbo-0125"
     modelClass: str = "agent_openai"
@@ -28,7 +31,7 @@ class ConversationControl(BaseModel):
     user_id: Optional[str] = ""
     assistant_id: Optional[str] = ""
     thread_id: Optional[str] = ""
-    chat_history:   List[AIMessage | HumanMessage] = []
+    chat_history:   List[ChatMessage] = []
 
 
 class ResponseChoice(BaseModel):
@@ -42,7 +45,7 @@ class ResponseControl(BaseModel):
     question_type: Optional[str] = ''
     possibleResponse: Optional[List[ResponseChoice]] = None
     error: Optional[str] = ''
-    chat_history: List[AIMessage | HumanMessage] = []
+    chat_history: List[ChatMessage] = []
     user_id: Optional[str] = ""
     assistant_id: Optional[str] = ""
     thread_id: Optional[str] = ""
