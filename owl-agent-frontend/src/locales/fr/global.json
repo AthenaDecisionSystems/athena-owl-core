@@ -5,7 +5,7 @@
     },
     "app": {
         "lbl.brand": "Réclamations sur les sinistres",
-        "msg.welcome": "## Bonjour,\n ### Bienvenue sur l'assistant conversationnel OwlAgent qui combine l'IA générative et les règles métier (IBM ODM).\n\n Je suis à votre disposition pour tout ce qui concerne l'assistance au traitement des réclamations sur le traitement des sinistres. J'ai accès à une base de données sur vos clients et leurs sinistres.\n Je suis formé pour vous aider sur des questions telles que:\n - Comment dois-je répondre à l'email d'un client ?\n - Un client a trouvé une autre assurance moins chère ailleurs, que dois-je faire ?\n - Un client est mécontent du traitement de son sinistre, que dois-je faire ?",
+        "msg.welcome": "## Bonjour,\n ### Bienvenue sur l'assistant conversationnel OwlAgent qui combine l'IA générative et les règles métier (IBM ODM).",
         "err.handlingYourRequest": "_Une erreur s'est produite lors du traitement de votre requête._",
         "msg.restartNeeded": "La conversation doit être relancée.",
         "alt.configuration": "Configuration",

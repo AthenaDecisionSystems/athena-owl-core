@@ -45,10 +45,11 @@ function App() {
   const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true }]);
   const [chatHistory, setChatHistory] = useState([]);
 
-  //  const [promptRef, setPromptRef] = useState("openai_insurance_with_tool");
-  const [promptRef, setPromptRef] = useState("default_prompt");
+  const [assistantId, setAssistantId] = useState(process.env.REACT_APP_ASSISTANT_ID);
+  const [agentId, setAgentId] = useState(process.env.REACT_APP_AGENT_ID); // eslint-disable-line
+  const [promptRef, setPromptRef] = useState(process.env.REACT_APP_DEFAULT_PROMPT);
   const [modelParameters, setModelParameters] = useState({
-    "modelName": "gpt-3.5-turbo-0125",
+    "modelName": "gpt-3.5-turbo-16k",
     "modelClass": "agent_openai",
     "prompt_ref": promptRef,
     "temperature": 0,
@@ -65,15 +66,21 @@ function App() {
     fetch(serverUrl + "health")
       .then(response => response.json())
       .then(data => {
-        console.log("useEffect: " + JSON.stringify(data));
+        console.log("Health: " + JSON.stringify(data));
         if (data.Status === "Alive") {
           setIsLoading(false);
         }
       })
       .catch(error => {
-        console.log('error', error.message)
+        console.error('error', error.message)
       })
   }, []); // eslint-disable-line
+
+  useEffect(() => {
+    if (assistantRef && assistantRef.current) {
+      assistantRef.current.updatePrompt();
+    }
+  }, [promptRef]);
 
   useEffect(() => {
     // Scroll to the end of messages when messages change
@@ -82,20 +89,10 @@ function App() {
     }
   }, [messages]); // eslint-disable-line
 
-  /*
-    useEffect(() => {
-      console.log("useEffect: chatHistory=" + JSON.stringify(chatHistory));
-    }, [chatHistory]);
-  */
-
   const changeLanguage = () => {
     // This is a called by the Configuration component.
-    console.log("changeLanguage: Language changed to " + i18n.language);
-
-    // Create new assistant (using the new language)
-    console.log("changeLanguage: assistantRef:", assistantRef)
     if (assistantRef && assistantRef.current) {
-      assistantRef.current.localizeAssistant();
+      assistantRef.current.localizeAssistant(i18n.language);
     }
   }
 
@@ -139,7 +136,7 @@ function App() {
       "reset": resetHistory,
       "modelParameters": modelParameters,
       "user_id": "",
-      "assistant_id": "",
+      "assistant_id": assistantId,
       "thread_id": "",
       "chat_history": (resetHistory ? [] : chatHistory)
     }
@@ -173,7 +170,7 @@ function App() {
         }, 500);
       })
       .catch(error => {
-        console.log('error', error)
+        console.error('error', error)
         setTimeout(() => {
           setMessages([...messages, { text, isBot: false }, {
             text: t("app.err.handlingYourRequest"), isBot: true
@@ -198,8 +195,7 @@ function App() {
 
   const handleChangeInput = (e) => {
     if (e.target.value.trim() === "demo") {
-      e.target.value = "David Martin is not happy with the settlement of his claim with id number 1.  " +
-        "He thinks the amount reimbursed is far too low. He is threatening to leave to the competition.";
+      e.target.value = process.env.REACT_APP_DEMO_TEXT;
     }
     setInput(e.target.value)
   };
@@ -211,6 +207,18 @@ function App() {
 
   const changeModelParameters = (value) => {
     setModelParameters(value);
+  }
+
+  const changeAssistantId = (value) => {
+    setAssistantId(value);
+  }
+
+  const changeAgentId = (value) => {
+    setAgentId(value);
+  }
+
+  const changePromptRef = (value) => {
+    setPromptRef(value);
   }
 
   const dismissConfigurationIfDisplayed = (e) => {
@@ -238,16 +246,25 @@ function App() {
       <Suspense fallback={null}>
         <div className="sideBar">
           <div className="configuration"><img src={configIcon} onClick={handleConfiguration} alt={t("app.alt.configuration")} /></div>
-          <div className={displayConfigurationPanel ? "visible" : "hidden"}><Configuration onDismiss={handleConfiguration} onChangeLanguage={changeLanguage} onChangeModelParameters={changeModelParameters} /></div>
+          <div className={displayConfigurationPanel ? "visible" : "hidden"}>
+            <Configuration onDismiss={handleConfiguration}
+              onChangeLanguage={changeLanguage}
+              onChangeModelParameters={changeModelParameters}
+              onChangeAssistantId={changeAssistantId}
+              onChangeAgentId={changeAgentId}
+              onChangePromptRef={changePromptRef} /></div>
 
           <div className="upperSide">
             {/* Change the logo, the className, and the brand text */}
             <div className="upperSideTop-ibu-assu">
               <img src={clientLogo} alt="Logo" className="logo-ibu-assu" />
-              <span className={useODM ? "brand brand-owl" : "brand"}>{t("app.lbl.brand")}</span>
+              <span className={useODM ? "brand brand-owl" : "brand"}>
+                {/* t("app.lbl.brand") */}
+                {process.env.REACT_APP_AGENT_NAME}
+              </span>
             </div>
 
-            <Assistant ref={assistantRef} informUser={informUser} changeUseODMStatus={changeUseODMStatus} changeUseFileSearchStatus={changeUseFileSearchStatus} />
+            <Assistant ref={assistantRef} promptRef={promptRef} informUser={informUser} changeUseODMStatus={changeUseODMStatus} changeUseFileSearchStatus={changeUseFileSearchStatus} />
 
             {error && <div className={useODM ? "app-error color-black" : "app-error"}>{error}</div>}
           </div>

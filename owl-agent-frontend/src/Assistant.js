@@ -9,7 +9,7 @@ import { setError } from './reducer/error.action';
 import Switch from './Switch'
 import { useTranslation } from 'react-i18next';
 
-const Assistant = forwardRef(({ informUser, changeUseODMStatus, changeUseFileSearchStatus }, ref) => {
+const Assistant = forwardRef(({ promptRef, informUser, changeUseODMStatus, changeUseFileSearchStatus }, ref) => {
     const [instructions, setInstructions] = useState("")
     const [defaultInstructions, setDefaultInstructions] = useState("")
 
@@ -24,7 +24,7 @@ const Assistant = forwardRef(({ informUser, changeUseODMStatus, changeUseFileSea
     const language = i18n.language;
 
     useEffect(() => {
-        getDefaultInstructions(language);
+        getPrompt(promptRef, language);
     }, []); // eslint-disable-line
 
     useEffect(() => {
@@ -40,8 +40,8 @@ const Assistant = forwardRef(({ informUser, changeUseODMStatus, changeUseFileSea
         changeUseFileSearchStatus(useFileSearch);
     }, [useFileSearch]); // eslint-disable-line
 
-    const getDefaultInstructions = async (lang) => {
-        fetch(serverUrl + "a/prompts/" + lang)
+    const getPrompt = async (prompt, language) => {
+        fetch(serverUrl + "a/prompts/" + prompt + "/" + language)
             .then(response => response.json())
             .then(data => {
                 let str = JSON.stringify(data);
@@ -53,8 +53,12 @@ const Assistant = forwardRef(({ informUser, changeUseODMStatus, changeUseFileSea
                 str = str.replace(/\\n/g, "\n");
                 // Change \" with "
                 str = str.replace(/\\"/g, "\"");
-                console.log("getDefaultInstructions(" + lang + "): " + str.substring(0, 200) + "...");
-                setDefaultInstructions(str);
+                // Delete leading and trailing spaces
+                str = str.trim();
+                setInstructions(str);
+                if (defaultInstructions === "") {
+                    setDefaultInstructions(str);
+                }
             })
             .catch(error => {
                 console.error('Error:', error)
@@ -63,10 +67,14 @@ const Assistant = forwardRef(({ informUser, changeUseODMStatus, changeUseFileSea
     }
 
     useImperativeHandle(ref, () => ({
-        localizeAssistant: () => {
-            console.log("localizeAssistant, locale=" + i18n.language)
-            getDefaultInstructions(i18n.language)
+        localizeAssistant: (lang) => {
+            getPrompt(promptRef, lang)
             informUser(t("app.msg.welcome"))
+            setDirty(false)
+        },
+        updatePrompt: () => {
+            getPrompt(promptRef, language)
+            informUser("Prompt updated.")
             setDirty(false)
         }
     }));
@@ -75,15 +83,51 @@ const Assistant = forwardRef(({ informUser, changeUseODMStatus, changeUseFileSea
         setDirty(instructions !== defaultInstructions)
     }
 
-    const reinitDefaultValues = async () => {
+    const reinitDefaultValues = () => {
         setInstructions(defaultInstructions);
         setDirty(false);
     }
 
-    const updateAssistant = () => {
-        //to be implemented;
-        setInstructions(defaultInstructions);
-        setDirty(false);
+    const updateAssistant = async () => {
+        const inst = instructions.trim();
+        if (inst === defaultInstructions) {
+            informUser("No change.")
+            setInstructions(defaultInstructions);
+            setDirty(false);
+            return
+        }
+        if (inst === "") {
+            informUser("Instructions can't be empty");
+            setInstructions(defaultInstructions);
+            setDirty(false);
+            return
+        }
+
+        const body = {
+            "prompt_key": promptRef,
+            "prompt_locale": language,
+            "prompt_content": instructions
+        }
+
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
+            body: JSON.stringify(body)
+        };
+
+        fetch(serverUrl + "a/prompts/", requestOptions)
+            .then(response => {
+                if (response.status === 200) {
+                    setDirty(false);
+                    setDefaultInstructions(instructions);
+                } else {
+                    console.error('Error:', response)
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error)
+                dispatch(setError(error))
+            });
     }
 
     const reinitConversation = () => {
@@ -125,7 +169,7 @@ const Assistant = forwardRef(({ informUser, changeUseODMStatus, changeUseFileSea
             </div>
             <hr className="assistant-space-around" />
             <div className="assistant-button-block">
-                <div className="assistant-small-button assistant-button-block" onClick={reinitConversation}>{t("assistant.btn.reinitConversation")}</div>
+                <div className="assistant-small-button " onClick={reinitConversation}>{t("assistant.btn.reinitConversation")}</div>
             </div>
         </div>
     );
