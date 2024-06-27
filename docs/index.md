@@ -1,6 +1,8 @@
 # Owl Agent Framework documentation
 
-OwlAgent is a framework for constructing interactive LLM-based applications (chatbots) that include support for calling external decision services via tool-calling to ensure precise decision-making at key moments by the interactive application.
+OwlAgent is an open source Hybrid AI framework for constructing interactive LLM-based applications (chatbots) that include support for calling external decision services built with business rules via tool-calling to ensure precise decision-making at key moments by the interactive application.  These applications can also access databases to get in-context information and a vector store of documents for doing RAG so that the chatbot can answer questions with relevant documents.   Other tools can also be created for additional API access in the applications.   This combination of technologies is called Hybrid AI.
+
+The OwlAgent was written by [Athena Decision Systems](http://www.athenadecisions.com/) but contributions are welcome from the whole community!   If you have any questions, please reach out by emailing Athena at [contact@athenadecisions.com](mailto:contact@athenadecisions.com).
 
 The core OwlAgent framework interacts with key parts of the generative AI and decision management ecosystem including:
 
@@ -9,8 +11,7 @@ The core OwlAgent framework interacts with key parts of the generative AI and de
 * Multiple model hosting environments (HuggingFace, IBM WatsonX.ai, Modal, AWS Bedrock) or local model hosting (e.g. using Ollama)
 * Multiple Business Rule Management Systems for decision services (IBM ODM, DMOE, ADS + potentially others)
 
-The main demonstration illustrates the values of this framework to help Enterprises getting better AI solution
-
+This video demonstration illustrates the value of this framework to help enterprises leverage Hybrid AI to help make even smarter interactive applications:
 
 [![alt text](https://img.youtube.com/vi/fGEU_obHM5M/0.jpg)](https://www.youtube.com/watch?v=fGEU_obHM5M)
 
@@ -27,15 +28,16 @@ OwlAssistant includes:
 [See architecture notes for details](arch.md).
 
 
-Tools could be:
+Tools can be used to:
 
-* integration layer to connect to custom data sources, business services, or decision services.
-* rules to control next best action.
-* document storage reference and configuration to build corpus and vector store, 
-* vector store with different collections
+* access an integration layer to connect to custom data sources, business services, or decision services.
+* execute rules to decide and run the next best action.
+* read from a document storage reference and configuration to build corpus and vector store, 
+* do semantic search in a vector store with different collections,
+* leverage third party API's to allow applications to take action in the world.
 
-Owl Platform portal includes assistants, agents and tools hub, that enterprise offers to their employees to select the best assistant in the context of their business processes. The OwAssistant server is a deployable unit, running on hybrid cloud.
+The Owl Platform portal includes assistants, agents, and a tools hub that enterprises can use to let employees and other stakeholders select the best assistant for their tasks. The OwAssistant server is a deployable dockerized unit that can run on any hybrid cloud platform.
 
 ## Contact us
 
-We are here to help you seamlessly integrate this innovative framework into your operations. For a customized proof of concept or production deployment, feel free to reach out to the expert team at [Athena Decision Systems](https://athenadecisions.com/contact-us). With their deep industry knowledge and tailored solutions, they will ensure a smooth and successful implementation that drives tangible value for your business.
+Athena Decision Systems is here to help you seamlessly integrate this innovative framework into your operations. For a customized proof of concept or production deployment, feel free to reach out to the expert team at [Athena Decision Systems](https://athenadecisions.com/contact-us). With deep industry knowledge and tailored solutions, Athena can ensure a smooth and successful implementation that drives tangible value for your business.
