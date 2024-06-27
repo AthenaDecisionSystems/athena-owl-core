@@ -1,21 +1,21 @@
 
-
-from langchain_core.output_parsers import StrOutputParser
-
-from langchain_core.messages import AIMessage, HumanMessage
-from langchain.agents import create_tool_calling_agent, AgentExecutor
-import logging
-
-from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
-from langchain.agents.output_parsers.tools import ToolsAgentOutputParser
-from langchain_core.prompts import BasePromptTemplate
+from athena.app_settings import get_config, AppSettings
 from athena.llm.agents.agent_mgr import OwlAgentInterface, OwlAgentEntity
 
-# TODO assess if there is not a better approach
-from athena.app_settings import get_config, AppSettings
+from langchain_core.output_parsers import StrOutputParser
+from langchain.agents import create_tool_calling_agent, AgentExecutor
+#from langchain.agents.format_scratchpad.openai_tools import format_to_openai_tool_messages
+#from langchain.agents.output_parsers.tools import ToolsAgentOutputParser
+from langchain_core.prompts import BasePromptTemplate
+
+import logging
 from typing import Optional, Any
 from importlib import import_module
 
+logging.basicConfig(
+    format='%(asctime)s %(levelname)-8s %(message)s',
+    level=logging.INFO,
+    datefmt='%Y-%m-%d %H:%M:%S')
 LOGGER = logging.getLogger(__name__)
 
 class OwlAgent(OwlAgentInterface):

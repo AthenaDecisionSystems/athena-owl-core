@@ -6,10 +6,9 @@ os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 from dotenv import load_dotenv
 load_dotenv()
 from athena.itg.store.content_mgr import get_content_mgr, FileDescription
-from athena.llm.base_owl_agent  import BaseOwlAgent
-from athena.llm.agent_openai  import OpenAIClient
-from athena.routers.dto_models import ConversationControl, ModelParameters
 
+from athena.routers.dto_models import ConversationControl
+from athena.llm.conversations.conversation_mgr import get_or_start_conversation
 class TestRagConversation(unittest.TestCase):
     
     
@@ -23,15 +22,13 @@ class TestRagConversation(unittest.TestCase):
         service = get_content_mgr()
         rep=service.process_doc(fd,None)
         print(repr)
-        agent = OpenAIClient()
+        
         cc = ConversationControl()
-        cc.callWithDecisionService=False
-        cc.callWithVectorStore=True
-        cc.locale="fr"
-        cc.type="chat"
-        cc.modelParameters = ModelParameters()
-        cc.modelParameters.prompt_ref = "default_prompt"
+        cc.locale="en"
+        cc.assistant_id="base_rag_assistant"
         cc.query="what is athena decision systems?"
-        rep=agent.send_conversation(cc)
+        rep = get_or_start_conversation(cc)
+        assert rep
+        assert rep.message
         print(rep)
         

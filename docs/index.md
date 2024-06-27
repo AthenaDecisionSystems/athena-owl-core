@@ -9,6 +9,11 @@ The core OwlAgent framework interacts with key parts of the generative AI and de
 * Multiple model hosting environments (HuggingFace, IBM WatsonX.ai, Modal, AWS Bedrock) or local model hosting (e.g. using Ollama)
 * Multiple Business Rule Management Systems for decision services (IBM ODM, DMOE, ADS + potentially others)
 
+The main demonstration illustrates the values of this framework to help Enterprises getting better AI solution
+
+
+[![alt text](https://img.youtube.com/vi/fGEU_obHM5M/0.jpg)](https://www.youtube.com/watch?v=fGEU_obHM5M)
+
 ## What is in this documentation?
 
 ### What OwlAssistants are

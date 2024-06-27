@@ -65,6 +65,19 @@ class TestUniqueStuff(unittest.TestCase):
         cc.query="Hi, I'm Bob and my last name is TheBuilder."
         self._validate_history(cc)
 
+    def test_conv_openai_base_assistant(self):
+        print("\n------- test_conv_openai_base_graph_assistant")
+        cc = ConversationControl()
+        cc.assistant_id="base_openai_assistant"
+        cc.user_id="unit_test"
+        cc.thread_id="3"
+        cc.chat_history=[]
+        cc.query="You are an expert in AI, can you answer this question: What is the value proposition of LangChain?"
+        rep = get_or_start_conversation(cc)
+        assert rep
+        assert rep.message
+        
+        print(f"\n\nAssistant --> {rep}") 
 
 if __name__ == '__main__':
     unittest.main()

@@ -37,7 +37,12 @@ plugins:
       lang: en
   - minify:
       minify_html: true
-
+  - mkdocs-video:
+      is_video: True
+      video_muted: True
+      video_controls: True
+      css_style:
+        width: "75%"
 markdown_extensions:
   - abbr
   - attr_list

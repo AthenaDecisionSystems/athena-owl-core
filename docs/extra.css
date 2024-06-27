@@ -9,6 +9,10 @@
   --md-primary-font-color: #220390;
 }
 
+.md-content {
+  --md-typeset-a-color: #09bfdd;
+}
+
 .section ul li {
   margin-bottom: 10px;
 }

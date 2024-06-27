@@ -58,6 +58,20 @@ class TestConversation(unittest.TestCase):
         cc.chat_history=[]
         cc.query="Hi, I'm Bob and my last name is TheBuilder."
         self._validate_history(cc)
+    
+    def test_thread_id_is_set_by_backend(self):
+        print("\n------- test_thread_id_is_set_by_backend")
+        cc = ConversationControl()
+        cc.assistant_id="base_openai_assistant"
+        cc.user_id="unit_test"
+        cc.chat_history=[]
+        cc.query="Hi, I'm Bob and my last name is TheBuilder."
+        rep = get_or_start_conversation(cc)
+        assert rep
+        assert rep.message
+        assert rep.thread_id
+        
+        print(f"\n\nAssistant --> {rep}") 
         
 if __name__ == '__main__':
     unittest.main()

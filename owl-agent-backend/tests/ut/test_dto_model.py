@@ -15,8 +15,11 @@ class TestDtoModel(unittest.TestCase):
         try:
             cc = dto_models.ConversationControl()
             self.assertIsNotNone(cc)
-            self.assertFalse(cc.callWithVectorStore)
             print(cc)
+            assert cc.thread_id == ""
+            assert cc.assistant_id == ""
+            assert cc.chat_history == []
+            assert cc.locale == "en"
         except ValidationError as exc:
             print(repr(exc.errors()[0]['type']))
             self.fail()

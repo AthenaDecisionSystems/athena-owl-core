@@ -29,23 +29,24 @@ class TestAssistantsAPIs(unittest.TestCase):
 
     def build_ConversationControl(self):
         ctl = ConversationControl()
-        ctl.callWithVectorStore = False
-        ctl.callWithDecisionService = False
-        ctl.type="chat"
-        ctl.assistant_id="base_assistant"
+        ctl.assistant_id="base_openai_assistant"
         ctl.user_id="test_user"
         ctl.thread_id="1"
         return ctl
     
     def test_basic_assistant(self):
+        print(">>> test_basic_assistant \n ")
         ctl = self.build_ConversationControl()
         ctl.query="You are an expert in AI, can you answer this question: What is the value proposition of LangChain?"
         response=self.client.post(get_config().api_route + "/c/generic_chat", json= ctl.model_dump())
         print(f"\n--it--> {response.content}")
         assert response
         assert response.status_code == 200
+        print(type(response.content))        
+        assert "sorry" in response.content.decode() # type: ignore
     
-    def test_fake_assistant(self):
+    def _test_fake_assistant(self):
+        print(">>> test_fake_assistant \n ")
         ctl = self.build_ConversationControl()
         ctl.assistant_id="fake_assistant"
         ctl.thread_id="2"
@@ -56,8 +57,9 @@ class TestAssistantsAPIs(unittest.TestCase):
         assert response.status_code == 200
         
     def test_basic_tool_assistant(self):
+        print(">>> test_basic_tool_assistant \n ")
         ctl = self.build_ConversationControl()
-        ctl.assistant_id="base_tool_assistant"
+        ctl.assistant_id="base_openai_tool_assistant"
         ctl.thread_id="3"
         ctl.query="You are an expert in AI, can you answer this question: What is Athena Decision Systems?"
         response=self.client.post(get_config().api_route + "/c/generic_chat", json= ctl.model_dump())

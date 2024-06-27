@@ -8,7 +8,7 @@ Copyright 2024, Athena Decision Systems
 
 It enables access to your custom demo based on the Owl Backend.  The demos are in this [Git repository](https://github.com/AthenaDecisionSystems/athena-owl-demos).
 
-The Frontend is developped in Javascript and leverages the [React library](https://react.dev/).
+The Frontend is developed in Javascript and leverages the [React library](https://react.dev/).
 
 To run it, two options (detailed below):
 1. As a Docker container

@@ -22,12 +22,8 @@ LOGGER = logging.getLogger(__name__)
 def init():
     global owl_agent
     build_get_glossary(get_config().owl_glossary_path)
-    module_path, class_name = get_config().owl_agent_llm_client_class.rsplit('.',1)
-    mod = import_module(module_path)
-    klass = getattr(mod, class_name)
-    owl_agent= klass()
     init_logger()
-    LOGGER.debug(f"\n@@@> OWL Agent used is {klass}")
+
 
 def init_logger():
     LOGGER.setLevel(get_config().logging_level_int)
@@ -54,14 +50,18 @@ def synchronous_chat_with_owl(conversationControl: ConversationControl) -> Respo
     LOGGER.debug(f"\n@@@> Input from chat UI= {conversationControl}")
     resp = ResponseControl()
     try:
-        if conversationControl.assistant_id != "":
-            resp = get_or_start_conversation(conversationControl)
-        else:
-            resp = owl_agent.send_conversation(conversationControl)
+        if not conversationControl.assistant_id or conversationControl.assistant_id == "":
+            conversationControl.assistant_id=get_config().owl_agent_default_assistant
+        resp = get_or_start_conversation(conversationControl)
+        
     except Exception as e:
         LOGGER.debug(f"\n@@@> Exception in chat conversation with error: {str(e)}")
         resp.status = 500
         resp.error = f"ERROR: backend exception {str(e)}"
+        resp.assistant_id = conversationControl.assistant_id
+        resp.user_id = conversationControl.user_id
+        resp.thread_id = conversationControl.thread_id
+        resp.chat_history = conversationControl.chat_history
     LOGGER.debug(f"\n@@@> {resp}")
     return resp
 

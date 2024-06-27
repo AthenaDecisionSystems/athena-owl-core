@@ -21,13 +21,13 @@ class ModelParameters(BaseModel):
     
     
 class ConversationControl(BaseModel):
-    callWithVectorStore: bool = False
-    callWithDecisionService: bool = False
+    #callWithVectorStore: bool = False
+    #callWithDecisionService: bool = False
     locale: Optional[str] = "en"
     query: str = ""
-    type: str = "chat"
+    #type: str = "chat"
     reset: bool = False  # to reset everything back to default config.
-    modelParameters: Optional[ModelParameters] = None
+    #modelParameters: Optional[ModelParameters] = None
     user_id: Optional[str] = ""
     assistant_id: Optional[str] = ""
     thread_id: Optional[str] = ""
