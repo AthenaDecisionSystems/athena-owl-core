@@ -1,6 +1,6 @@
 # [Athena OWL Core](https://athenadecisionsystems.github.io/athena-owl-core/)
 
-OwlAgent is a framework for constructing interactive LLM-based applications (chatbots) that include support for calling external decision services via tool-calling to ensure precise decision making at key moments by the interactive application.  The OwlAgent is an open source framework initially created by [Athena Decision Systems](http://athenadecisions.com/).   Please write to contact@athenadecisions if you have any questions or want to contribute!
+OwlAgent is a framework for constructing interactive LLM-based applications (chatbots) that include support for calling external decision services via tool-calling to ensure precise decision making at key moments by the interactive application.  The OwlAgent is an open source framework initially created by [Athena Decision Systems](http://athenadecisions.com/).   Please write to [contact@athenadecisions](mailto:contact@athenadecisions.com) if you have any questions or want to contribute!
 
 The core OwlAgent framework interacts with key parts of the generative AI and decision management ecosystem including:
 
@@ -37,7 +37,7 @@ The OWL Backend is a runnable server. See [readme file](owl-agent-backend/README
 
 ## The journey to your demonstration
 
-The current repository to store the initial set of demonstrations is in a separate [git repository (athena-owl-demos)](https://github.com/AthenaDecisionSystems/athena-owl-demos). See the instructions to create your own demonstration from the current backend.   Please feel free to store your demonstration back in the repository so others can use it as well!   If you need assistance for that, please contact Athena Decision Systems at contact@athenadecisions.com. 
+The current repository to store the initial set of demonstrations is in a separate [git repository (athena-owl-demos)](https://github.com/AthenaDecisionSystems/athena-owl-demos). See the instructions to create your own demonstration from the current backend.   Please feel free to store your demonstration back in the repository so others can use it as well!   If you need assistance for that, please contact [Athena Decision Systems](http://www.athenadecisions.com/) at [contact@athenadecisions](mailto:contact@athenadecisions.com). 
 
 ---
 
