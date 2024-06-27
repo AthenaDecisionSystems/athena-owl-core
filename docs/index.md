@@ -43,6 +43,8 @@ Tools can be used to:
 
 The Owl Platform portal includes assistants, agents, and a tools hub that enterprises can use to let employees and other stakeholders select the best assistant for their tasks. The OwAssistant server is a deployable dockerized unit that can run on any hybrid cloud platform.
 
+You can review [the blog about moving from Generative AI to Hybrid AI](./gen_ai_gs.md).
+
 ## Contact us
 
 Athena Decision Systems is here to help you seamlessly integrate this innovative framework into your operations. For a customized proof of concept or production deployment, feel free to reach out to the expert team at [Athena Decision Systems](https://athenadecisions.com/contact-us). With deep industry knowledge and tailored solutions, Athena can ensure a smooth and successful implementation that drives tangible value for your business.

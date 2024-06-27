@@ -6,10 +6,10 @@ nav:
   - Architecture: 
     - Introduction: arch.md
     - OwlAgent design: design.md
+  - Demos: https://athenadecisionsystems.github.io/athena-owl-demos/
   - Enablement:
-    - Gen AI review: gen_ai_gs.md
-    - Rule based systems: brms.md
-    - Build your own solution: https://AthenaDecisionSystems.github.io/athena-owl-demos
+    - Gen AI to hybrid AI: gen_ai_gs.md
+    - Build your own solution: https://AthenaDecisionSystems.github.io/athena-owl-demos/build_sol/
 theme: 
   name: material
   logo: assets/owl.png
