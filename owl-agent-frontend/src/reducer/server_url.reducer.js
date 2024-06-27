@@ -3,7 +3,7 @@
 
 import { SET_SERVER_URL } from "./server_url.action";
 
-const localServerUrl = { serverUrl: process.env.REACT_APP_BACKEND_URL };
+const localServerUrl = { serverUrl: window._env_.REACT_APP_BACKEND_URL };
 
 export default function serverUrlReducer(serverUrl = localServerUrl, action) {
     switch (action.type) {

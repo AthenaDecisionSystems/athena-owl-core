@@ -45,8 +45,8 @@ function App() {
   const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true }]);
   const [chatHistory, setChatHistory] = useState([]);
 
-  const [assistantId, setAssistantId] = useState(process.env.REACT_APP_ASSISTANT_ID_WITH_RULES);
-  const [assistantIdWithoutRules, setAssistantIdWithoutRules] = useState(process.env.REACT_APP_ASSISTANT_ID_WITHOUT_RULES);
+  const [assistantId, setAssistantId] = useState(window._env_.REACT_APP_ASSISTANT_ID_WITH_RULES);
+  const [assistantIdWithoutRules, setAssistantIdWithoutRules] = useState(window._env_.REACT_APP_ASSISTANT_ID_WITHOUT_RULES);
   const [threadId, setThreadId] = useState(null);
   const [userId, setUserId] = useState("");
 
@@ -191,7 +191,7 @@ function App() {
 
   const handleChangeInput = (e) => {
     if (e.target.value.trim() === "demo") {
-      e.target.value = process.env.REACT_APP_DEMO_TEXT;
+      e.target.value = window._env_.REACT_APP_DEMO_TEXT;
     }
     setInput(e.target.value)
   };
@@ -246,7 +246,7 @@ function App() {
               <img src={clientLogo} alt="Logo" className="logo-ibu-assu" />
               <span className={useODM ? "brand brand-owl" : "brand"}>
                 {/* t("app.lbl.brand") */}
-                {process.env.REACT_APP_OWL_AGENT_NAME}
+                {window._env_.REACT_APP_OWL_AGENT_NAME}
               </span>
             </div>
 
