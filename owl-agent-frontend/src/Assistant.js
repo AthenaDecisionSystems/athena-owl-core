@@ -9,7 +9,8 @@ import { setError } from './reducer/error.action';
 import Switch from './Switch'
 import { useTranslation } from 'react-i18next';
 
-const Assistant = forwardRef(({ promptRef, informUser, changeUseODMStatus, changeUseFileSearchStatus }, ref) => {
+const Assistant = forwardRef(({ assistantId, informUser, changeUseODMStatus, changeUseFileSearchStatus }, ref) => {
+    const [promptRef, setPromptRef] = useState("")
     const [instructions, setInstructions] = useState("")
     const [defaultInstructions, setDefaultInstructions] = useState("")
 
@@ -24,8 +25,31 @@ const Assistant = forwardRef(({ promptRef, informUser, changeUseODMStatus, chang
     const language = i18n.language;
 
     useEffect(() => {
-        getPrompt(promptRef, language);
-    }, []); // eslint-disable-line
+        const fetchPromptRefAndGetPrompt = async () => {
+            fetch(serverUrl + "a/assistants/" + assistantId)
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Agent id: " + data.agent_id);
+                    fetch(serverUrl + "a/agents/" + data.agent_id)
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log("Prompt ref: " + data.prompt_ref);
+                            getPrompt(data.prompt_ref, language);
+                            setPromptRef(data.prompt_ref);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error)
+                        })
+                })
+                .catch(error => {
+                    console.error('Error:', error)
+                });
+        }
+
+        if (assistantId && assistantId !== "") {
+            fetchPromptRefAndGetPrompt();
+        }
+    }, [assistantId]); // eslint-disable-line
 
     useEffect(() => {
         setInstructions(defaultInstructions);

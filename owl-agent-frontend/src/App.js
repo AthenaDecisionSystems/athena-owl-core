@@ -37,7 +37,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [displayConfigurationPanel, setDisplayConfigurationPanel] = useState(false);
   const [useODM, setUseODM] = useState(false);
-  const [useFileSearch, setUseFileSearch] = useState(true);
+  const [useFileSearch, setUseFileSearch] = useState(true); // eslint-disable-line
   const [resetHistory, setResetHistory] = useState(false);
 
   const [input, setInput] = useState("");
@@ -45,23 +45,24 @@ function App() {
   const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true }]);
   const [chatHistory, setChatHistory] = useState([]);
 
-  const [assistantId, setAssistantId] = useState(process.env.REACT_APP_ASSISTANT_ID);
-  const [agentId, setAgentId] = useState(process.env.REACT_APP_AGENT_ID); // eslint-disable-line
-  const [promptRef, setPromptRef] = useState(process.env.REACT_APP_DEFAULT_PROMPT);
-  const [modelParameters, setModelParameters] = useState({
-    "modelName": "gpt-3.5-turbo-16k",
-    "modelClass": "agent_openai",
-    "prompt_ref": promptRef,
-    "temperature": 0,
-    "top_k": 1,
-    "top_p": 1
-  })
+  const [assistantId, setAssistantId] = useState(process.env.REACT_APP_ASSISTANT_ID_WITH_RULES);
+  const [assistantIdWithoutRules, setAssistantIdWithoutRules] = useState(process.env.REACT_APP_ASSISTANT_ID_WITHOUT_RULES);
+  const [threadId, setThreadId] = useState(null);
+  const [userId, setUserId] = useState("");
 
   // Ref to component Assistant
   // When the language changes, the Assistant component must update its instructions
   const assistantRef = useRef();
 
   useEffect(() => {
+    // Random user id
+    const uniqueId = `user_${Math.random().toString(36).substr(2, 9)}_${Date.now()}`;
+    setUserId(uniqueId);
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+
     // Check Backend
     fetch(serverUrl + "health")
       .then(response => response.json())
@@ -74,13 +75,7 @@ function App() {
       .catch(error => {
         console.error('error', error.message)
       })
-  }, []); // eslint-disable-line
-
-  useEffect(() => {
-    if (assistantRef && assistantRef.current) {
-      assistantRef.current.updatePrompt();
-    }
-  }, [promptRef]);
+  }, [serverUrl]);
 
   useEffect(() => {
     // Scroll to the end of messages when messages change
@@ -88,6 +83,10 @@ function App() {
       msgEnd.current.scrollIntoView();
     }
   }, [messages]); // eslint-disable-line
+
+  useEffect(() => {
+    console.log("App.js: assistantId=", assistantId, " assistantIdWithoutRules=", assistantIdWithoutRules)
+  }, [assistantId, assistantIdWithoutRules]);
 
   const changeLanguage = () => {
     // This is a called by the Configuration component.
@@ -128,16 +127,12 @@ function App() {
     dispatch(setError(null));
 
     const body = {
-      "callWithVectorStore": useFileSearch,
-      "callWithDecisionService": useODM,
       "locale": i18n.language,
       "query": text,
-      "type": "chat",
       "reset": resetHistory,
-      "modelParameters": modelParameters,
-      "user_id": "",
-      "assistant_id": assistantId,
-      "thread_id": "",
+      "user_id": userId,
+      "assistant_id": (useODM ? assistantId : assistantIdWithoutRules),
+      "thread_id": threadId,
       "chat_history": (resetHistory ? [] : chatHistory)
     }
 
@@ -155,6 +150,7 @@ function App() {
         if (data.status === 200) {
           answer = data.message
           // setChatHistory([...chatHistory, { "role": "human", "content": text }, { "role": "assistant", "content": answer }]);
+          setThreadId(data.thread_id)
           setChatHistory(data.chat_history)
           setResetHistory(false);
         } else {
@@ -205,22 +201,6 @@ function App() {
     setDisplayConfigurationPanel(!displayConfigurationPanel);
   };
 
-  const changeModelParameters = (value) => {
-    setModelParameters(value);
-  }
-
-  const changeAssistantId = (value) => {
-    setAssistantId(value);
-  }
-
-  const changeAgentId = (value) => {
-    setAgentId(value);
-  }
-
-  const changePromptRef = (value) => {
-    setPromptRef(value);
-  }
-
   const dismissConfigurationIfDisplayed = (e) => {
     // Dismiss configuration panel if displayed and user clicks outside of it
     if (displayConfigurationPanel && !e.target.closest('.configuration-panel')) {
@@ -232,7 +212,13 @@ function App() {
     return (
       <div className='upperSide brand'>
         <div className="configuration"><img src={configIcon} onClick={handleConfiguration} alt={t("app.alt.configuration")} /></div>
-        <div className={displayConfigurationPanel ? "visible" : "hidden"}><Configuration onDismiss={handleConfiguration} onChangeLanguage={changeLanguage} onChangeModelParameters={changeModelParameters} /></div>
+        <div className={displayConfigurationPanel ? "visible" : "hidden"}>
+          <Configuration onDismiss={handleConfiguration}
+            assistantId={assistantId}
+            assistantIdWithoutRules={assistantIdWithoutRules}
+            onChangeLanguage={changeLanguage}
+            setAssistantId={setAssistantId}
+            setAssistantIdWithoutRules={setAssistantIdWithoutRules} /></div>
         <div>
           {t("app.msg.loading")}
           <div className="loader"><img src={loadingImage} alt={t("app.msg.loading")} /></div>
@@ -248,11 +234,11 @@ function App() {
           <div className="configuration"><img src={configIcon} onClick={handleConfiguration} alt={t("app.alt.configuration")} /></div>
           <div className={displayConfigurationPanel ? "visible" : "hidden"}>
             <Configuration onDismiss={handleConfiguration}
+              assistantId={assistantId}
+              assistantIdWithoutRules={assistantIdWithoutRules}
               onChangeLanguage={changeLanguage}
-              onChangeModelParameters={changeModelParameters}
-              onChangeAssistantId={changeAssistantId}
-              onChangeAgentId={changeAgentId}
-              onChangePromptRef={changePromptRef} /></div>
+              setAssistantId={setAssistantId}
+              setAssistantIdWithoutRules={setAssistantIdWithoutRules} /></div>
 
           <div className="upperSide">
             {/* Change the logo, the className, and the brand text */}
@@ -260,11 +246,15 @@ function App() {
               <img src={clientLogo} alt="Logo" className="logo-ibu-assu" />
               <span className={useODM ? "brand brand-owl" : "brand"}>
                 {/* t("app.lbl.brand") */}
-                {process.env.REACT_APP_AGENT_NAME}
+                {process.env.REACT_APP_OWL_AGENT_NAME}
               </span>
             </div>
 
-            <Assistant ref={assistantRef} promptRef={promptRef} informUser={informUser} changeUseODMStatus={changeUseODMStatus} changeUseFileSearchStatus={changeUseFileSearchStatus} />
+            <Assistant ref={assistantRef}
+              assistantId={(useODM ? assistantId : assistantIdWithoutRules)}
+              informUser={informUser}
+              changeUseODMStatus={changeUseODMStatus}
+              changeUseFileSearchStatus={changeUseFileSearchStatus} />
 
             {error && <div className={useODM ? "app-error color-black" : "app-error"}>{error}</div>}
           </div>

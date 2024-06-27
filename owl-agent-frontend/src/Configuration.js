@@ -2,41 +2,41 @@
 // @author Joel Milgram
 
 import "./Configuration.css";
-import "./Slider.css";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setServerUrl } from "./reducer/server_url.action";
 import { setLanguage } from "./reducer/language.action";
 import { useTranslation } from 'react-i18next';
 
-const Configuration = ({ onDismiss, onChangeLanguage, onChangeModelParameters, onChangeAssistantId, onChangeAgentId, onChangePromptRef }) => {
+const Configuration = ({ onDismiss, assistantId, assistantIdWithoutRules, onChangeLanguage, setAssistantId, setAssistantIdWithoutRules }) => {
     const serverUrl = useSelector((state) => state.serverUrlReducer.serverUrl)
     const defaultServerUrl = serverUrl
 
     // The following state is used to detect a change so the "Set" button is displayed
     const [serverUrlNewValue, setServerUrlNewValue] = useState(defaultServerUrl)
-    const [assistantId, setAssistantId] = useState("ibu_assistant")
-    const [assistantIdNewValue, setAssistantIdNewValue] = useState("ibu_assistant")
-    const [agentId, setAgentId] = useState("ibu_agent")
-    const [agentIdNewValue, setAgentIdNewValue] = useState("ibu_agent")
-    const [promptRef, setPromptRef] = useState(process.env.REACT_APP_DEFAULT_PROMPT)
-    const [promptRefNewValue, setPromptRefNewValue] = useState(promptRef)
-
-    const [modelParameters, setModelParameters] = useState({
-        "modelName": "gpt-3.5-turbo-16k",
-        "modelClass": "agent_openai",
-        "temperature": 0,
-        "top_k": 1,
-        "top_p": 1
-    });
-
-    const [sliderValue, setSliderValue] = useState(modelParameters.temperature);
+    const [assistantList, setAssistantList] = useState([])
 
     const dispatch = useDispatch()
 
     const { t, i18n } = useTranslation();
     const language = i18n.language;
 
+    useEffect(() => {
+        const getAssistantList = async () => {
+            fetch(serverUrl + "a/assistants")
+                .then(response => response.json())
+                .then(data => {
+                    let list = data.map((assistant) => {
+                        return assistant.assistant_id;
+                    });
+                    setAssistantList(list);
+                })
+                .catch(error => {
+                    console.error('Error:', error)
+                });
+        }
+        getAssistantList();
+    }, []); // eslint-disable-line
 
     const handleClickServerUrl = async () => {
         dispatch(setServerUrl(serverUrlNewValue));
@@ -47,48 +47,6 @@ const Configuration = ({ onDismiss, onChangeLanguage, onChangeModelParameters, o
         i18n.changeLanguage(language);
         dispatch(setLanguage(language));
         onChangeLanguage();
-    }
-
-    const changeTemperatureValue = (value) => {
-        let mp = {
-            "modelName": modelParameters.modelName,
-            "modelClass": modelParameters.modelClass,
-            "temperature": value,
-            "top_k": modelParameters.top_k,
-            "top_p": modelParameters.top_p
-        }
-        setModelParameters(mp);
-        onChangeModelParameters(mp);
-    }
-    const setModel = (value) => {
-        let mp = {
-            "modelName": value,
-            "modelClass": modelParameters.modelClass,
-            "temperature": modelParameters.temperature,
-            "top_k": modelParameters.top_k,
-            "top_p": modelParameters.top_p
-        }
-        setModelParameters(mp);
-        onChangeModelParameters(mp);
-    }
-
-    const getBackgroundSize = () => {
-        return { backgroundSize: `${sliderValue}% 100%` };
-    };
-
-    const handleClickSetAssistantId = () => {
-        setAssistantId(assistantIdNewValue);
-        onChangeAssistantId(assistantIdNewValue);
-    }
-
-    const handleClickSetAgentId = () => {
-        setAgentId(agentIdNewValue);
-        onChangeAgentId(agentIdNewValue);
-    }
-
-    const handleClickSetPromptRef = () => {
-        setPromptRef(promptRefNewValue);
-        onChangePromptRef(promptRefNewValue);
     }
 
     return (
@@ -114,62 +72,22 @@ const Configuration = ({ onDismiss, onChangeLanguage, onChangeModelParameters, o
                     <div className="configuration-url-set" onClick={handleClickServerUrl}>Set</div>}
             </div>
 
-            <div className="assistant-label">Assistant Id</div>
-            <div className="configuration-url">
-                <input type="text" name="assistantId"
-                    placeholder={assistantId}
-                    value={assistantIdNewValue}
-                    onChange={(e) => setAssistantIdNewValue(e.target.value)} />
-                {assistantIdNewValue !== assistantId &&
-                    <div className="configuration-url-set" onClick={handleClickSetAssistantId}>Set</div>}
-            </div>
-
-            <div className="assistant-label">Agent Id</div>
-            <div className="configuration-url">
-                <input type="text" name="agentId"
-                    placeholder={agentId}
-                    value={agentIdNewValue}
-                    onChange={(e) => setAgentIdNewValue(e.target.value)} />
-                {agentIdNewValue !== agentId &&
-                    <div className="configuration-url-set" onClick={handleClickSetAgentId}>Set</div>}
-            </div>
-
-            <div className="assistant-label">{t("configuration.lbl.model")}</div>
+            <div className="assistant-label">Assistant Id with Rules</div>
             <div className="assistant-input-zone">
-                <select name="model" value={modelParameters.modelName} onChange={(e) => { setModel(e.target.value) }}>
-                    <option value="gpt-4o">gpt-4o</option>
-                    <option value="gpt-4-turbo">gpt-4-turbo</option>
-                    <option value="gpt-3.5-turbo-16k">gpt-3.5-turbo-16k</option>
-                    <option value="ibm/granite-13b-instruct-v2">Watsonx/granite-20b-multilingual</option>
-                    <option value="ibm/llama-3-8b-instruct">Watsonx/llama-3-8b-instruct</option>
-                    <option value="ibm/mixtral-8x7b-instruct">Watsonx/mixtral-8x7b-instruct</option>                </select>
+                <select name="assistantId" value={assistantId} onChange={(e) => { setAssistantId(e.target.value) }}>
+                    {assistantList.map((assistantId) => {
+                        return <option key={assistantId} value={assistantId}>{assistantId}</option>
+                    })}
+                </select>
             </div>
 
-            <div className="assistant-label">Prompt</div>
-            <div className="configuration-url">
-                <input type="text" name="promptRef"
-                    placeholder={promptRef}
-                    value={promptRefNewValue}
-                    onChange={(e) => setPromptRefNewValue(e.target.value)} />
-                {promptRefNewValue !== promptRef &&
-                    <div className="configuration-url-set" onClick={handleClickSetPromptRef}>Set</div>}
-            </div>
-
-            <div className="assistant-one-line">
-                <div className="assistant-label">{t("configuration.lbl.temperature")}</div>
-                <div>
-                    {sliderValue / 100}
-                    &nbsp;
-                    <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        onChange={(e) => setSliderValue(e.target.value)}
-                        onMouseUp={(e) => changeTemperatureValue(e.target.value)}
-                        style={getBackgroundSize()}
-                        value={sliderValue}
-                    />
-                </div>
+            <div className="assistant-label">Assistant Id without Rules</div>
+            <div className="assistant-input-zone">
+                <select name="assistantIdWithoutRules" value={assistantIdWithoutRules} onChange={(e) => { setAssistantIdWithoutRules(e.target.value) }}>
+                    {assistantList.map((assistantId) => {
+                        return <option key={assistantId} value={assistantId}>{assistantId}</option>
+                    })}
+                </select>
             </div>
         </div>
     );
