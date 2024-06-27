@@ -11,8 +11,9 @@ The core OwlAgent framework interacts with key parts of the generative AI and de
 
 The main demonstration illustrates the values of this framework to help Enterprises getting better AI solution
 
-
 [![alt text](https://img.youtube.com/vi/fGEU_obHM5M/0.jpg)](https://www.youtube.com/watch?v=fGEU_obHM5M)
+
+The [PowerPoint deck](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/docs/assets/athena-shorter%202024-05-14.pptx) presents the solution and the approach.
 
 ## What is in this documentation?
 
