@@ -1,6 +1,16 @@
 # Owl Agent Backend Design
 
-For tuning and enhancing the OWL backend the code is in [athena-owl-core/owl-agent-backend](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend), this chapter explains the code and implementation approach, and then how to continue developing and testing the backend.
+For tuning and enhancing the OWL backend, the code is in [athena-owl-core/owl-agent-backend](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend), this chapter explains the code and implementation approach, and then how to continue developing and testing the backend.
+
+## The core concepts
+
+The core concepts the framework manages are the assistant, agents, tools, prompts in the following relationship:
+
+![](./diagrams/owl_entities.drawio.png){ width=900 }
+
+Assistant supports a specific business use cases, like helping a worker in a specific task of a business process, which may involve the coordination of multiple agents. Assistants may be stateful to keep state of the conversation with snapshot capabilities.
+
+Agent are a grouping of Large Language Model or fine tuned smaller Language Models, with prompt and tools. Retriever can be defined as tool to access a collection within a vector store. So using RAG means using a retriever. 
 
 ## Code organization
 
@@ -10,13 +20,13 @@ The main entry point for the owl-backend is the [athena.main.py](https://github.
 The backend can run in uvicorn or ugnicorn server. It exposes two set of APIs: 
 
 * `/api/v1/c/` pour the conversation 
-* `/api/v1/a/` for the administration like managing the different entities of the frameworks: assistants, agents, prompts, RAG documents
+* `/api/v1/a/` for the administration tasks like managing the different entities of the frameworks: assistants, agents, prompts, tools, RAG documents
 
-The src folder includes the Dockerfile to build the image, the requirements.txt for dependencies and a `start_backend.sh` script to do local development tests. Unit and integration test are done using pytest and unittest modules. Code testing can be debugged in VScode IDE.
+The `src` folder includes the Dockerfile to build the image, the `requirements.txt` is used for Python module dependencies and a `start_backend.sh` script to do local development tests. Unit and integration test are done using `pytest` and unittest modules. Code testing can be debugged in VScode IDE.
 
 ## Important components
 
-The [architecture document presents the components](arch.md/#component-view). The decomposition is done with API, service/repository code and then llm specific code.
+The [architecture document presents the components](arch.md/#component-view). The decomposition is done with API, service/repository code and then llm specific facade code.
 
 ![](./images/code_repo.PNG)
 
@@ -118,7 +128,7 @@ The `llm/agents` folder includes some pre-defined agents:
 | Agent | Description |
 | --- | --- |
 | Fake Agent | To do unit testing without cost |
-| open_ai_gpt35 |  openai based agent with simple prompt |
+| openai_chain |  openai based agent with simple prompt |
 | Open_ai_tool | openai based agent with prompt coming from langchain hub  and tool |
 | Agent anthropic with tools | Claude 3 with tool calling |
 
