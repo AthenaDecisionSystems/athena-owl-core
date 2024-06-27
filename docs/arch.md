@@ -4,7 +4,7 @@
 
 * [ ] Ability to access information from corporate IT systems (typically databases or systems that host key corporate data such as CRM, Maximo, or ERP systems)
 * [ ] Ability to leverage information found in corporate documents that help formulate responses or policy, on top of the formalized decisions made by decision services
-* [ ] Ability to access decision services by providing needed input parameters from a combination of chatbot context and enterprise IS data, and by injecting the decision service output back to the LLM’s conversation context for output text generation. 
+* [x] Ability to access decision services by providing needed input parameters from a combination of chatbot context and enterprise IT data, and by injecting the decision service output back to the LLM’s conversation context for output text generation. 
 * [ ] Ability to host the chatbot in multiple environments, including public cloud, private cloud, or enterprise data center.
 * [ ] Easily creating tool calls for decision services in multiple BRMS.
 
@@ -32,7 +32,7 @@ In this diagram we have the following external actors:
 
 To zoom into the OwlAssistant server, we can highlight the following components, outside of any technology choice:
 
-![](./diagrams/component-view.drawio.png){ width=800 }
+![](./diagrams/component_view.drawio.png){ width=800 }
 
 1. The end-user interacts with a single page application (SPA) within a Web Browser. Admin user uses SPA app with more panels. 
 1. This SPA is served by a **backend for front end** or BFF, that can be deployed in different regions, worldwide or on-premises.
@@ -211,7 +211,7 @@ The implementation approach looks similar that the assistant manager. The agent 
 
 Expose a REST resource for document management with core processing dependent od configuration:
 
-![](./diagrams/doc-mgr.drawio.png)
+![](./diagrams/doc_mgr.drawio.png)
 
 * File descriptor specifies some meta-data about the file uploaded. The file can be uploaded using the REST operation or given a URL to get the document from this URL.
 * Configuration defines:

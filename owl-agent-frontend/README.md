@@ -1,20 +1,20 @@
-Copyright 2024, Athena Decision Systems
+Copyright 2024, [Athena Decision Systems](http://www.athenadecisions.com/)
 
-@author Joel Milgram
+@author [Joel Milgram](mailto:joel@athenadecisions.com)
 
 ---
 
 # This is the OWL Frontend
 
-It enables access to your custom demo based on the Owl Backend.  The demos are in this [Git repository](https://github.com/AthenaDecisionSystems/athena-owl-demos).
+The front-end is an interactive chatbot-style UI for custom demos based on the OwlAgent Backend.  The current demos are in this [Git repository](https://github.com/AthenaDecisionSystems/athena-owl-demos).
 
-The Frontend is developed in Javascript and leverages the [React library](https://react.dev/).
+The front-end is developed in Javascript and leverages the [React library](https://react.dev/).
 
-To run it, two options (detailed below):
+To run it, you have two options (detailed below):
 1. As a Docker container
 2. With [Node.js Javascript runtime environment](https://nodejs.org/)
 
-> Choose option 2. if you plan to modify the Frontend's code.
+> Use option 2 if you plan to modify the front end's code.
 
 ---
 
@@ -46,18 +46,18 @@ npm i
 npm start
 ```
 
-Whenever a subsequent `git pull` changes the dependency list (`package.json`), then the command `npm i`, that installs packages, must be launched again.
+Whenever a subsequent `git pull` changes the dependency list (`package.json`), you need to re-execute the command `npm i`, that installs updated and new packages.
 
 ---
 
-Invoke the Frontend from your browser: [http://localhost:3000](http://localhost:3000).
+Invoke the front-end from your browser: [http://localhost:3000](http://localhost:3000).
 
 
 ---
 
 ## Parameters and customization
 
-The Frontend assumes that the Backend runs on port 8000. Edit the parameter `REACT_APP_BACKEND_URL` or go to the Frontend's configuration panel to change it. This parameter is the full base line URL for the backend's APIs: `http://backend-server:backend-port/api/v1/`.
+The front-end assumes that the back-end runs on port 8000. Edit the parameter `REACT_APP_BACKEND_URL` or go to the front-end's configuration panel to change it. This parameter is the full base line URL for the backend's APIs: `http://backend-server:backend-port/api/v1/`.
 
 When you build your own custom solution, you can customize this Frontend with those parameters:
 
@@ -71,7 +71,7 @@ When you build your own custom solution, you can customize this Frontend with th
 
 ---
 
-> When you run the Frontend as a Docker container, edit the parameters in the `docker-compose.yaml` file or in your `.env` file.
+> When you run the front-end as a Docker container, edit the parameters in the `docker-compose.yaml` file or in your `.env` file.
 
 > When you run it with `npm start`, define the parameters in your environment:
 
