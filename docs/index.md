@@ -1,6 +1,6 @@
 # Owl Agent Framework documentation
 
-OwlAgent is an open source Hybrid AI framework for constructing interactive LLM-based applications (chatbots) that include support for calling external decision services built with business rules via tool-calling to ensure precise decision-making at key moments by the interactive application.  These applications can also access databases to get in-context information and a vector store of documents for doing RAG so that the chatbot can answer questions with relevant documents.   Other tools can also be created for additional API access in the applications.   This combination of technologies is called Hybrid AI.
+OwlAgent is an open source Hybrid AI framework for constructing interactive LLM-based applications (chatbots) that include support for calling external decision services built with business rules via tool-calling to ensure precise decision-making at key moments by the interactive application.  These applications can also access databases to get in-context information and a vector store of documents for doing RAG so that the chatbot can answer questions with relevant data and documents.   Other tools can also be created for additional API access in the applications.   This combination of technologies is called Hybrid AI.
 
 The OwlAgent was written by [Athena Decision Systems](http://www.athenadecisions.com/) but contributions are welcome from the whole community!   If you have any questions, please reach out by emailing Athena at [contact@athenadecisions.com](mailto:contact@athenadecisions.com).
 
