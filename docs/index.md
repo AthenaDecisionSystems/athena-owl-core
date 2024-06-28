@@ -6,7 +6,7 @@ The philosophy of the OwlAgent Framework is to be as declarative as possible, wi
 
 The OwlAgent Framework was initially written by [Athena Decision Systems](http://www.athenadecisions.com/) but contributions are welcome from the whole community!   If you have any questions, please reach out by emailing Athena at [contact@athenadecisions.com](mailto:contact@athenadecisions.com).
 
-The core OwlAgent framework interacts with key parts of the generative AI and decision management ecosystem including:
+The core OwlAgent framework leverages key parts of the generative AI and decision management ecosystem including:
 
 * LangChain, LangGraph
 * Multiple large language models that support tool calling
