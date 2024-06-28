@@ -2,51 +2,53 @@
 
 ## Introduction
 
-Generative AI is a combination of neural network models to create new content (text, image, music, videos..) from a requesting query. Models are pre-trained on vast amounts of unlabeled data, using from 7B up to 500B of parameters. The models are trained on vast amounts (Terabytes) of text data like books, articles, websites etc. his helps the model learn grammar, facts, reasoning abilities and even some level of common sense from the content.
+Generative AI uses special types of neural network models to generate new content (text, image, music, videos..) based on a request that is typically text. Models are pre-trained on vast amounts of unlabeled data, using from 7B to 500B parameters. The models are trained on vast amounts (terabytes) of data like books, articles, websites etc. This helps the model to simulate learning grammar, facts, reasoning abilities and even some level of common sense from the content.
 
-Gen AI applies well to different category of use cases: improve customer experiences, improve employee's productivity, help around creativity, and help optimizing business process.
+Gen AI's natural language understanding and generation capabilities applies well to different use cases: improve customer experience, improve an employee's productivity, provoking creativity by generatinv ideas, and optimizing certain business processes.
 
 ### Key Concepts
 
-Generative AI today is used really via Chatbot interface served by a hosting vendor. Most of the sandbox platforms, like WatsonX.ai, are using Large Language Model (LLM) with any type of query. The architecture looks like below:
+Generative AI today is often used via a chatbot hosted by an AI vendor like OpenAI, Anthropic, IBM, or Mistral. Most of the platforms, including IBM's watsonx.ai, use Large Language Models (LLM) with many query types. The architecture of such a system looks like this:
 
 ![](./diagrams/current_chat_sandbox.drawio.png){ width=900 }
 
-The LLMs are hosted on dedicated hardware with GPUs and used for inference. The LLM usage is primarily used to address natural language processing (NLP) of unstructured query from the human users. The interactions are stateless, and the concept of context window is used to bring contextual data as part of the query.
+The LLMs are hosted on dedicated hardware with GPUs that are needed for high-speed inference.  (Inference is the technical term for generating new content with a model.)  LLMs are primarily used to do natural language processing (NLP) of unstructured queries from human users. The interactions are stateless, and the concept of a context window is used to include contextual data as part of the query.   Contextual data includes previous dialog in a conversation, system prompts, relevant bits of information from other documents (called RAG), or data brought in from databases or external API service calls.  As the LLM is essentially stateless, any information used to generate a response must be included in the context, which is why context window size is very important.   Since most AI companies charge per token consumed and generated, the more context that is included in each LLM query, the more expensive the query.
 
 ![](./images/watsonx.ai.main.PNG){ width=900 }
 
-WatsonX.ai for example helps users to select the Large Language Model to use, define some system prompt and perform queries. As an enhanced platform AI scientists can also fine-tune an existing open-source model, or develop brand new ML models. 
+IBM's watsonx.ai, for example, helps users select which LLM to use, define system prompts, and perform queries. As an enhanced platform, AI scientists can also fine-tune an existing open-source model, or develop brand new ML models. 
 
-The same approach exists for vendors like Anthropic, OpenAI, Perplexity, Mistral, Hugging Face, Anakin AI, AWS Bedrock, ... 
+The same approach exists for vendors like Anthropic, OpenAI, Perplexity, Mistral, Hugging Face, Anakin AI, AWS Bedrock, and so on. 
 
-And each models used for inference are accessible via API.
+Models used for inference are accessible via an API.
 
-Enterprise deployments of such Generative AI, needs more integration. Some tools are already available to help developing Generative AI workflows: WatsonX Orchestrate with a no-code approach, or for developer, lower level frameworks, such as LangChain, LlamaIndex or Haystack which offer Python based libraries. 
+Enterprise deployments of Generative AI need a high degree integration, since enterprise applications need to leverage enterprise-specific instructions, documents, services, and data to perform useful functions for the company. Some tools are already available to help develop Generative AI workflows: For instance watsonx Orchestrate has a no-code approach for leveraging a library of skills. For developers, lower level frameworks, such as LangChain, LlamaIndex or Haystack, offer Python-based libraries with enormous flexibility and a high degree of complexity. 
 
 So a real deployment looks like in the following figure:
 
 ![](./diagrams/current_itg.drawio.png){ width=900 }
 
-Mow the backend for chatbot application needs to be integrated with a lot of existing datasources in the form of database, SOA service, Customer Relationship Management, predictive scoring ML inference, Business Process Management workflows, decision services... Those data sources need to be part of the conversation with the human.
+The backend for a chatbot application needs to be integrated with existing data sources and services including databases, SOA services, Customer Relationship Management platforms, predictive machine learning models and scoring engines, business process management workflows -- and of course business-rule based decision services... The data from these services need to be included in a conversation with a human user if it is to be relevant to the user's current context.   Fine-tuning the model with the latest information in infeasible when enterprise data changes every second, so a dynamic approach to getting the data into the LLM's context window is needed.   In addition, in order to effect changes in the enterprise environment, the user needs to be able to update data or call services.
 
-When there is complex integration, there is development effort. 
+All those custom solution can be deployed in virtual private cloud, on-premises servers or in an hybrid cloud.  Other IT considerations such as security are also paramount.
 
-All those custom solution may be deployed in virtual private cloud, on-premises servers or in an hybrid cloud. 
+When there is complex integration, there is development effort.   The OwlAgent Framework attempts to minimize the development effort by providing simple abstractions and a declarative way of using different components in a specific application.
 
 ### Challenges
 
-* **Accuracy**: First of all the current level of model accuracy should not be acceptable to any enterprise under regulations and with customer centric strategy. Models produce incorrect and contradictory answers. With classical ML, output is well expected. Trained sentiment analysis algorithms on labelled data will perform better than any LLM for that task. Always try to assess when to use ML.
+LLM's are amazing tools for doing natural language processing.   But they come with challenges due to the underlying training and inference technology, due to the fact they are trained only occasionally and are thus always out of date, and due to the fact that natural language generation is not grounded in any model of reality or reasoning but instead uses probabilistic techniques based on correlations of a huge number of strings of tokens (words).
 
-* **Not specific**: A single large model is unlikely to solve every business problem effectively. To differentiate their generative AI applications and achieve optimal performance, companies should rely on their **own data sets** tailored to their unique use case. 
+* **Accuracy**: The accuracy of LLM's is not acceptable to any enterprise that must follow regulations and policies and respect contractual agreements with suppliers and customers.   Because they cannot truly reason or take into account regulations and policies precisely, models often produce incorrect and contradictory answers when asked for decisions or actions to undertake.  With classical ML, probabilistic output is expected. Symbolic approaches like business rules that precisely express policies produce reliable results at the cost of coding the policies mostly manually.
 
-* **Cost** of training and inference, privacy and intellectual property are top concerns. FM can be "fine-tuned" for a specific task, by using a small number of labeled examples, specific to the company's industry or use case. Fine-tuned models can deliver more accurate and relevant outputs. But training, retraining model and even inference are expensive, cloud providers are seeing this opportunity to resale more virtual servers, at a higher cost. 
+* **Specificity**: A single large model is unlikely to solve every business problem effectively because it is trained on generally-available information rather than enterprise-specific information. To differentiate their generative AI applications and achieve optimal performance, companies should rely on their **own data sets** tailored to their unique use case.   Even then, enterprise data changes constantly, so techniques such as RAG and tool calling are needed to leverage the most up-to-date and relevant information for a specific query.
 
-* **Skill**: developing new LLM may not make sense as of today, but fine tuning an existing model may. The developer skill has gap in neural network tuning, understanding their architecture and the hyper parameter tunings. Reinforcement learning to fine-tune existing LLM require a very important amount of trials, and the data quality is still a very important topic.
+* **Cost and Risk** of training and inference, as well as privacy and intellectual property are top concerns. LLM's can be "fine-tuned" for a specific task by using a small number of labeled examples specific to the company's industry or use case. Fine-tuned models can deliver more accurate and relevant outputs. But training and retraining models, hosting them, and doing inference with them are expensive. Cloud providers see this opportunity to sell more virtual servers equipped with GPU's at a higher price. 
 
-* **Reliability and reasoning**: Generative AI models could not reason and plan accurately. Even if progresses are done on that matter at each new version of LLMs, by design the transformer algorithm is probabilistic to generate text. 
+* **Skills**: developing a new LLM may not make sense today, but fine tuning an existing model may in some circumstances. There are relatively few developers with expertise in model tuning, understanding their architecture and limitations, integrating them in applications, and in tuning their hyper parameters. Reinforcement learning to fine-tune existing LLM requires a huge number of trials, and data quality is still a very difficult and poorly-mastered topic.
 
-The next sections go over more detailed explanation of the generative AI architecture.
+* **Reliability and reasoning**: Generative AI models do not reason and plan accurately. New versions of LLMs attempt to improve this, but by design the transformer algorithm is probabilistic and greedy for text generation and does not inherently do any kind of structured symbolic reasoning or manage ontologies of concepts (knowledge graphs). 
+
+The next sections explains the generative AI architecture in more detail.
 
 ### Transformer Architecture
 
