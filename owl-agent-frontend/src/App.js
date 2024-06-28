@@ -100,6 +100,7 @@ function App() {
     console.log("informUser: " + message);
     if (message === "---Restart conversation---") {
       setResetHistory(true);
+      setThreadId(null);
       setMessages([...messages, { text: "Clear", isBot: true }]);
     } else {
       setMessages([...messages, { text: message, isBot: true }]);
