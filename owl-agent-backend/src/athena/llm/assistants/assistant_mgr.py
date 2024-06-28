@@ -15,7 +15,11 @@ from typing import Any, Optional
 LOGGER = logging.getLogger(__name__)
 
 class OwlAssistant(object):
+    assistant_id: str
     
+    def __init__(self, assistantID):
+        self.assistant_id = assistantID
+        
     def stream(self, query: str, thread_id: str) -> str:
         pass
     
@@ -143,7 +147,7 @@ class AssistantManager(object):
             LOGGER.debug(f"--> {class_name} created")
             if oa.agent_id and oa.agent_id != "":
                 agent=get_agent_manager().build_agent(oa.agent_id, locale)
-                return klass(agent)
+                return klass(agent, oa.assistant_id)
             else:
                 return klass()
         return None

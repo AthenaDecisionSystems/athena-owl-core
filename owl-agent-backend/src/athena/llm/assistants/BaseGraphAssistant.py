@@ -30,7 +30,8 @@ class State(TypedDict):
 
 class BaseGraphAssistant(OwlAssistant):
     
-    def __init__(self, agent):
+    def __init__(self, agent, assistantID):
+        super().__init__(assistantID)
         self.memory = SqliteSaver.from_conn_string(":memory:")
         self.llm = agent.get_runnable()
         graph_builder = StateGraph(State)

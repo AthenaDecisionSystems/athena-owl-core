@@ -42,5 +42,6 @@ def delete_assistant_entity(id: str) -> str:
     return get_assistant_manager().delete_assistant(id)
 
 @router.post("/assistants/reset")
-def reset_from_files():
-    return get_assistant_manager().load_assistants(get_config().owl_assistants_path)
+def reset_assistant_definitions():
+    get_assistant_manager().load_assistants(get_config().owl_assistants_path)
+    return "Done"

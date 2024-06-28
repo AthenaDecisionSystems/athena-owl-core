@@ -62,7 +62,8 @@ class BaseToolGraphAssistant(OwlAssistant):
     An assistant using an agent with tools and tool node to execute the tool call
     """
     
-    def __init__(self, agent):
+    def __init__(self, agent, assistantID):
+        super().__init__(assistantID)
         self.memory = SqliteSaver.from_conn_string(":memory:")
         self.llm = agent.get_runnable()
         tool_node=BasicToolNode(agent.get_tools())

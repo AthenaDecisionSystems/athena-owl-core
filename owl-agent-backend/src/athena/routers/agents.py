@@ -42,5 +42,5 @@ def delete_agent_entity(id: str) -> str:
     return get_agent_manager().delete_agent(id)
 
 @router.post("/agents/reset")
-def reset_from_files():
+def reset_agent_definitions():
     return get_agent_manager().load_agents(get_config().owl_agents_path)

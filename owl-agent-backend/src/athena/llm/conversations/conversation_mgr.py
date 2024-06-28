@@ -16,19 +16,28 @@ LOGGER = logging.getLogger(__name__)
 
 _ACTIVE_CONV: dict[str, OwlAssistant] = dict()
 
+def _get_new_assistant(assistant_id, locale):
+    assistant_mgr = get_assistant_manager()
+    assistant = assistant_mgr.build_assistant(assistant_id, locale)
+    return assistant
+    
 def get_or_start_conversation(cc: ConversationControl) -> ResponseControl | None:
     """
-    Start a conversation or continue an existing one. 
+    Start a conversation or continue an existing one based on the thread id. In case the assistant id  
     """
     assistant: OwlAssistant
     if cc.thread_id is None or cc.thread_id == "":
         cc.thread_id = str(uuid.uuid4())
     if not _ACTIVE_CONV or cc.thread_id not in _ACTIVE_CONV or  _ACTIVE_CONV[cc.thread_id] is None:
-        assistant_mgr = get_assistant_manager()
-        assistant = assistant_mgr.build_assistant(cc.assistant_id, cc.locale)
-        _ACTIVE_CONV[cc.thread_id] = assistant
+        assistant = _get_new_assistant(cc.assistant_id, cc.locale)
+        _ACTIVE_CONV[cc.thread_id]= assistant
     else:
         assistant = _ACTIVE_CONV[cc.thread_id]
+        if assistant.assistant_id != cc.assistant_id:
+            # user change setting
+            assistant = _get_new_assistant(cc.assistant_id, cc.locale)
+            _ACTIVE_CONV[cc.thread_id]=assistant
+        
     LOGGER.debug(f"\n@@@> get_or_start_conversation() {assistant}")
     if assistant:
         resp = assistant.send_conversation(cc)
