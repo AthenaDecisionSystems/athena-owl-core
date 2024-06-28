@@ -1,16 +1,16 @@
 # Owl Agent Backend Design
 
-For tuning and enhancing the OWL backend, the code is in [athena-owl-core/owl-agent-backend](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend), this chapter explains the code and implementation approach, and then how to continue developing and testing the backend.
+For modifying and enhancing the OwlAgent Framework backend, the code is in [athena-owl-core/owl-agent-backend](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend). This chapter explains the code and implementation approach, and then how to continue developing and testing the backend.
 
 ## The core concepts
 
-The core concepts the framework manages are the assistant, agents, tools, prompts in the following relationship:
+The core concepts the framework manages are assistants, agents, tools, and prompts.  Here is a how they are related:
 
 ![](./diagrams/owl_entities.drawio.png){ width=900 }
 
-Assistant supports a specific business use cases, like helping a worker in a specific task of a business process, which may involve the coordination of multiple agents. Assistants may be stateful to keep state of the conversation with snapshot capabilities.
+An *Assistant* supports a specific business use case, like helping a worker in a specific task of a business process, which may involve the coordination of multiple agents. Assistants may be stateful to keep state of the conversation with snapshot capabilities.
 
-Agent are a grouping of Large Language Model or fine tuned smaller Language Models, with prompt and tools. Retriever can be defined as tool to access a collection within a vector store. So using RAG means using a retriever. 
+An *Agent* is a grouping of Large Language Model or fine tuned smaller Language Models, each with a prompt and tools, to accomplish a subtask of the assistant. A *retriever* is a tool to access a collection or document within a vector store. So using RAG means using a retriever. 
 
 ## Code organization
 
@@ -51,12 +51,12 @@ Conversation uses a ConversationControl bean class. The definitions of those cla
 
 From the user interface the end user may select another assistant, and in this case a new thread should be started. When assistant uses implementation with Stateful capability, like in LangGraph, then the conversation will be saved as part of the memory management of LangGraph using the thread unique identifier.
 
-An example of simple query to Anthropic Claude using an assistant that has Tavily search tool. The payload to the POST url is
+Here is an example of a simple query to the LLM Anthropic Claude using an assistant that has Tavily search tool. The payload to the POST url is
 
 ```json
 {
  
-  "query": "what is the Athena Decision Systems company? about",
+  "query": "What does the Athena Decision Systems company do?",
   "user_id": "jerome",
   "assistant_id": "base_tool_assistant",
   "thread_id": "1"
@@ -65,10 +65,9 @@ An example of simple query to Anthropic Claude using an assistant that has Tavil
 
 ### Assistant
 
-The Assistant manager is in [llm/assistants](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend/src/athena/llm/assistants) folder. The current implementation is using local repository as file system. The assistant also exposes a factory method to create assistant executor using the AssistantEntity information.
+The Assistant manager is in [llm/assistants](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend/src/athena/llm/assistants) folder. The current implementation uses the local repository as a file system. The assistant also exposes a factory method to create assistant executor using the AssistantEntity information.
 
 ![](./diagrams/assistant_mgr_class.drawio.png)
-
 
 The validation unit tests are in [tests/ut/test_assistant_mg.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/tests/ut/test_assistant_mg.py) and for the integration tests  [tests/it/test_assistants_api.py]
 
@@ -100,7 +99,7 @@ def send_conversation(self, controller: ConversationControl) -> ResponseControl 
 ### Agents
 
 
-The Agent manager is in [llm/agents](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend/src/athena/llm/agents) folder. The current implementation is using local repository as file system. The agent manager also exposes a factory method to create agent executor using the AgentEntity information.
+The Agent manager is in [llm/agents](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend/src/athena/llm/agents) folder. The current implementation uses the local repository as a file system. The agent manager also exposes a factory method to create agent executor using the AgentEntity information.
 
 ![](./diagrams/agent_mgr_class.drawio.png)
 
@@ -110,7 +109,7 @@ Example of AgentEntity
 open_ai_tool:
   agent_id: open_ai_tool
   name: open_ai_gpt35
-  description: openai based agent with prompt coming from langchain hub  and tool
+  description: openai based agent with prompt coming from langchain hub and tool
   class_name: athena.llm.agents.tool_agent_openai.OpenAIToolAgent
   modelName: gpt-3.5-turbo-0125
   prompt_ref: hwchase17/openai-functions-agent
@@ -158,7 +157,7 @@ LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
 
 ```sh
 python -m venv .venv
-# for MAC users
+# for MAC / Linux users
 source ./venv/bin/activate
 # for Windows
 source ./venv/Scripts/activate
@@ -168,9 +167,9 @@ source ./venv/Scripts/activate
 
 ### Development mode
 
-While developing the backend, the approach is to use test-driven development and start by the unit tests. Each unit test python file define a unittest.TestCase class and then test method. For each entity manager instantiate a manager and then do some testing of the api.
+While developing the backend, the approach is to use test-driven development and start by writing unit tests for any new or changed feature. Each unit test python file defines a `unittest.TestCase` class and a test method. For each entity manager, instantiate a manager and then do some testing of the api.
 
-For conversation, use the ConversationControl object.
+For conversations, use the ConversationControl object.
 
 ```python
 def test_base_assistant_with_chat_history(self):    
@@ -196,7 +195,7 @@ The minimum payload to use one of the assistant is the following:
 
 ```json
 {
-  "query": "what is the Athena Decision Systems company about?",
+  "query": "What is Athena Decision Systems all about?",
   "user_id": "jerome",
   "assistant_id": "fake_assistant",
   "thread_id": "1"
