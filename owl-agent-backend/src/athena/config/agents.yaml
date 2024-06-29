@@ -59,6 +59,8 @@ fake_agent:
   temperature: 0
   top_k: 1
   top_p: 1
+  tools:
+  - query_crm
 
 anthropic_claude_3:
   agent_id: anthropic_claude_3

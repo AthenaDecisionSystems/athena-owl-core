@@ -6,7 +6,7 @@ os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 from dotenv import load_dotenv
 load_dotenv()
 
-from athena.routers.dto_models import ConversationControl, ChatMessage
+from athena.routers.dto_models import ConversationControl
 from athena.llm.conversations.conversation_mgr import get_or_start_conversation
 
 class TestConversation(unittest.TestCase):

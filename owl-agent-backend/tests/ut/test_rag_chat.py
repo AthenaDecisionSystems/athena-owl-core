@@ -13,7 +13,7 @@ class TestRagConversation(unittest.TestCase):
     
     
     def test_getting_athena_content_and_query_it(self):
-        print("Test crawling a web site to vector store and do a query to openAI")
+        print("Test crawling a web site to vector store and do a query to path data to openAI")
         fd=FileDescription()
         fd.name="athena-decision-web"
         fd.file_name= fd.name
@@ -25,10 +25,13 @@ class TestRagConversation(unittest.TestCase):
         
         cc = ConversationControl()
         cc.locale="en"
-        cc.assistant_id="base_rag_assistant"
+        cc.assistant_id="base_graph_assistant"
+        cc.thread_id="1"
         cc.query="what is athena decision systems?"
         rep = get_or_start_conversation(cc)
         assert rep
         assert rep.message
         print(rep)
         
+if __name__ == '__main__':
+    unittest.main()

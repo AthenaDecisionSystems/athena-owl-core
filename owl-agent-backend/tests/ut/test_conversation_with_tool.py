@@ -5,8 +5,8 @@ sys.path.append(os.path.abspath(module_path))
 os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 from dotenv import load_dotenv
 load_dotenv()
-from athena.llm.agent_openai import OpenAIClient
-from athena.routers.dto_models import ConversationControl, ModelParameters, ChatMessage
+
+from athena.routers.dto_models import ConversationControl
 from athena.llm.conversations.conversation_mgr import get_or_start_conversation
 
 class TestConversationWithTool(unittest.TestCase):
