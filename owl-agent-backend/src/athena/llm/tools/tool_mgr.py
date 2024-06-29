@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from typing import Any
 from functools import lru_cache
 from athena.app_settings import get_config
-import uuid, yaml
+import yaml
 from athena.llm.tools.tool_factory import ToolInstanceFactoryInterface, OwlToolEntity
 from langchain_community.tools.tavily_search import TavilySearchResults
 
@@ -45,7 +45,7 @@ class ToolManager():
 _instance = None
 
 @lru_cache
-def get_tool_manager() -> ToolManager:
+def get_tool_entity_manager() -> ToolManager:
     """ Factory to get access to unique instance of Tools manager"""
     global _instance
     if _instance is None:
@@ -59,7 +59,7 @@ def get_tool_manager() -> ToolManager:
 
 class BaseToolInstanceFactory(ToolInstanceFactoryInterface):
     
-    def build_tool_instances(self, tool_entities: list[OwlToolEntity]):
+    def build_tool_instances(self, tool_entities: list[OwlToolEntity]) -> list[Any]:
         tool_list=[]
         for tool_entity in tool_entities:
             # TO DO rethink about this approach

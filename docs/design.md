@@ -6,7 +6,7 @@ For modifying and enhancing the OwlAgent Framework backend, the code is in [athe
 
 The core concepts the framework manages are assistants, agents, tools, and prompts.  Here is a how they are related:
 
-![](./diagrams/owl_entities.drawio.png){ width=900 }
+![](./diagrams/design/owl_entities.drawio.png){ width=900 }
 
 An *Assistant* supports a specific business use case, like helping a worker in a specific task of a business process, which may involve the coordination of multiple agents. Assistants may be stateful to keep state of the conversation with snapshot capabilities.
 
@@ -17,10 +17,11 @@ An *Agent* is a grouping of Large Language Model or fine tuned smaller Language 
 The code for the backend is in the `src` folder, while unit tests and integration tests are under `tests/ut/` and `tests/it`.
 
 The main entry point for the owl-backend is the [athena.main.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/main.py) which is a FastAPI server.
+
 The backend can run in uvicorn or ugnicorn server. It exposes two set of APIs: 
 
-* `/api/v1/c/` pour the conversation 
-* `/api/v1/a/` for the administration tasks like managing the different entities of the frameworks: assistants, agents, prompts, tools, RAG documents
+* `/api/v1/c/` for the conversation with chatbot user interface
+* `/api/v1/a/` for the administration tasks, such as managing the different OWL entities of the frameworks: assistants, agents, prompts, tools, RAG documents...
 
 The `src` folder includes the Dockerfile to build the image, the `requirements.txt` is used for Python module dependencies and a `start_backend.sh` script to do local development tests. Unit and integration test are done using `pytest` and unittest modules. Code testing can be debugged in VScode IDE.
 
@@ -28,7 +29,7 @@ The `src` folder includes the Dockerfile to build the image, the `requirements.t
 
 The [architecture document presents the components](arch.md/#component-view). The decomposition is done with API, service/repository code and then llm specific facade code.
 
-![](./images/code_repo.PNG)
+![](./images/design/code_repo.PNG)
 
 | Folder | Functions |
 | --- | --- |
@@ -42,10 +43,10 @@ The [architecture document presents the components](arch.md/#component-view). Th
 
 The conversation API is in [routers/conversations.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/routers/conversations.py). 
 
-![](./diagrams/conversation_mgr.drawio.png)
+![](./diagrams/design/conversation_mgr.drawio.png)
 
-The conversation manager [conversation_mgr.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/llm/conversations/conversation_mgr.py) under `llm/conversations` folder exposes a factory method to create or get in the cache the assistant supporting the conversation. 
-When an assistant is not in the memory, the factory delegates to the assistant manager the creation of the assitant.
+The conversation manager [conversation_mgr.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/llm/conversations/conversation_mgr.py) under `llm/conversations` folder exposes a factory method to create, or get from the cache, the assistant supporting the conversation. 
+When an assistant is not in the memory, the factory delegates to the assistant manager the creation of the assistant.
 
 Conversation uses a ConversationControl bean class. The definitions of those classes are in a DTO model so it can be easily shared with other app.
 
@@ -63,15 +64,21 @@ Here is an example of a simple query to the LLM Anthropic Claude using an assist
 }
 ```
 
+From a conversation interaction the sequence flow looks like in the following sequence diagram:
+
+![](./diagrams/design/conv_seq_flow.drawio.png)
+
+The Assistant and Agent are instance created by different factory taking into account the yaml definition of the matching Entity.
+
 ### Assistant
 
-The Assistant manager is in [llm/assistants](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend/src/athena/llm/assistants) folder. The current implementation uses the local repository as a file system. The assistant also exposes a factory method to create assistant executor using the AssistantEntity information.
+The Assistant manager is in [llm/assistants](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend/src/athena/llm/assistants) folder. The current implementation uses the local file to persist assistant entity definitions. The assistant manager exposes a factory method to create assistant executor using the AssistantEntity information.
 
 ![](./diagrams/assistant_mgr_class.drawio.png)
 
-The validation unit tests are in [tests/ut/test_assistant_mg.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/tests/ut/test_assistant_mg.py) and for the integration tests  [tests/it/test_assistants_api.py]
+See the validation unit test in [tests/ut/test_assistant_mg.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/tests/ut/test_assistant_mg.py) and the integration tests  [tests/it/test_assistants_api.py]
 
-The `llm/assistants` folder includes some pre-defined assistants:
+The `llm/assistants` folder includes some pre-defined assistant implementations:
 
 | Assistant | Description |
 | --- | --- |
@@ -79,7 +86,7 @@ The `llm/assistants` folder includes some pre-defined assistants:
 | Default tool assistant | Default tool assistant |
 | Claude 3 with tool assistant | | 
 
-The configuration of the assistants are in the [config/assistants.yaml](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/config/assistants.yaml) files
+While the configuration of the assistants are in the [config/assistants.yaml](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/config/assistants.yaml) files
 
 ```yaml
 base_tool_assistant:
@@ -90,7 +97,9 @@ base_tool_assistant:
   agent_id: open_ai_tool
 ```
 
-The Assistant implementation can be a Langchain chain or a langGraph graph. Each assistant needs to implement the send_conversation and streaming method.
+We can have multiple different assistant definitions for the same assistant implementation class.
+
+The Assistant implementation can be a Langchain chain or a langGraph graph. Each assistant needs to implement the send_conversation and streaming methods.
 
 ```python
 def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
@@ -98,8 +107,7 @@ def send_conversation(self, controller: ConversationControl) -> ResponseControl 
 
 ### Agents
 
-
-The Agent manager is in [llm/agents](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend/src/athena/llm/agents) folder. The current implementation uses the local repository as a file system. The agent manager also exposes a factory method to create agent executor using the AgentEntity information.
+The Agent manager is in [llm/agents](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend/src/athena/llm/agents) folder. The current implementation uses the local file to keep AgentEntity definitions. The agent manager exposes a factory method to create agent executor using the AgentEntity information.
 
 ![](./diagrams/agent_mgr_class.drawio.png)
 
@@ -120,7 +128,7 @@ open_ai_tool:
   - tavily
 ```
 
-The validation unit tests are in [tests/ut/test_agent_mg.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/tests/ut/test_agent_mg.py) and for the integration tests  [tests/it/test_agents_api.py]
+The validation unit tests are in [tests/ut/test_agent_mg.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/tests/ut/test_agent_mg.py) and the integration tests  in [tests/it/test_agents_api.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/tests/it)
 
 The `llm/agents` folder includes some pre-defined agents:
 
@@ -133,9 +141,84 @@ The `llm/agents` folder includes some pre-defined agents:
 
 The configuration of the agents are in the [config/agents.yaml](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/config/agents.yaml) files
 
-
 ### Tools
 
+The concept of tools / functions was introduced by OpenAI, and most big LLM are supporting it now. 
+
+Here is an example of python function that will be used as a tool:
+
+```python
+def query_crm_backend(query: str):
+    """Call the customer relationship management (CRM) to get customer data."""
+
+    return ["The customer records from DEMO CRM"]
+```
+
+An example of this function is in [demo_tools.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/llm/tools/demo_tools.py)
+
+The OWL Framework needs an implementation of a tool factory to be able to create tool references used by LLM API. 
+
+???+ info "Langchain tool api"
+    The classical way to add tools to a "LLM" instance in LangChain, is to define an AgentExecutor, which is a LLM and a prompt with the tools names.
+
+    ```python
+    agent = LLMSingleActionAgent(llm_chain=llm_chain, output_parser=output_parser,
+        stop=["\nObservation:"], allowed_tools=tool_names,
+    )
+    agent_executor = AgentExecutor.from_agent_and_tools(agent=agent, tools=tools)
+    ```
+
+    The tool_names is a list of strings of the name of the tools, while the tools is a list of python functions matching the names.
+
+    Zooming to the Prompt, it needs to include placeholders for tools and tool_names:
+
+    **Answer the following questions as best you can, but speaking as a pirate might speak. You have access to the following tools:**
+
+    **{tools}**
+
+    Use the following format:
+
+    Question: the input question you must answer
+    Thought: you should always think about what to do
+    Action: the action to take, should be one of **[{tool_names}]**
+    Action Input: the input to the action
+    Observation: the result of the action
+    ... (this Thought/Action/Action Input/Observation can repeat N times)
+    Thought: I now know the final answer
+    Final Answer: the final answer to the original input question
+    Question: **{input}** \n    **{agent_scratchpad}**
+
+
+Therefore the same python module needs to implement the tool factory class:
+
+```python
+from athena.llm.tools.tool_factory import ToolInstanceFactoryInterface
+class DemoToolInstanceFactory(ToolInstanceFactoryInterface):
+  def build_tool_instances(self, tool_entities: list[OwlToolEntity]) -> list[Any]:
+```
+
+This factory uses LangChain to build StructuredTool:
+
+```python
+def build_tool_instances(self, tool_entities: list[OwlToolEntity]) -> list[Any]:
+    """ From the list of tools to use build the function reference for LLM """
+    tool_list=[]
+    for tool_entity in tool_entities:
+        tool_list.append(self.define_tool( tool_entity.tool_description, tool_entity.tool_fct_name, tool_entity.tool_arg_schema_class))
+    return tool_list
+```
+
+The tools.yaml includes the definition of the tool as a OwlEntity
+
+```
+query_crm:
+  tool_id: query_crm
+  tool_class_name: athena.llm.tools.demo_tools
+  tool_description: """Call the customer relationship management (CRM) to get customer data."""
+  tool_fct_name: 'query_crm_backend' 
+```
+
+When creating the agent, the tool definitions are loaded and then passed to the `build_tool_instances()` function. See [the code]()
 
 ## Running locally
 

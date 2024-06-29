@@ -3,4 +3,9 @@ tavily:
   tool_class_name: langchain_community.tools.tavily_search.TavilySearchResults
   tool_description: 'A search engine optimized for comprehensive, accurate, and trusted results'
   tool_fct_name: ''
-  tool_id: tavily
+
+query_crm:
+  tool_id: query_crm
+  tool_class_name: athena.llm.tools.demo_tools
+  tool_description: "Call the customer relationship management (CRM) to get customer data."
+  tool_fct_name: query_crm_backend

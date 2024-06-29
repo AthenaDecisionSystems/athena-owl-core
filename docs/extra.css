@@ -76,7 +76,7 @@ code>* {
 }
 
 li .md-nav__item--active {
-  background-color: #f7f7f7;
+  background-color: #fffdfd;
 }
 
 .md-nav__item .md-nav__link--active {
@@ -178,7 +178,7 @@ span.md-ellipsis {
 
 /* center colum white */
 .md-content {
-  background-color: #f4f0f0;
+  background-color: #f9f9f9;
 }
 
 /* adjust center column */

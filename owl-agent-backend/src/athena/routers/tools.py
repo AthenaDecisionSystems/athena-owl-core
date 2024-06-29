@@ -6,7 +6,7 @@ Copyright 2024 Athena Decision Systems
 from athena.app_settings import get_config
 from fastapi import APIRouter
 from typing import List
-from athena.llm.tools.tool_mgr import get_tool_manager, OwlToolEntity
+from athena.llm.tools.tool_mgr import get_tool_entity_manager, OwlToolEntity
 
     
 router = APIRouter( prefix= get_config().api_route +"/a")
@@ -14,7 +14,7 @@ router = APIRouter( prefix= get_config().api_route +"/a")
 
 @router.get( "/tools/")
 def get_all_tools() -> List[OwlToolEntity]:
-    all = get_tool_manager().get_tools()
+    all = get_tool_entity_manager().get_tools()
     l = []
     for e in all.values():
             l.append(OwlToolEntity.model_validate(e))
@@ -22,26 +22,26 @@ def get_all_tools() -> List[OwlToolEntity]:
 
 @router.get("/tools/{id}")
 def get_tool_by_id(id: str) -> OwlToolEntity:
-    return get_tool_manager().get_tool_by_id(id)
+    return get_tool_entity_manager().get_tool_by_id(id)
 
 @router.get("/tools/name/{name}")
 def get_tool_by_name(name: str) -> OwlToolEntity | None:
-    return get_tool_manager().get_tool_by_name(name)
+    return get_tool_entity_manager().get_tool_by_name(name)
 
 @router.post("/tools/")
 def new_tool_entity(e: OwlToolEntity) -> str:
-    return get_tool_manager().save_tool(e)
+    return get_tool_entity_manager().save_tool(e)
 
 @router.put("/tools/{id}")
 def update_tool_entity(id: str, e: OwlToolEntity) -> str:
-    return get_tool_manager().save_tool(e)
+    return get_tool_entity_manager().save_tool(e)
 
 
 @router.delete("/tools/{id}")
 def delete_tool_entity(id: str) -> str:
-    return get_tool_manager().delete_tool(id)
+    return get_tool_entity_manager().delete_tool(id)
 
 
 @router.post("/tools/reset")
 def reset_from_files():
-    return get_tool_manager().load_tools(get_config().owl_tools_path)
+    return get_tool_entity_manager().load_tools(get_config().owl_tools_path)

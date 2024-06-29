@@ -20,11 +20,9 @@ class OwlAssistant(object):
     def __init__(self, assistantID):
         self.assistant_id = assistantID
         
-    def stream(self, query: str, thread_id: str) -> str:
+    def stream(self, query: str, thread_id: str):
+        # TO BE DONE
         pass
-    
-    def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
-        pass 
     
     def transform_chat_history(self, chat_history: list[ChatMessage]):
         l=[]

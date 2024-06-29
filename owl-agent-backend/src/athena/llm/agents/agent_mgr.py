@@ -8,9 +8,9 @@ from typing import Optional
 from functools import lru_cache
 from athena.app_settings import get_config
 from importlib import import_module
-from athena.routers.dto_models import ConversationControl, ResponseControl, ModelParameters
+from athena.routers.dto_models import ConversationControl, ResponseControl
 from athena.llm.prompts.prompt_mgr import get_prompt_manager
-from athena.llm.tools.tool_mgr import get_tool_manager
+from athena.llm.tools.tool_mgr import get_tool_entity_manager
 
 class OwlAgentInterface(object):
     
@@ -106,10 +106,10 @@ class AgentManager(object):
             mod = import_module(module_path)
             klass = getattr(mod, class_name)
             prompt = get_prompt_manager().build_prompt(agent_entity.prompt_ref, locale)
-            tools = []
+            tool_entities = []
             for tid in agent_entity.tools:
-                tools.append(get_tool_manager().get_tool_by_id(tid))
-            tool_instances=get_config().get_tool_factory().build_tool_instances(tools)
+                tool_entities.append(get_tool_entity_manager().get_tool_by_id(tid))
+            tool_instances=get_config().get_tool_factory().build_tool_instances(tool_entities)
             return klass(agent_entity, prompt, tool_instances)
             #return klass(agent_entity.modelName, sys_prompt, agent_entity.temperature, tools)
         return None

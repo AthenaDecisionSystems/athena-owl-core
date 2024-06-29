@@ -1,17 +1,14 @@
 logging_level: DEBUG
 version: v0.0.2
 owl_env_path: ../.env
-# owl_agent_llm_client_class: athena.llm.agent_anthropic.AnthropicClient
 
-
-owl_agent_decision_service_fct_name: athena.itg.decisions.nba_ds_dummy.callDecisionService
 owl_glossary_path: /app/athena/config/glossary.json
 owl_prompts_path: /app/athena/config/prompts.json
 owl_assistants_path: /app/athena/config/assistants.yaml
 owl_agents_path: /app/athena/config/agents.yaml
 owl_tools_path: /app/athena/config/tools.yaml
+
 owl_prompts_key_name: default_prompt
-#owl_agent_content_vstore_url: http://localhost:8005
 owl_agent_content_collection_name: base_collection
 owl_agent_content_file_path: /app/file_content
 owl_agent_vs_path: /app/chromadb
@@ -19,6 +16,9 @@ owl_agent_vs_embedding_fct: OpenAIEmbeddings
 owl_agent_llm_history_length: 5
 owl_agent_tool_factory_class:  athena.llm.tools.tool_mgr.BaseToolInstanceFactory
 owl_agent_default_assistant: base_openai_assistant
+
+owl_agent_decision_service_fct_name: athena.itg.decisions.nba_ds_dummy.callDecisionService
+
 watsonx_ai_url: https://us-south.ml.cloud.ibm.com
 watsonx_ai_project_id: bddd370f-77c3-4b6e-a18b-3ef7f4ca1bae
 watsonx_ai_model: "ibm/granite-13b-instruct-v2"
