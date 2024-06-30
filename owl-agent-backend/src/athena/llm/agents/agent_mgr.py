@@ -38,7 +38,7 @@ class OwlAgentInterface(object):
     def get_prompt(self):
         return self.prompt
     
-    def invoke(self, query: str) -> str:
+    def invoke(self, query) -> str:
         return self.get_runnable().invoke(query)
     
 class OwlAgentEntity(BaseModel):

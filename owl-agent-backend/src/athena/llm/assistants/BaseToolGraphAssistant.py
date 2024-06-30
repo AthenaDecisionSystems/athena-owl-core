@@ -67,6 +67,8 @@ class BaseToolGraphAssistant(OwlAssistant):
         self.memory = SqliteSaver.from_conn_string(":memory:")
         self.llm = agent.get_runnable()
         tool_node=BasicToolNode(agent.get_tools())
+        #self.graph = create_react_agent(self.model,tools=agent.get_tools(), messages_modifier=self.modify_messages)
+    
         graph_builder = StateGraph(AgentState)
         graph_builder.add_node("llm", self.call_llm)
         graph_builder.add_node("tools", tool_node)

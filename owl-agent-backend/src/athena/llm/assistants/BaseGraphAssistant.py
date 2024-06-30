@@ -38,6 +38,7 @@ class BaseGraphAssistant(OwlAssistant):
         graph_builder.add_node("chatbot", self.call_chatbot)
         graph_builder.set_entry_point("chatbot")
         graph_builder.set_finish_point("chatbot")
+       
         self.graph = graph_builder.compile(checkpointer=self.memory)
         
         

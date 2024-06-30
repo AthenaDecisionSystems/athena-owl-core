@@ -5,7 +5,6 @@ module_path = "./src"
 sys.path.append(os.path.abspath(module_path))
 import yaml,json
 from typing import Optional 
-from yaml import BaseLoader
 from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgentEntity
 
 class TestAgentsManager(unittest.TestCase):

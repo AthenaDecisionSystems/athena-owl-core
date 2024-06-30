@@ -3,7 +3,7 @@ Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
 """
 from athena.glossary.glossary_mgr import CURRENT_LOCALE, DEFAULT_LOCALE
-import json
+import json, yaml
 from athena.app_settings import get_config
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain import hub
@@ -15,7 +15,7 @@ from typing import List
 Prompt manager manages different prompts and support CRUD for prompt. In this
 version the prompts is persisting on local file system.
 
-The prompt persistence is a json with prompt_unique_key and the prompt string in different locale like:
+The prompt persistence is a yaml with prompt_unique_key and the prompt string in different locale like:
 
 {
  "default_prompt" : {
@@ -28,6 +28,18 @@ The path for persistence is defined in configuration as owl_prompts_path
 
 """
 
+
+class OwlPromptEntity(BaseModel):
+    class localeStructure(BaseModel):
+        locale: str
+        text: str
+        
+    name: str
+    locales: list[localeStructure]
+
+     
+        
+        
 _instance = None
 
 class Prompts:
@@ -35,48 +47,47 @@ class Prompts:
     Use a cache for the Prompts in PROMPTS
     """
     def __init__(self):
-        self.PROMPTS: dict
+        self.PROMPTS: dict[OwlPromptEntity] = dict()
 
-    def add_prompt(self, prompt_key: str, locale: str, prompt: str):
+    def add_prompt(self, prompt_key: str, locale: str, text: str):
         """Adds a new prompt, using a key to the prompts inventory.
 
         Args:
             prompt_key (str): The key of the prompt.
-            prompt (str): The prompt in the given locale.
+            text (str): The prompt in the given locale.
             locale (str): The language of the translation. Defaults to "en".
         """
         entry = self.PROMPTS.get(prompt_key, None)
         if entry == None:
-            entry = dict()
+            localStruc= OwlPromptEntity.localeStructure(locale=locale, text=text)
+            entry = OwlPromptEntity(name=prompt_key,locales=[localStruc])
             self.PROMPTS[prompt_key] = entry
-        entry[locale] = prompt
+        else:
+            entry.locales.append(OwlPromptEntity.localeStructure(locale=locale, text=text))
 
 
-    def get_prompt(self, prompt_key: str, locale: str = CURRENT_LOCALE) -> BaseModel:
+    def get_prompt(self, prompt_key: str, locale: str = CURRENT_LOCALE) -> str | None:
         entry = self.PROMPTS.get(prompt_key, None)
         if entry == None:
-            return "None"
+            return None
         else:
-            res = entry.get(locale, entry.get(DEFAULT_LOCALE, None))
-            if res == None:
-                return "None"
-            else:
-                return res
+            ope= OwlPromptEntity.model_validate(entry)
+            for l in ope.locales:
+                if l.locale == locale:
+                    return l.text       
+            return None
+ 
 
     def build_prompt(self, prompt_key: str, locale: str = CURRENT_LOCALE) -> BaseModel:
         if "/" in prompt_key:
             return hub.pull(prompt_key)
         else:
-            entry = self.PROMPTS.get(prompt_key, None)
-            if entry == None:
-                return "None"
+            text = self.get_prompt(prompt_key, locale)
+            if text == None:
+                return None
             else:
-                res = entry.get(locale, entry.get(DEFAULT_LOCALE, None))
-                if res == None:
-                    return "None"
-                else:
-                    return ChatPromptTemplate.from_messages([
-                        ("system", res),
+                return ChatPromptTemplate.from_messages([
+                        ("system", text),
                         MessagesPlaceholder(variable_name="chat_history", optional=True),
                         ("human", "{input}"),
                         MessagesPlaceholder(variable_name="agent_scratchpad", optional=True),
@@ -84,30 +95,45 @@ class Prompts:
         
     
     def get_prompt_locales(self, prompt_key: str) -> dict[str,str]:
-        return self.PROMPTS.get(prompt_key, None)
-    
+        entry = self.PROMPTS.get(prompt_key, None)
+        ope= OwlPromptEntity.model_validate(entry)
+        a_dict = {}
+        for ls in ope.locales:
+            a_dict[ls.locale] = ls.text
+        return a_dict
+        
     def delete_prompt(self, prompt_key: str) -> str:
         entry = self.PROMPTS.get(prompt_key, None)
         if entry != None:
             del self.PROMPTS[prompt_key]
             
     
-    def get_prompts(self) -> dict[str,dict[str]]:
+    def get_prompts(self) -> dict[OwlPromptEntity]:
         return self.PROMPTS
     
-    def save_prompts(self, path: str = "prompts.json"):
+    def save_prompts(self, path: str = "prompts.yaml"):
         """Save the entire prompts in external file."""
         with open(path, "w", encoding="utf-8") as of:
             json.dump(self.PROMPTS, of, indent=4, ensure_ascii=False)
         return path
 
-    def update_prompt(self,prompt_key: str, locale: str, prompt: str):
-        self.add_prompt(prompt_key,locale,prompt)
+    def update_prompt(self,prompt_key: str, locale: str, text: str):
+        entry = self.PROMPTS.get(prompt_key, None)
+        if entry != None:
+            ope= OwlPromptEntity.model_validate(entry)
+            for l in ope.locales:
+                if l.locale == locale:
+                    l.text=text
+                    return
+            localStruc= OwlPromptEntity.localeStructure(locale=locale, text=text)
+            ope.locales.append(localStruc)
+             
+        
     
     def load_prompts(self, path: str = "prompts.json"):
         """Reads the prompts from a file."""
         with open(path, "r", encoding="utf-8") as f:
-            self.PROMPTS = json.load(f)  # a dict with prompt key and locales
+            self.PROMPTS = yaml.load(f, Loader=yaml.FullLoader)  # a dict with prompts
          
 
 @lru_cache
