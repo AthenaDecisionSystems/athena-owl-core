@@ -11,10 +11,10 @@ from langchain_core.messages import AnyMessage, SystemMessage, HumanMessage, Too
 from langgraph.graph.message import add_messages
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.pregel.types import StateSnapshot
-
 from langchain_core.runnables.config import RunnableConfig
+
 from athena.llm.assistants.assistant_mgr import OwlAssistant
-from athena.routers.dto_models import ConversationControl, ResponseControl
+
     
 """
 The simples assistant use one LLM

@@ -19,7 +19,7 @@ LOGGER.setLevel(get_config().logging_level_int)
 """
 Service to manage documents for semantic search and RAG context source
 """
-embedders={"OpenAIEmbeddings": OpenAIEmbeddings}
+embeddings={"OpenAIEmbeddings": OpenAIEmbeddings}
 
 class FileDescription(BaseModel):
     """
@@ -64,10 +64,12 @@ class ContentManager:
                 f = open(self.path + "/" + file_name_base + ".json","w")
                 f.write(file_description.model_dump_json())
                 f.close()
-                LOGGER.info("Saved metadata " + file_name_base)
+                LOGGER.debug("Saved metadata " + file_name_base)
    
             chunks=self.build_vector_content(file_description)
-            return f"document {file_description.name} processed with {chunks} chunks embedded"
+            rep =  f"document {file_description.name} processed with {chunks} chunks embedded"
+            LOGGER.debug(f"@@@> {rep}")
+            return rep
         else:
             raise Exception("The file description content is mandatory")
         
@@ -84,6 +86,8 @@ class ContentManager:
             return self.embed_md_docs(file_description)
         elif file_description.type == "html":
             return self.embed_html_docs(file_description)
+        else:
+            return 0
 
             
     def embed_txt_docs(self,file_description: FileDescription)-> int:

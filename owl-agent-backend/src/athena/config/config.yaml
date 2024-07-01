@@ -8,7 +8,7 @@ owl_assistants_path: /app/athena/config/assistants.yaml
 owl_agents_path: /app/athena/config/agents.yaml
 owl_tools_path: /app/athena/config/tools.yaml
 
-owl_prompts_key_name: default_prompt
+owl_prompts_key_name: openai_insurance_with_tool
 owl_agent_content_collection_name: base_collection
 owl_agent_content_file_path: /app/file_content
 owl_agent_vs_path: /app/chromadb

@@ -247,6 +247,22 @@ source ./venv/Scripts/activate
 ```
 
 * Install the needed python modules with `pip install -r src/requirements.txt` and `pip install -r tests/requirements.txt`
+* build the owl backend image under the `owl-agent-backend` folder.
+
+```sh
+./build/buildImage.sh
+```
+
+This image can be pushed to docker hub. (as of now it is the `jbcodeforce/athena-owl-backend:latest` image)
+
+![](./images/docker-hub.PNG)
+
+* Build the owl-frontend docker image under the `owl-agent-frontend` folder:
+
+```sh
+./build/buildImage.sh
+```
+
 
 ### Development mode
 
@@ -323,12 +339,4 @@ Then breakpoint and step by step.
 
 There are two ways to do integration tests, with docker or with the start_backend.sh script.
 
-* build the agent backend image under the owl-agent-backend folder.
 
-```sh
-./build/buildImage.sh
-```
-
-This image can be pushed to docker hub. (as of now it is the `jbcodeforce/athena-owl-backend:latest` image)
-
-![](./images/docker-hub.PNG)
