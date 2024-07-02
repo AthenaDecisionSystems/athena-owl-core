@@ -77,5 +77,15 @@ class TestPromptsManager(unittest.TestCase):
         print(type(prompt))
         print(prompt)
 
+    def test_all_prompts(self):
+        print("\n\n --- test_all_prompts")
+        p_mgr=get_prompt_manager()
+        aDict = p_mgr.get_prompts()
+        print(aDict)
+        assert aDict
+        assert len(aDict) > 1
+        promptEntity = OwlPromptEntity.model_validate(aDict["default_prompt"])
+        assert promptEntity
+        
 if __name__ == '__main__':
     unittest.main()

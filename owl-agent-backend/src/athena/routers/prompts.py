@@ -5,8 +5,8 @@ Copyright 2024 Athena Decision Systems
 from pydantic import BaseModel
 from athena.app_settings import get_config
 from fastapi import APIRouter
-from athena.llm.prompts.prompt_mgr import get_prompt_manager
-from typing import Any
+from athena.llm.prompts.prompt_mgr import get_prompt_manager, OwlPromptEntity
+from typing import Any, List
 
 class PromptRequest(BaseModel):
     prompt_key: str
@@ -17,8 +17,13 @@ router = APIRouter( prefix= get_config().api_route +"/a")
 
 
 @router.get( "/prompts/")
-def get_all_prompt_entities() -> dict[str,Any]:
-    return get_prompt_manager().get_prompts()
+def get_all_prompt_entities() -> List[OwlPromptEntity]:
+    all = get_prompt_manager().get_prompts()
+    l = []
+    for e in all.values():
+        l.append(OwlPromptEntity.model_validate(e))
+    return l
+
 
 @router.get( "/prompts/{locale}")
 def get_prompt_for_ui(locale: str) -> str:

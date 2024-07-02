@@ -26,6 +26,7 @@ class TestPromptApi(unittest.TestCase):
        
 
     def test_get_default_prompt(self):
+        print("\ntest_get_default_prompt\n")
         response = self.client.get(get_config().api_route +"/a/prompts/default_prompt/en")
         print(f"\n--it--> {response.json()}")
         assert response is not None
@@ -33,6 +34,7 @@ class TestPromptApi(unittest.TestCase):
         assert "conversation" in response.json()
 
     def test_post_new_instruction(self):
+        print("\ntest_post_new_instruction\n")
         pr= PromptRequest(prompt_key="test_prompt", prompt_locale="en", prompt_content="You are an helpful assistant")
         response = self.client.post(get_config().api_route + "/a/prompts/",json = pr.model_dump())
         assert response is not None
@@ -44,6 +46,7 @@ class TestPromptApi(unittest.TestCase):
 
 
     def test_prompt_for_ui(self):
+        print("\ntest_prompt_for_ui\n")
         response = self.client.get( get_config().api_route + "/a/prompts/en").content.decode()
         assert response is not None
         print(f"\n--it--> {response}")
@@ -55,7 +58,13 @@ class TestPromptApi(unittest.TestCase):
         response = self.client.get( get_config().api_route + "/a/prompts/es").content.decode()
         assert response is not None
         print(f"\n--it--> {response}")
-        assert response.find("siguiente") > 0
+        assert response.find("conversaciones") > 0
+    
+    def test_get_all_prompts(self):
+        print("\ntest_get_all_prompts\n")
+        response = self.client.get( get_config().api_route + "/a/prompts").content.decode()
+        assert response is not None
+        print(f"\n--it--> {response}")
         
 if __name__ == '__main__':
     unittest.main()
