@@ -41,8 +41,8 @@ class OwlAssistant(object):
         resp.user_id = controller.user_id
         return resp
     
-    def invoke(self, request, thread_id: Optional[str]) -> dict[str, Any] | Any:
-        pass
+    def invoke(self, request, thread_id: Optional[str], **kwargs) -> dict[str, Any] | Any:
+        return {}
         
     def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
         LOGGER.debug(f"\n@@@> query assistant {controller.query}")

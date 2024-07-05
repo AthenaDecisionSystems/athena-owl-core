@@ -220,6 +220,26 @@ query_crm:
 
 When creating the agent, the tool definitions are loaded and then passed to the `build_tool_instances()` function. See [the code]()
 
+### Document management
+
+When a user uploads a document using the chatbot interface, the file is persisted in cloud object storage with some metadata. The file is parsed in sub-documents that vectorized via Embeddings. The created vectors are saved in a vector store. The [architecture section](./arch.md/#agent-manager) introduced the processing.
+
+The REST resource is in the [document.py file](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/routers/documents.py). It offers two APIs, one for the similarity search and one to upload the document. The filedrescription represent the metadata and myFile the binary stream coming from the client application.
+
+```python
+@router.post("/documents/")
+async def post_document_for_rag( file_description: FileDescription = Depends(), myFile: UploadFile = File(...)):
+    # it delegate to the document manager
+```
+
+The document manager is in the [itg/store/content_mgr.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/itg/store/content_mgr.py) file. The logic to process the uploaded file is:
+
+1. Persist the metadata file and potentially the file content itself in the storage uri as specified in config.yaml file: `owl_agent_content_file_path`
+1. From the document type, perform the different chunking and embedding, as the tool to parse and split the main document are different.
+1. Create embeddings and save them in vector store in the collection as defined by the config file
+
+The content_mgr offers a `get_retriever()` method to be using in LLM RAG implementation.
+
 ## Running locally
 
 ### Pre-requisites

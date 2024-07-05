@@ -52,7 +52,7 @@ class ContentManager:
 
     def process_doc(self, file_description: FileDescription, content)-> str:
         """
-        Persist file metadata and potentially file content in storage uri as specified in config
+        Persist  metadata file and potentially the file content in storage uri as specified in config
         """
         if file_description:
             if content:
@@ -78,6 +78,7 @@ class ContentManager:
 
             
     def build_vector_content(self,file_description: FileDescription) -> int:
+        # From the document type, perform the different chunking and embedding
         if file_description.type == "pdf":
             return self.embed_pdf_docs(file_description)
         elif file_description.type == "text":
@@ -157,7 +158,7 @@ class ContentManager:
 
     def build_embeddings(self,docs):
         vs = self.get_vector_store()
-        vs.from_documents(documents=docs, embedding= embedders[get_config().owl_agent_vs_embedding_fct](),  persist_directory=get_config().owl_agent_vs_path)
+        vs.from_documents(documents=docs, embedding= embeddings[get_config().owl_agent_vs_embedding_fct](),  persist_directory=get_config().owl_agent_vs_path)
         print(f"Vector store updated with docs... {docs[0]}")
         
     def persist_content(self,filename, content) -> str:
@@ -175,7 +176,7 @@ class ContentManager:
 
     def get_vector_store(self):
         if len(get_config().owl_agent_vs_url) == 0:
-            self.vdb=Chroma(persist_directory=get_config().owl_agent_vs_path, embedding_function=embedders[get_config().owl_agent_vs_embedding_fct]())
+            self.vdb=Chroma(persist_directory=get_config().owl_agent_vs_path, embedding_function=embeddings[get_config().owl_agent_vs_embedding_fct]())
         else:
             LOGGER.info("Not implemented")
         return self.vdb

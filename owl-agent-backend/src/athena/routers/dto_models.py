@@ -14,6 +14,7 @@ class ConversationControl(BaseModel):
     locale: Optional[str] = "en"
     query: str = ""
     reset: bool = False  # to reset everything back to default config.
+    callWithVectorStore: Optional[bool] = False
     user_id: Optional[str] = ""
     assistant_id: Optional[str] = ""
     thread_id: Optional[str] = ""
