@@ -49,11 +49,6 @@ class OwlAgent(OwlAgentInterface):
         else:
             self.llm = {"input": lambda x: x["input"], "chat_history" : lambda x: x["chat_history"]}  | self.prompt | self.model | StrOutputParser()
             
-    def _instantiate_model(self,modelName, modelClass, temperature):
-        module_path, class_name = modelClass.rsplit('.',1)
-        mod = import_module(module_path)
-        klass = getattr(mod, class_name)
-        return klass(model=modelName, temperature= temperature/100)
        
     def get_runnable(self):
         #return   self.prompt |  self.model.bind(self.tools) | StrOutputParser()

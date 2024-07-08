@@ -5,7 +5,7 @@ Copyright 2024 Athena Decision Systems
 import os,sys
 from typing import Any, Generator
 
-from  athena.routers.dto_models import ConversationControl, ResponseControl, ModelParameters
+from  athena.routers.dto_models import ConversationControl, ResponseControl
 
 
 class AgentInterface:

@@ -27,7 +27,6 @@ class OwlAgentInterface(object):
         then the others functions of this class may be called. This method needs to be overridden for each different LLM
         """
         pass
-
     
     def get_tools(self):
         return self.tools
@@ -40,6 +39,14 @@ class OwlAgentInterface(object):
     
     def invoke(self, query, **kwargs) -> str:
         return self.get_runnable().invoke(query)
+    
+    def _instantiate_model(self,modelName, modelClass, temperature):
+        module_path, class_name = modelClass.rsplit('.',1)
+        mod = import_module(module_path)
+        klass = getattr(mod, class_name)
+        return klass(model=modelName, temperature= temperature/100)
+ 
+ 
     
 class OwlAgentEntity(BaseModel):
     agent_id: str = str(uuid.uuid4())
