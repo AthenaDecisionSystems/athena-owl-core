@@ -6,7 +6,7 @@ from langchain.tools import StructuredTool
 
 class OwlToolEntity(BaseModel):
     tool_id: str = str(uuid.uuid4())
-    toll_name: Optional[str] = ""
+    tool_name: Optional[str] = ""
     tool_description: Optional[str] = ""
     tool_class_name: Optional[str] = ""
     tool_fct_name: Optional[str] = ""
