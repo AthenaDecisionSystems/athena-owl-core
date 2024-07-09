@@ -45,3 +45,8 @@ def add_prompt_using_key_locale(promptRequest: PromptRequest):
 @router.put("/prompts/")
 def update_prompt_using_key_locale(promptRequest: PromptRequest):
     get_prompt_manager().update_prompt(promptRequest.prompt_key,promptRequest.prompt_locale, promptRequest.prompt_content)
+    
+    
+@router.delete( "/prompts/{prompt_key}")
+def delete_prompt_using_key(prompt_key: str) -> str:
+    return get_prompt_manager().delete_prompt(prompt_key)

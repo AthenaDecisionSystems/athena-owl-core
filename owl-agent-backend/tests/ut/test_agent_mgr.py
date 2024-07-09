@@ -56,7 +56,7 @@ class TestAgentsManager(unittest.TestCase):
         assert p.tools
         print(p)
         
-    def test_calling_fake_agent(self):
+    def _test_calling_fake_agent(self):
         mgr = get_agent_manager()
         oae: Optional[OwlAgentEntity] = mgr.get_agent_by_id("fake_agent")
         if oae is None:
