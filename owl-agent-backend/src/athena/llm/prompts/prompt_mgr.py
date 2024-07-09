@@ -3,13 +3,13 @@ Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
 """
 from athena.glossary.glossary_mgr import CURRENT_LOCALE, DEFAULT_LOCALE
-import json, yaml
+import json, yaml, uuid
 from athena.app_settings import get_config
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain import hub
 from functools import lru_cache
 from pydantic import BaseModel, RootModel
-from typing import List
+from typing import List, Optional
 
 """
 Prompt manager manages different prompts and support CRUD for prompt. In this
@@ -33,8 +33,8 @@ class OwlPromptEntity(BaseModel):
     class localeStructure(BaseModel):
         locale: str
         text: str
-        
-    name: str
+    prompt_id: Optional[str] = str(uuid.uuid4())
+    name: Optional[str]
     locales: list[localeStructure]
 
      

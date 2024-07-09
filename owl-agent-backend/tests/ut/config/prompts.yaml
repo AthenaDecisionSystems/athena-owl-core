@@ -1,6 +1,7 @@
 
 default_prompt:
     name:  default_prompt
+    prompt_id: default_prompt
     locales:
     - locale: en
       text: "Answer the user's question based on the conversation history: {chat_history} \n\n question: {input}"
@@ -10,6 +11,7 @@ default_prompt:
       text: "Responda las preguntas del usuario según el historial de conversaciones  {chat_history} \n\n question: {input}"
 second_prompt:
     name: second_prompt
+    prompt_id: second_prompt
     locales:
     - locale: en
       text: "Answer the user's question based on the below context:\n\n{context} and conversation history"
