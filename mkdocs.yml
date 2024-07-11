@@ -19,6 +19,7 @@ theme:
   language: en
   features:
       - content.code.annotate
+      - content.code.copy
       - content.tooltips
       - search.highlight
       - navigation.instant

@@ -36,7 +36,8 @@ When there is complex integration, there is development effort.   The OwlAgent F
 
 ### Challenges
 
-LLM's are amazing tools for doing natural language processing.   But they come with challenges due to the underlying training and inference technology, due to the fact they are trained only occasionally and are thus always out of date, and due to the fact that natural language generation is not grounded in any model of reality or reasoning but instead uses probabilistic techniques based on correlations of a huge number of strings of tokens (words).
+LLM's are amazing tools for doing natural language processing.   But they come with challenges due to the underlying training and inference technology, due to the fact they are trained only occasionally and are thus always out of date, and due to the fact that natural language generation is not grounded in any model of reality or reasoning but instead uses probabilistic techniques based on correlations of a huge number of strings of tokens (words). Which means hallucination and approximate retrieval are core of their architecture: the completion they are generating is in the same distribution as the text they have been trained on. Prompt engineering does not change hallucination as the decision to assess the response is a factual completion depends of the knowledge of the prompter and requires to continuously assess all the responses.
+
 
 * **Accuracy**: The accuracy of LLM's is not acceptable to any enterprise that must follow regulations and policies and respect contractual agreements with suppliers and customers.   Because they cannot truly reason or take into account regulations and policies precisely, models often produce incorrect and contradictory answers when asked for decisions or actions to undertake.  With classical ML, probabilistic output is expected. Symbolic approaches like business rules that precisely express policies produce reliable results at the cost of coding the policies mostly manually.
 
@@ -46,7 +47,7 @@ LLM's are amazing tools for doing natural language processing.   But they come w
 
 * **Skills**: developing a new LLM may not make sense today, but fine tuning an existing model may in some circumstances. There are relatively few developers with expertise in model tuning, understanding their architecture and limitations, integrating them in applications, and in tuning their hyper parameters. Reinforcement learning to fine-tune existing LLM requires a huge number of trials, and data quality is still a very difficult and poorly-mastered topic.
 
-* **Reliability and reasoning**: Generative AI models do not reason and plan accurately. New versions of LLMs attempt to improve this, but by design the transformer algorithm is probabilistic and greedy for text generation and does not inherently do any kind of structured symbolic reasoning or manage ontologies of concepts (knowledge graphs). 
+* **Reliability and reasoning**: Generative AI models do not reason and do not plan accurately. New versions of LLMs attempt to improve this, but by design the transformer algorithm is probabilistic and greedy for text generation and does not inherently do any kind of structured symbolic reasoning or manage ontologies of concepts (knowledge graphs). LLM are very big system-1 with their knowledge based from digital representation of humanity created content.
 
 The next sections explains the generative AI architecture in more detail.
 

@@ -1,8 +1,11 @@
 # Owl Agent Framework documentation
 
-OwlAgent is an open source Hybrid AI framework for constructing interactive LLM-based assistants (e.g. chatbots) that include support for calling external decision services built with business rules via tool-calling to ensure precise decision-making at key moments by the interactive application.  These applications can also access databases to get in-context information and a vector store of documents for doing RAG so that the chatbot can answer questions with relevant data and documents.   Other tools can also be created for additional API access in the applications.   This combination of technologies is called Hybrid AI.
+OwlAgent is an open source Hybrid AI framework for constructing interactive LLM-based assistants (e.g. chatbots) that include support for calling external decision services built with business rules via tool-calling to ensure precise decision-making at key moments by the interactive application. These applications can also access databases to get in-context information and a vector store of documents for doing RAG so that the chatbot can answer questions with relevant data and documents. Other tools can also be created for additional API access in the applications. This combination of technologies is called Hybrid AI and OwlAgent framework helps you create Agentic applications.
 
-The philosophy of the OwlAgent Framework is to be as declarative as possible, with almost all assistant components specified as parameters in a YAML file.   This greatly simplifies creating a new assistant, and allows assistants to run in a single server with a REST API.   In addition, there is a clean separation between the back end server and the front end, meaning you can write your own front end or use the assistants in a completely different type of application, simply by calling the REST API.
+
+## The approach
+
+The philosophy of the OwlAgent Framework is to be as declarative as possible, with almost all assistant components specified as parameters in a YAML file.   This greatly simplifies creating a new assistant, and allows assistants to run in a single server with a REST API.   In addition, there is a clean separation between the back end server and the front end, meaning you can write your own front end or use the assistants in a completely different type of application, simply by calling the REST APIs.
 
 The OwlAgent Framework was initially written by [Athena Decision Systems](http://www.athenadecisions.com/) but contributions are welcome from the whole community!   If you have any questions, please reach out by emailing Athena at [contact@athenadecisions.com](mailto:contact@athenadecisions.com).
 
@@ -18,6 +21,19 @@ This video demonstration illustrates the value of this framework to help enterpr
 [![alt text](https://img.youtube.com/vi/fGEU_obHM5M/0.jpg)](https://www.youtube.com/watch?v=fGEU_obHM5M)
 
 The [PowerPoint deck](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/docs/assets/athena-shorter%202024-05-14.pptx) presents the solution and the approach.
+
+## Getting Started
+
+This repository includes the core elements of the OwlAgent Framework, while the [demonstration git repository](https://github.com/AthenaDecisionSystems/athena-owl-demos) includes how to develop solutions from the core framework, or leveraging existing demonstrations.
+
+To get started we recommend cloning both repositories:
+
+```sh
+git clone https://github.com/AthenaDecisionSystems/athena-owl-core
+git clone https://github.com/AthenaDecisionSystems/athena-owl-demos
+```
+
+And [go to the demonstration documentation](https://athenadecisionsystems.github.io/athena-owl-demos/) to run one of the existing demonstration or [build your own solution](https://athenadecisionsystems.github.io/athena-owl-demos/build_sol/).
 
 ## What is in this documentation?
 
