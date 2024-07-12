@@ -62,11 +62,11 @@ class BaseToolGraphAssistant(OwlAssistant):
     An assistant using an agent with tools and tool node to execute the tool call
     """
     
-    def __init__(self, agent, assistantID):
-        super().__init__(assistantID)
+    def __init__(self, assistantID, agents):
+        super().__init__(assistantID, agents)
         self.memory = SqliteSaver.from_conn_string(":memory:")
-        self.llm = agent.get_runnable()
-        tool_node=BasicToolNode(agent.get_tools())
+        self.llm = agents[0].get_runnable()
+        tool_node=BasicToolNode(agents[0].get_tools())
         #self.graph = create_react_agent(self.model,tools=agent.get_tools(), messages_modifier=self.modify_messages)
     
         graph_builder = StateGraph(AgentState)

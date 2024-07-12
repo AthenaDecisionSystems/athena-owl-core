@@ -13,9 +13,9 @@ class BaseAssistant(OwlAssistant):
     Agent may use tools or not.
     """
     
-    def __init__(self, agent, assistantID):
-        super().__init__(assistantID)
-        self.llm = agent.get_runnable()
+    def __init__(self, assistantID, agents):
+        super().__init__(assistantID, agents)
+        self.llm = agents[0].get_runnable()
     
         
     def invoke(self, request, thread_id: Optional[str]) -> dict[str, Any] | Any:

@@ -15,10 +15,12 @@ from typing import Any, Optional
 LOGGER = logging.getLogger(__name__)
 
 class OwlAssistant(object):
+    agents: []
     assistant_id: str
     
-    def __init__(self, assistantID):
+    def __init__(self, assistantID, loaded_agents):
         self.assistant_id = assistantID
+        self.agents = loaded_agents
         
     def stream(self, query: str, thread_id: str):
         # TO BE DONE
@@ -75,7 +77,7 @@ class OwlAssistantEntity(BaseModel):
     name: str = "default_assistant"
     description: str = "A default assistant to do simple LLM calls"
     class_name : str = "athena.llm.assistants.BaseAssistant.BaseAssistant"
-    agent_id: str = ""
+    agents: list[str] = []
     
 class AssistantManager(object):
     """
@@ -93,7 +95,15 @@ class AssistantManager(object):
         self.ASSISTANTS[assistant.assistant_id] = assistant
         return assistant.assistant_id
     
-    def get_assistant_by_id(self, id : str) -> OwlAssistantEntity:
+    def get_assistant_by_id(self, id: str) -> OwlAssistantEntity:
+        """
+        Get Assistant entity description given its unique identifier
+        Args:
+            id (str): unique identifier persisted as assistant_id
+
+        Returns:
+            OwlAssistantEntity: The assistant entity with information to create instance of the assistant with one to many agents
+        """
         return self.ASSISTANTS[id]
     
     def load_assistants(self, path: str):
@@ -143,11 +153,14 @@ class AssistantManager(object):
             mod = import_module(module_path)
             klass = getattr(mod, class_name)
             LOGGER.debug(f"--> {class_name} created")
-            if oa.agent_id and oa.agent_id != "":
-                agent=get_agent_manager().build_agent(oa.agent_id, locale)
-                return klass(agent, oa.assistant_id)
-            else:
-                return klass()
+            
+            if len(oa.agents) == 0:
+                return klass(assistant_id)
+            agents=[]
+            for aid in oa.agents:
+                agent=get_agent_manager().build_agent(aid, locale)
+                agents.append(agent)
+            return klass(assistant_id,agents)
         return None
 
 
