@@ -33,7 +33,7 @@ This video demonstration illustrates the value of this framework to help enterpr
 
 [![alt text](https://img.youtube.com/vi/fGEU_obHM5M/0.jpg)](https://www.youtube.com/watch?v=fGEU_obHM5M)
 
-The [PowerPoint deck](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/docs/assets/athena-shorter%202024-05-14.pptx) presents the solution and the approach.
+The [PowerPoint deck](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/docs/assets/athena%202024-07-12.pptx) presents the solution and the approach.
 
 ## Getting Started
 
