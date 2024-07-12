@@ -1,8 +1,8 @@
-# Owl Agent Framework documentation
+# Owl Agent Framework Documentation
 
 OwlAgent is an open source Hybrid AI framework for constructing interactive LLM-based assistants (e.g. chatbots) that include support for calling external decision services built with business rules via tool-calling to ensure precise decision-making at key moments by the interactive application. These applications can also access databases to get in-context information and a vector store of documents for doing RAG so that the chatbot can answer questions with relevant data and documents. Other tools can also be created for additional API access in the applications. This combination of technologies is called Hybrid AI and OwlAgent framework helps you create Agentic applications.
 
-## Why this framework?
+## Why This Framework?
 
 Today, most LLM-based applications in organizations focus on doing purely text-based tasks with a sprinkling of organizational knowledge from a set of documents - tasks like document or report summarization, answering questions whose answers can be found in documents, and "conversing with data" to get additional information about enterprise data.
 
@@ -14,7 +14,9 @@ The OwlAgent framework makes it as easy as possible to combine these different e
 
 The OwlAgent framework is open source and we welcome all users and contributors!   Please write to [Athena Decision Systems](mailto:contact@athenadecisions.com) if you have any questions or need any support!   We are constantly iterating the framework and we hope you can use it successfully and ideally help out yourself!
 
-## The approach
+This documentation includes an overview of the approach, a getting started guide, some presentation material, links to demos and use cases.   Suggestions and corrections are welcome!
+
+## The Approach
 
 The philosophy of the OwlAgent Framework is to be as declarative as possible, with almost all assistant components specified as parameters in a YAML file.   This greatly simplifies creating a new assistant, and allows assistants to run in a single server with a REST API.   In addition, there is a clean separation between the back end server and the front end, meaning you can write your own front end or use the assistants in a completely different type of application, simply by calling the REST APIs.
 
