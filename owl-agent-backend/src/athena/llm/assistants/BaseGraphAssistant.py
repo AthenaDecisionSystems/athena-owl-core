@@ -30,10 +30,10 @@ class State(TypedDict):
 
 class BaseGraphAssistant(OwlAssistant):
     
-    def __init__(self, agent, assistantID):
-        super().__init__(assistantID)
+    def __init__(self, assistantID, agents):
+        super().__init__(assistantID, agents)
         self.memory = SqliteSaver.from_conn_string(":memory:")
-        self.llm = agent.get_runnable()
+        self.llm = agents[0].get_runnable()
         graph_builder = StateGraph(State)
         graph_builder.add_node("chatbot", self.call_chatbot)
         graph_builder.set_entry_point("chatbot")

@@ -1,8 +1,9 @@
+from dotenv import load_dotenv
+load_dotenv()
 import unittest, sys, os
 # Order of the following code is important to make the tests working
 os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
-from dotenv import load_dotenv
-load_dotenv()
+
 module_path = "./src"
 sys.path.append(os.path.abspath(module_path))
 import yaml,json
