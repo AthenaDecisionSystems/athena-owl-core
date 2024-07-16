@@ -29,8 +29,8 @@ const Assistant = forwardRef(({ assistantId, informUser, changeUseODMStatus, cha
             fetch(serverUrl + "a/assistants/" + assistantId)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("Agent id: " + data.agent_id);
-                    fetch(serverUrl + "a/agents/" + data.agent_id)
+                    console.log("Agent id: " + data.agent_id, data);
+                    fetch(serverUrl + "a/agents/" + data.agents[0])
                         .then(response => response.json())
                         .then(data => {
                             console.log("Prompt ref: " + data.prompt_ref);
