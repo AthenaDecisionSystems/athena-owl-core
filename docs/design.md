@@ -82,24 +82,29 @@ The `llm/assistants` folder includes some pre-defined assistant implementations:
 
 | Assistant | Description |
 | --- | --- |
-| BaseAssistant | A default assistant to do simple LLM calls |
+| BaseAssistant | A default assistant to do simple LLM calls, with function calling |
 | Default tool assistant | Default tool assistant |
 | Claude 3 with tool assistant | | 
 
-While the configuration of the assistants are in the [config/assistants.yaml](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/config/assistants.yaml) files
+While the configuration of the assistants are in the [config/assistants.yaml](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/config/assistants.yaml) file. Review the content of this file to see the last implemented assistants.
+
+Below is an assistant declaration: 
 
 ```yaml
-base_tool_assistant:
-  assistant_id: base_tool_assistant
-  class_name: athena.llm.assistants.BaseToolAssistant.BaseToolAssistant
-  description: A default assistant that uses LLM and search tool to do web search
-  name: Default tool assistant
-  agent_id: open_ai_tool
+base_openai_tool_assistant:
+  assistant_id: base_openai_tool_assistant
+  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
+  description: A default assistant that uses LLM using chain with tool calling
+  name: Base openai tool assistant
+  agents: 
+    - openai_tool_chain
 ```
 
-We can have multiple different assistant definitions for the same assistant implementation class.
+We can have multiple different assistant definitions for the same assistant implementation class. The variable dimensions are the prompt, the tools, and the LLMs used
 
-The Assistant implementation can be a Langchain chain or a langGraph graph. Each assistant needs to implement the send_conversation and streaming methods.
+The [assistant_mgr](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/llm/assistants/assistant_mgr.py) module defines the [`OwlAssistantEntity`](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/e45d0aa1072b602fd875bb621c3cf1bec8d05a97/owl-agent-backend/src/athena/llm/assistants/assistant_mgr.py#L72-L80) class to keep Assistant declarative metadata and the [`OwlAssistant`](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/e45d0aa1072b602fd875bb621c3cf1bec8d05a97/owl-agent-backend/src/athena/llm/assistants/assistant_mgr.py#L17-L68) abstract class.
+
+The Assistant implementation can be a Langchain chain or a langGraph graph. Each assistant needs to implement the `invoke()` and streaming functions.
 
 ```python
 def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
