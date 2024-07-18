@@ -1,5 +1,8 @@
 # Owl Agent Framework Documentation
 
+???- info "Version"
+    Create March 2024 - Updated 7/18/2024
+    
 OwlAgent is an open source Hybrid AI framework for constructing interactive LLM-based assistants (e.g. chatbots) that include support for calling external decision services built with business rules via tool-calling to ensure precise decision-making at key moments by the interactive application. These applications can also access databases to get in-context information and a vector store of documents for doing RAG so that the chatbot can answer questions with relevant data and documents. Other tools can also be created for additional API access in the applications. This combination of technologies is called Hybrid AI and OwlAgent framework helps you create Agentic applications.
 
 ## Why This Framework?

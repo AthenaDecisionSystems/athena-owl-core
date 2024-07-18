@@ -2,6 +2,7 @@ uvicorn
 fastapi
 langchain-openai
 langchain-anthropic
+langchain-mistralai
 langchain_ibm
 langchain_community 
 langchain

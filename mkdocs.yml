@@ -7,8 +7,10 @@ nav:
     - Introduction: arch.md
     - OwlAgent design: design.md
   - Demos: https://athenadecisionsystems.github.io/athena-owl-demos/
-  - Enablement:
-    - Gen AI to hybrid AI: gen_ai_gs.md
+  - Gen AI to hybrid AI: gen_ai_gs.md
+  - Tutorials:
+    - Environment Setup: tutorials/dev_env.md
+    - Building new Mistral agent: tutorials/new_mistral_agent.md
     - Build your own solution: https://AthenaDecisionSystems.github.io/athena-owl-demos/build_sol/
 theme: 
   name: material

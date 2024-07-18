@@ -1,5 +1,8 @@
 # Architecture
 
+???- info "Version"
+    Create March 2024 - Updated 7/18/2024
+
 ## High Level requirement for Owl Framework
 
 * [ ] Ability to access information from corporate IT systems (typically databases or systems that host key corporate data such as CRM, Maximo, or ERP systems)
@@ -118,64 +121,23 @@ The assistant instance exposes `invoke` or `stream` methods to send query to LLM
 
 ### Assistant Manager
 
-A specific use case implementation is supported by one Assistant. It is not exactly the same concept as the OpenAI assistant, but it may look more as a Crew of agents like in Crew.ai. Assistant defines one or more agents, and if orchestration is needed a dedicated class needs to be implemented.
+A specific business use case implementation is supported by one Assistant. It is not exactly the same concept as the OpenAI assistant, but it may look more as a Crew of agents like in Crew.ai. Assistant defines one or more agents, and if orchestration is needed a dedicated class needs to be implemented.
 
-Assistant will be LangGraph graph when it needs to be stateful, oe LangChain chain when stateless. LangGraph brings the persistence of the conversation with the thread_id and the ability to playback the conversation, therefore it will be the first implementation choice. 
-
-In the case of IBU insurance demo , we have one Assistant, one agent, one prompt, and 3 or 4 tools. The implementation of the assistant is a graph with two nodes: one LLM and one tool_calling node.
-
-There are a set of pre-defined assistants. See the [config file for assistants](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/config/assistants.yaml).
-
-| Assistant Name | Goal |
-| --- | --- |
-| Base Assistant | The base assistant uses LangGraph with one node to implement a simple assistant with a unique node which is an OpenAI agent |
-| Base Tool Assistant | Use a agent and a tool node to search with Tavily tool |
-
+Assistant will be LangGraph graph when it needs to be stateful, or LangChain chain when stateless. LangGraph brings the persistence of the conversation with the thread_id and the ability to playback the conversation, therefore it will be the first implementation choice. 
 
 #### Requirements
 
 * [x] Assistant can be defined by configuration, but also via CRUD APIs as REST resources. Assistant is defined by a unique id, a name, description, some metadata, a class to support the implementation and the list of agents.
-* [ ] Assistant defines a set of agents, and tools an agent can use. Agent is linked to a LLM model. So assistant can be a group of agent using different LLMs. 
+* [x] Assistant defines a set of agents, and tools an agent can use. Agent is linked to a LLM model. So assistant can be a group of agent using different LLMs. 
 * [x] Agent can be a LangGraph graph class with a contract to support invoke and stream. The class is instantiated at runtime from configuration.
 * [x] Support loading configuration for at least one assistants and cached in memory. 
 
+[>>> See detail design section](design.md/#assistants)
 
-#### Approach
-
-The assistant configuration includes a yaml definition such as:
-
-```yaml
-base_tool_assistant:
-  assistant_id: base_tool_assistant
-  class_name: athena.llm.assistants.BaseToolAssistant.BaseToolAssistant
-  description: A default assistant use LLM and tool to do web search
-  name: Default tool assistant
-  agent_id: anthropic_claude_3
-```
-
-![](./diagrams/assistant_mgr_class.drawio.png)
-
-The assistant REST resource defines the FastAPI router (see code `routers/assistants.py`) and the CRUD verbs. The code delegates to a repository. The entity is `OwlAssistantEntity` which maps the definition of the yaml above.
-
-```python
-   
-router = APIRouter( prefix= get_config().api_route +"/a")
-
-@router.get( "/assistants/")
-def get_all_assistants() -> List[OwlAssistantEntity]:
-   all = get_assistant_manager().get_assistants()
-   ...
-```
-
-![](./images/assist_api.PNG)
-
-The manager also includes a factory method to create an instance of the AssistantExecutor so a conversation can create this instance and process the query of the conversation.
-
-!!!- info "Not yet covered"
 
 ### Agent Manager
 
-Agent groups LLM reference, prompts, and tools declaration. The agent manager manages those metadata in the AgentEntity object. The application use agent executor instance.
+Agent groups LLM reference, system prompt, and tools declarations. The agent manager manages those metadata in the OwlAgentEntity object. The application uses agent executor instance.
 
 #### Requirements
 
@@ -184,14 +146,7 @@ Agent groups LLM reference, prompts, and tools declaration. The agent manager ma
 * [x] AgentEntity references the prompt, to use and the model parameters like model name, temperature, top K, top P...
 
 
-#### Approach
-
-The implementation approach looks similar that the assistant manager. The agent manager has a constructor to create agent executor.
-
-![](./diagrams/agent_mgr_class.drawio.png)
-
-
-![](./images/agent_api.PNG)
+[>>> See detail design section](design.md/#agents)
 
 ### Document manager
 

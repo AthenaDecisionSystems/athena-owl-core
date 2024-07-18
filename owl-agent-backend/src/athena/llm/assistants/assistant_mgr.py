@@ -1,6 +1,10 @@
 """
 Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
+
+The assistant manager supports CRUD operations for the OwlAssistantEntity and a factory
+to create instance of an assistant top support conversation.
+There is only one manager per deployed Owl Framework backend.
 """
 from pydantic import BaseModel
 import uuid, yaml, logging
@@ -14,7 +18,22 @@ from typing import Any, Optional
 
 LOGGER = logging.getLogger(__name__)
 
+
+class OwlAssistantEntity(BaseModel):
+    """
+    Entity to persist data about a OwlAssistant
+    """
+    assistant_id: str = str(uuid.uuid4())
+    name: str = "default_assistant"
+    description: str = "A default assistant to do simple LLM calls"
+    class_name : str = "athena.llm.assistants.BaseAssistant.BaseAssistant"
+    agents: list[str] = []
+    
+
 class OwlAssistant(object):
+    """
+    Base class to represent an instance of an assistant. So it defines a contract to support conversations.
+    """
     agents: []
     assistant_id: str
     
@@ -69,19 +88,10 @@ class OwlAssistant(object):
             
     
     
-class OwlAssistantEntity(BaseModel):
-    """
-    Entity to persist data about a OwlAssistant
-    """
-    assistant_id: str = str(uuid.uuid4())
-    name: str = "default_assistant"
-    description: str = "A default assistant to do simple LLM calls"
-    class_name : str = "athena.llm.assistants.BaseAssistant.BaseAssistant"
-    agents: list[str] = []
-    
+
 class AssistantManager(object):
     """
-    A repository to manage OwlAssistant Entity
+    The assistant manager manages OwlAssistant Entities.
     """
     
     def __init__(self):
@@ -107,6 +117,7 @@ class AssistantManager(object):
         return self.ASSISTANTS[id]
     
     def load_assistants(self, path: str):
+        """ Load all the assistants definition from the file systems"""
         with open(path, "r", encoding="utf-8") as f:
             a_dict = yaml.load(f, Loader=yaml.FullLoader)  # a dict with assistant entities
             for oa in a_dict:
