@@ -29,8 +29,8 @@ const Assistant = forwardRef(({ assistantId, informUser, changeUseODMStatus, cha
             fetch(serverUrl + "a/assistants/" + assistantId)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("Agent id: " + data.agent_id, data);
                     const agentId = data.agent_id || data.agents[0];
+                    console.log("Agent id: " + agentId, data);
                     fetch(serverUrl + "a/agents/" + agentId)
                         .then(response => response.json())
                         .then(data => {

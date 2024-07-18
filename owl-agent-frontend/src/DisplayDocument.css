@@ -57,7 +57,7 @@
 
 .display-document-content {
     box-sizing: border-box;
-    padding: 0.5rem;
+    padding: 1rem;
     height: 85.5vh;
     overflow-y: auto;
 }
@@ -117,6 +117,21 @@ pre {
     white-space: -o-pre-wrap;
 
     word-wrap: break-word;
+}
+
+.markdown-adjust-format h1 {
+    margin-top: 2rem;
+    text-decoration: underline;
+    text-underline-offset: 0.5rem;
+}
+
+.markdown-adjust-format h2 {
+    margin-top: 1rem;
+    text-decoration: underline;
+}
+
+.markdown-adjust-format ul {
+    margin-left: 2rem;
 }
 
 .highlight {

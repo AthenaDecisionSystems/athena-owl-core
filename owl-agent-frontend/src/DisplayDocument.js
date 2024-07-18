@@ -8,6 +8,7 @@ import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 import DOMPurify from 'dompurify'
+import ReactMarkdown from 'react-markdown';
 import { useTranslation } from 'react-i18next';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -30,7 +31,7 @@ const DisplayDocument = ({ name, type, content, dismiss }) => {
     function onDocumentLoadSuccess({ numPages }) {
         setNumPages(numPages);
     }
-
+    console.log("DisplayDocument.js: name: " + name + ", type: " + type + ", content: " + content);
     /*<div className="display-annotation-content"><pre>{JSON.stringify(annotations, null, 2)}</pre></div>*/
 
     return (
@@ -43,6 +44,10 @@ const DisplayDocument = ({ name, type, content, dismiss }) => {
                 {(type === "text/plain") &&
                     <div className="display-document-content">
                         <pre>{content}</pre>
+                    </div>}
+                {(type === "text/markdown") &&
+                    <div className="display-document-content">
+                        <ReactMarkdown className="markdown-adjust-format">{content}</ReactMarkdown>
                     </div>}
                 {(type === "text/html") &&
                     <div
