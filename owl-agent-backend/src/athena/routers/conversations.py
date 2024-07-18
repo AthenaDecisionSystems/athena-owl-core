@@ -2,12 +2,12 @@
 Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
 """
-from fastapi import APIRouter, Depends, Response
-from fastapi.responses import StreamingResponse
+from fastapi import APIRouter, Depends, Response, WebSocket
+from fastapi.responses import StreamingResponse, HTMLResponse
 
 import logging
-from typing import AsyncGenerator
-from importlib import import_module
+from typing import AsyncGenerator, NoReturn
+
 from athena.routers.dto_models import ResponseControl, ConversationControl
 from athena.app_settings import get_config
 from athena.glossary.glossary_mgr import build_get_glossary
@@ -75,4 +75,36 @@ async def async_chat_with_owl(conversationControl: ConversationControl) -> Respo
             yield chunk
     return StreamingResponse(event_stream(), media_type="text/event-stream")
 
+async def get_ai_response(message: str) -> AsyncGenerator[str, None]:
+   
+    all_content = ""
+    async for chunk in iter(response):
+        content = chunk.choices[0].delta.content
+        if content:
+            all_content += content
+            yield all_content
+            
+    
+@router.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket) -> NoReturn:
+    """
+    Websocket for AI responses
+    """
+    await websocket.accept()
+    while True:
+        message = await websocket.receive_text()
+        async for text in get_ai_response(message):
+            await websocket.send_text(text)
 
+
+# Test the core app without external UI
+with open("./athena/routers/index.html") as f:
+    html = f.read()
+
+
+@router.get("/")
+async def web_app() -> HTMLResponse:
+    """
+    Web App
+    """
+    return HTMLResponse(html)

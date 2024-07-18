@@ -10,7 +10,7 @@ from langchain_core.prompts import BasePromptTemplate
 
 import logging
 from typing import Optional, Any
-from importlib import import_module
+
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
