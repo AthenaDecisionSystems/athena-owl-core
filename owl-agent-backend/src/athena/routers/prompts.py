@@ -50,3 +50,9 @@ def update_prompt_using_key_locale(promptRequest: PromptRequest):
 @router.delete( "/prompts/{prompt_key}")
 def delete_prompt_using_key(prompt_key: str) -> str:
     return get_prompt_manager().delete_prompt(prompt_key)
+
+
+@router.post("/prompts/reset")
+def reset_assistant_definitions():
+    get_prompt_manager().load_prompts(get_config().owl_prompts_path)
+    return "Done"

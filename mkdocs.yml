@@ -7,8 +7,10 @@ nav:
     - Introduction: arch.md
     - OwlAgent design: design.md
   - Demos: https://athenadecisionsystems.github.io/athena-owl-demos/
-  - Enablement:
-    - Gen AI to hybrid AI: gen_ai_gs.md
+  - Gen AI to hybrid AI: gen_ai_gs.md
+  - Tutorials:
+    - Environment Setup: tutorials/dev_env.md
+    - Building new Mistral agent: tutorials/new_mistral_agent.md
     - Build your own solution: https://AthenaDecisionSystems.github.io/athena-owl-demos/build_sol/
 theme: 
   name: material
@@ -57,12 +59,19 @@ markdown_extensions:
       permalink: true
       toc_depth: 3
   - pymdownx.tabbed
-  - pymdownx.highlight
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
+  - pymdownx.superfences
   - pymdownx.details
   - pymdownx.tasklist:
       custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
 extra:
   social:

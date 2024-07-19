@@ -12,6 +12,7 @@ from importlib import import_module
 class AppSettings(BaseSettings):
     model_config = ConfigDict(extra='allow')  # authorize adding attributes dynamically
     api_route: str = "/api/v1"
+    app_index_path: str = "./athena/routers/index.html"
     version: str = "v0.0.1"
     owl_env_path: str = "../.env"
     logging_level: str = "INFO"

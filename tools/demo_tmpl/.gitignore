@@ -1,0 +1,11 @@
+**/database/
+**/target/
+**/.cache/
+**/.idea/
+**/__pycache__/
+**/data/
+**/chromadb/
+**/file_content/
+**/.env
+**/output/
+**/**.class
