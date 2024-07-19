@@ -9,3 +9,14 @@ default_prompt:
     - locale: es
       text: "Responda las preguntas del usuario según el historial de conversaciones  {chat_history} \n\n question: {input}"
     
+mistral_rag_prompt:
+    name: Mistral Bank Query Classification
+    prompt_id: mistral_rag_prompt
+    locales:
+    - locale: en
+      text: |
+        "Answer the following question based only on the provided context:
+
+        <context>
+        {context}
+        </context>

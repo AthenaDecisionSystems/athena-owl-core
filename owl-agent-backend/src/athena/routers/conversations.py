@@ -98,7 +98,7 @@ async def websocket_endpoint(websocket: WebSocket) -> NoReturn:
 
 
 # Test the core app without external UI
-with open("./athena/routers/index.html") as f:
+with open(get_config().app_index_path) as f:
     html = f.read()
 
 

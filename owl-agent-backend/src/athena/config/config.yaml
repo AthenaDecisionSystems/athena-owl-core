@@ -1,7 +1,7 @@
 logging_level: DEBUG
 version: v0.0.2
 owl_env_path: ../.env
-
+app_index_path: /app/athena/routers/index.html
 owl_glossary_path: /app/athena/config/glossary.json
 owl_prompts_path: /app/athena/config/prompts.yaml
 owl_assistants_path: /app/athena/config/assistants.yaml

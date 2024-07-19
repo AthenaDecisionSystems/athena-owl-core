@@ -74,3 +74,17 @@ anthropic_claude_3:
   top_p: 1
   tools:
   - tavily
+
+mistral_large:
+  agent_id: mistral_large
+  class_name: athena.llm.agents.mistral_agent.MistralAgent
+  description:  A Mistral large agent for RAG question and answer
+  modelClassName: langchain_mistralai.chat_models.ChatMistralAI
+  modelName: mistral-large-latest
+  name: Mistral based agent
+  prompt_ref: mistral_rag_prompt
+  temperature: 0
+  top_k: 1
+  tools: []
+
+

@@ -111,7 +111,7 @@ The conversation is what links the assistant to a user. The user starts a conver
 
 The conversation REST resource expose synchronous or async API and delegate to a conversation manager. 
 
-![](./diagrams/conversation_mgr.drawio.png)
+![](./diagrams/design/conversation_mgr.drawio.png)
 
 The conversation parameter includes the user_id, so the server manages multiple users in parallel, the assistant_id as a conversation is linked to a use case so an assistant. To get the assistant executor the assistant manager creates one instance according to the AssistantEntity definition.
 

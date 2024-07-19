@@ -16,8 +16,8 @@ class MistralAgent(OwlAgentInterface):
     def __init__(self,agentEntity: OwlAgentEntity, prompt: BasePromptTemplate, tool_instances: Optional[list[Any]]):
         self.prompt = prompt
         self.model=self._instantiate_model(agentEntity.modelName, agentEntity.modelClassName, agentEntity.temperature)
-        self.llm = {"input": lambda x: x["input"], "chat_history" : lambda x: x["chat_history"]}  | self.prompt | self.model | StrOutputParser()
-  
+        #self.llm = {"input": lambda x: x["input"], "chat_history" : lambda x: x["chat_history"]}  | self.prompt | self.model | StrOutputParser()
+        self.llm = self.prompt | self.model | StrOutputParser()
     
     def get_runnable(self):
         return  self.llm

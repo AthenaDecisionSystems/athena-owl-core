@@ -11,6 +11,9 @@ class TestAgentsManager(unittest.TestCase):
     """
     Validate CRUD on agent entity and factory of agent instance
     """
+
+
+
     def test_owl_agent_entity_to_json_to_yaml(self):
         print("\n\n >>> test_owl_agent_entity_to_json_to_yaml\n")
         # Use the default setting of the OwlAssistantEntity

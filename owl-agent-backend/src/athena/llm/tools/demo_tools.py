@@ -35,6 +35,10 @@ def query_crm_backend(crmArgument: CrmArgument):
     # normally process the  argument. This is for demonstration of passing a BaseModel as arg
     return [{"customer_id": "C001", "description": "The customer records from DEMO CRM"}]
 
+def retrieve_documents(question: str):
+    _vs=Chroma(persist_directory=DOMAIN_VS_PATH,collection_name="agentic_corpus", embedding_function=_embd)
+    documents = _vs.as_retriever().invoke(question)
+    return documents
 
 class DemoToolInstanceFactory(ToolInstanceFactoryInterface):
     # use to map to function
