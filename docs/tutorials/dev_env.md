@@ -52,12 +52,25 @@ And for the testing
 pip install -r tests/requirements.txt
 ```
 
-* Create a .env file for accessing remote LLM, and update any of the API KEY. You need at least Mistral and OpenAI keys
+* Create a .env file for accessing remote LLM, and update any of the API KEY. 
 
 ```sh
 # under the folder owl-agent-backend
 cp ../tools/.env_tmpl .env
 ```
+
+You need at least the Mistral and OpenAI keys
+
+```yaml
+OPENAI_API_KEY=---your-key---
+WATSONX_APIKEY=---your-key---
+MISTRAL_API_KEY=---your-key---
+LANGCHAIN_API_KEY=---your-key---
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
+...
+```
+
 
 ## Validating Unit Tests for the Backend
 
@@ -89,29 +102,6 @@ The config folder and llm folder are the one you may add code and configuration 
 
 ### Pre-requisites
 
-* Prepare your .env file, using your personal Keys
-
-```yaml
-OPENAI_API_KEY=---your-key---
-WATSONX_APIKEY=---your-key---
-MISTRAL_API_KEY=---your-key---
-LANGCHAIN_API_KEY=---your-key---
-LANGCHAIN_TRACING_V2=true
-LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
-...
-```
-
-* Create and start virtual python env (once created just activate it). Test with python 3.12.3. Above that there is some incompatibility with langchain modules (as of 6/15/2024).
-
-```sh
-python -m venv .venv
-# for MAC / Linux users
-source ./venv/bin/activate
-# for Windows
-source ./venv/Scripts/activate
-```
-
-* Install the needed python modules with `pip install -r src/requirements.txt` and `pip install -r tests/requirements.txt`
 * build the owl backend image under the `owl-agent-backend` folder.
 
 ```sh

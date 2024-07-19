@@ -62,6 +62,8 @@ class TestMistral(unittest.TestCase):
         ctl.query="What is Athena Owl Agent?"
         response=client.post(get_config().api_route + "/c/generic_chat", json= ctl.model_dump())
         print(f"\n---> {response.content}")
+        if "500" in response.content.decode():
+            self.fail("Error in backend")
       
 
     def _test_define_agent_entity_create_instance(self):

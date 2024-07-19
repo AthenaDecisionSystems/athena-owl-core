@@ -1,0 +1,24 @@
+# Copyright 2024 Athena Decision Systems
+# @author Jerome Boyer
+# IBU Loan Application Demo
+# ------------------------------------------------------------------
+ibu_assistant:
+  assistant_id: ibu_assistant
+  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
+  description: A default assistant that uses LLM, and local defined tools like get borrower, and next best action
+  name: IBU Loan App assistant
+  agent_id: ibu_agent
+
+fake_assistant:
+  assistant_id: fake_assistant
+  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
+  description: A default assistant that uses fake LLM
+  name: Fake assistant
+  agent_id: fake_agent
+
+base_assistant:
+  assistant_id: base_assistant
+  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
+  description: A base assistant to do simple LLM calls
+  name: Base assistant
+  agent_id: open_ai_gpt35

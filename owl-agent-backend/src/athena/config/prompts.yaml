@@ -20,3 +20,5 @@ mistral_rag_prompt:
         <context>
         {context}
         </context>
+
+        Question: {input}"

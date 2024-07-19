@@ -1,0 +1,78 @@
+{
+    "example": {
+        "fr": "exemple",
+        "en": "example"
+    },
+    "Actions": {
+        "fr": "Actions",
+        "en": "Actions"
+    },
+    "ClientNotFound": {
+        "fr": "Client $clientid non trouvé",
+        "en": "Client $clientid not found"
+    },
+    "Proposal": {
+        "fr": "une proposition commerciale",
+        "en": "a commercial proposal"
+    },
+    "AcknowledgmentOfReceipt": {
+        "fr": "un accusé de réception",
+        "en": "an acknowledgement of receipt"
+    },
+    "ClientRepresentative": {
+        "fr": "un gestionnaire de compte",
+        "en": "a client representative"
+    },
+    "SorryAboutPerceptionButFair": {
+        "fr": "une note qui explique que nous sommes désolés de sa perception mais c'est le juste prix",
+        "en": "a note that explains that we are sorry about the perception but it is the fair price"
+    },
+    "Letter": {
+        "fr": "lettre",
+        "en": "letter"
+    },
+    "CommercialProposal": {
+        "fr": "une proposition commerciale",
+        "en": "a commercial proposal"
+    },
+    "SMS": {
+        "fr": "SMS",
+        "en": "SMS"
+    },
+    "Phone": {
+        "fr": "téléphone",
+        "en": "phone"
+    },
+    "analysis_gives": {
+        "fr": "L'analyse du cas du client donne :\n",
+        "en": "The analysis of the client case gives:\n"
+    },
+    "NoAction": {
+        "fr": "Pas d'action pour ce client",
+        "en": "No action for this client"
+    },
+    "CommunicateWithClient": {
+        "fr": "Communiquer avec le client par $channel $messageType",
+        "en": "Communicate with the client by $channel $messageType"
+    },
+    "PrepareProposal": {
+        "fr": "Préparer une proposition commerciale pour le client.",
+        "en": "Prepare a commercial proposal for the client."
+    },
+    "ResendTo": {
+        "fr": "Renvoyer à $recipient",
+        "en": "Resend to $recipient"
+    },
+    "CommercialEffort": {
+        "fr": "Envisager un effort commercial",
+        "en": "Consider a commercial effort"
+    },
+    "UnknownAction": {
+        "fr": "Action inconnue: $actionType",
+        "en": "Unknown action: $actionType"
+    },
+    "Explanation": {
+        "fr": "    Explication: $expl\n",
+        "en": "    Explanation: $expl\n"
+    }
+}

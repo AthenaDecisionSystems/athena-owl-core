@@ -1,0 +1,32 @@
+# Copyright 2024 Athena Decision Systems
+# @author Jerome Boyer
+# IBU Loan Application Demo
+# ------------------------------------------------------------------
+open_ai_tool:
+  agent_id: open_ai_tool
+  name: open_ai_gpt35
+  description: openai based agent with prompt coming from langchain hub  and tool
+  class_name: athena.llm.agents.tool_agent_openai.OpenAIToolAgent
+  modelName: gpt-3.5-turbo-0125
+  prompt_ref: hwchase17/openai-functions-agent
+  temperature: 0
+  top_k: 1
+  top_p: 1
+  tools:
+  - tavily
+
+
+ibu_agent:
+  agent_id: ibu_agent
+  name: ibu_agent
+  description: openai based agent with IBU loan app prompt and tools
+  class_name: athena.llm.agents.base_chain_agent.OwlAgent
+  modelName: gpt-3.5-turbo-0125
+  modelClassName: langchain_openai.ChatOpenAI
+  prompt_ref: ibu_loan_prompt
+  temperature: 0
+  top_k: 1
+  top_p: 1
+  tools:
+  - ibu_client_by_name
+  - ibu_loan_assessment_action
