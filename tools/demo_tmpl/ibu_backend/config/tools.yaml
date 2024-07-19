@@ -1,31 +1,11 @@
-# Copyright 2024 Athena Decision Systems
-# @author Jerome Boyer
-# IBU Loan Application Demo
-# ------------------------------------------------------------------
 tavily:
   tool_id: tavily
   tool_class_name: langchain_community.tools.tavily_search.TavilySearchResults
   tool_description: 'A search engine optimized for comprehensive, accurate, and trusted results'
   tool_fct_name: ''
-  tool_id: tavily
 
-
-ibu_client_by_name:
-  tool_id: ibu_client_by_name
-  tool_class_name: 'ibu.llm.tools.client_tools'
-  tool_description: 'get client information given his first and last name'
-  tool_fct_name: get_client_by_name
-
-
-ibu_best_action:
-  tool_id: ibu_best_action
-  tool_class_name: ibu.llm.tools.client_tools
-  tool_description: 'perform the loan application request assessment for the given borrower name'
-  tool_fct_name: define_next_best_action_with_decision
-  tool_arg_schema_class: LoanRequest
-
-ibu_loan_assessment_action:
-  tool_id: ibu_loan_assessment_action
-  tool_class_name: ibu.llm.tools.client_tools
-  tool_description: 'perform the loan application request assessment for the given borrower name'
-  tool_fct_name: assess_loan_app_with_decision
+query_crm:
+  tool_id: query_crm
+  tool_class_name: athena.llm.tools.demo_tools
+  tool_description: "Call the customer relationship management (CRM) to get customer data."
+  tool_fct_name: query_crm_backend

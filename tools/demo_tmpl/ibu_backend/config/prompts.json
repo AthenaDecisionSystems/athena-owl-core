@@ -1,5 +1,0 @@
-{
-    "ibu_loan_prompt": {
-        "en": "You are a bank assistant, supporting customer agent representative managing borrower's loan application by addressing the \n\n question: {input}"
-    }
-}

@@ -59,6 +59,6 @@ mistral_tool_assistant:
   assistant_id: mistral_tool_assistant
   class_name: athena.llm.assistants.BaseGraphAssistant.BaseGraphAssistant
   description: A default assistant that uses Mistral
-  name: Mistral large with tool assitant
+  name: Mistral large with tool assistant
   agents: 
     - mistral_large

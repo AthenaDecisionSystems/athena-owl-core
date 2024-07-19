@@ -1,24 +1,39 @@
-# Copyright 2024 Athena Decision Systems
-# @author Jerome Boyer
-# IBU Loan Application Demo
-# ------------------------------------------------------------------
-ibu_assistant:
-  assistant_id: ibu_assistant
+base_openai_assistant:
+  assistant_id: base_openai_assistant
   class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
-  description: A default assistant that uses LLM, and local defined tools like get borrower, and next best action
-  name: IBU Loan App assistant
-  agent_id: ibu_agent
+  description: A default assistant that uses LLM using chain
+  name: Base openai assistant
+  agents: 
+    - openai_chain
 
-fake_assistant:
-  assistant_id: fake_assistant
+base_openai_tool_assistant:
+  assistant_id: base_openai_tool_assistant
   class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
-  description: A default assistant that uses fake LLM
-  name: Fake assistant
-  agent_id: fake_agent
+  description: A default assistant that uses LLM using chain with tool calling
+  name: Base openai tool assistant
+  agents: 
+    - openai_tool_chain
 
-base_assistant:
-  assistant_id: base_assistant
-  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
-  description: A base assistant to do simple LLM calls
+base_tool_graph_assistant:
+  assistant_id: base_tool_graph_assistant
+  class_name: athena.llm.assistants.BaseToolGraphAssistant.BaseToolGraphAssistant
+  description: A default assistant that uses LLM and search tool to do web search
+  name: Default tool assistant
+  agents: 
+    - openai_tool_chain
+
+base_graph_assistant:
+  assistant_id: base_graph_assistant
+  class_name: athena.llm.assistants.BaseGraphAssistant.BaseGraphAssistant
+  description: A base assistant to do simple LLM calls using LangGraph
   name: Base assistant
-  agent_id: open_ai_gpt35
+  agents: 
+    - openai_chain
+
+mistral_tool_assistant:
+  assistant_id: mistral_tool_assistant
+  class_name: athena.llm.assistants.BaseGraphAssistant.BaseGraphAssistant
+  description: A default assistant that uses Mistral
+  name: Mistral large with tool assistant
+  agents: 
+    - mistral_large

@@ -2,12 +2,16 @@
 a bunch of calls to the backend servers to validate the major functions
 """
 from pydantic import BaseModel
+import unittest
+import requests
 
 import requests
 
 IBU_BASE_URL="http://localhost:8000/api/v1"
-PROMPT_REFERENCE="ibu_loan_prompt"
-ASSISTANT_REF="ibu_assistant"
+PROMPT_REF="default_prompt"
+ASSISTANT_REF="base_graph_assistant"
+AGENT_REF="openai_tool_chain"
+TOOL_REF="tavily"
 
 class OwlAssistantEntity(BaseModel):
     """
@@ -18,67 +22,70 @@ class OwlAssistantEntity(BaseModel):
     description: str = "A default assistant to do simple LLM calls"
     class_name : str = "athena.llm.assistants.BaseAssistant.BaseAssistant"
     agent_id: str = ""
-    
-def verify_health(base_url):
-  print("\n--> Validate the Web App is Alive\n")
+ 
+class TestHappyPathScenario(unittest.TestCase):
+  
+    def test_verify_health(self):
+        print("\n--> Validate the Web App is Alive\n")
+        rep = requests.get(IBU_BASE_URL + "/health", timeout = 10).content.decode()
+        assert "Alive" in rep
+        print(f"@@@> {rep} -> good!")
 
-  rep = requests.get(base_url + "/health").content.decode()
-  print(f"\n@@@> {rep}")
-  assert "Alive" in rep
+
+    def test_perform_general_knowledge_query_legacy(self):
+        print("\n--> Validate Basic Query to LLM\n")
+        data='{  "locale": "en",\
+          "query": "can you give me some information about Athena Decision Systems?",\
+          "assistant_id": "' + ASSISTANT_REF + '",  \
+          "user_id" : "remote_test", \
+          "chat_history": [],\
+          "thread_id" : "1" \
+        }'
+        print(data)
+        rep = requests.post(IBU_BASE_URL + "/c/generic_chat", data=data, headers = {"Content-Type": "application/json"}, timeout = 10).content.decode()
+        print(f"@@@> {rep}")
+        assert rep   
+
   
 
-def validate_access_to_ibu_prompt(base_url):
-  print("\n--> Get IBU default prompt\n")
-  rep = requests.get(base_url + f"/a/prompts/{PROMPT_REFERENCE}/en").content.decode()
-  print(f"\n@@@> {rep}")
-  assert "bank" in rep
+    def test_validate_access_to_prompt_entity_api(self):
+      print("\n--> Get IBU default prompt\n")
+      rep = requests.get(IBU_BASE_URL + f"/a/prompts/{PROMPT_REF}/en").content.decode()
+      print(f"\n@@@> {rep}")
+      assert "conversation" in rep
   
-  
-def validate_ibu_assistant(base_url):
-  print("\n--> Get IBU Loan assistant entity\n")
-  resp = requests.get(base_url + f"/a/assistants/{ASSISTANT_REF}")
-  a_str= resp.content.decode()
-  print(f"\n@@@> {a_str}")
-  ae = OwlAssistantEntity.model_validate_json(json_data=a_str)
-  print(f"\n@@@> {ae}")
-  #print(obj["agent_id"])
-  return ae
-  
+      
+    def test_validate_base_assistant_entity_api(self):
+      print("\n--> Get base assistant entity\n")
+      resp = requests.get(IBU_BASE_URL + f"/a/assistants/{ASSISTANT_REF}")
+      a_str= resp.content.decode()
+      print(f"\n@@@> {a_str}")
+      ae = OwlAssistantEntity.model_validate_json(json_data=a_str)
+      print(f"\n@@@> {ae}")
+      #print(obj["agent_id"])
+      return ae
+      
 
-def validate_ibu_agent(base_url,agent_id):
-  print("\n--> Get IBU loan agent entity\n")
-  rep = requests.get(base_url + "/a/agents/"+agent_id).content.decode()
-  print(f"\n@@@> {rep}")
-  return rep
+    def test_validate_agent_entity_api(self):
+      print("\n--> Get base agent entity\n")
+      rep = requests.get(IBU_BASE_URL + "/a/agents/"+AGENT_REF).content.decode()
+      print(f"\n@@@> {rep}")
+      return rep
 
-def validate_ibu_tools(base_url, tool_id):
-  print("\n--> Get IBU loan tool entity\n")
-  rep = requests.get(base_url + "/a/tools/"+tool_id).content.decode()
-  print(f"\n@@@> {rep}")
-  return rep
+    def test_validate_tools_entity_api(self):
+      print("\n--> Get IBU loan tool entity\n")
+      rep = requests.get(IBU_BASE_URL + "/a/tools/"+TOOL_REF).content.decode()
+      print(f"\n@@@> {rep}")
+      return rep
 
-def validate_get_credit_score(base_url, fn: str, ln: str):
-  print("\n--> Get information about one of the client\n")
-  data='{ "locale": "en",\
-    "query": "What is the credit score of Robert Smith using IBU loan database?",\
-    "assistant_id": "ibu_assistant", \
-    "thread_id" : "1", \
-    "user_id" : "a_test_user"\
-  }'
-  rep = requests.post(base_url + "/c/generic_chat", data=data, headers = {"Content-Type": "application/json"}).content.decode()
-  print(f"\n@@@> {rep}")
-  return rep
+    # ADD HERE your own scenario test
 
 
   
 if __name__ == "__main__":
-  print("################ Non Regression Tests ##############")
-  verify_health(IBU_BASE_URL)
-  validate_access_to_ibu_prompt(IBU_BASE_URL)
-  ae=validate_ibu_assistant(IBU_BASE_URL)
-  validate_ibu_agent(IBU_BASE_URL,ae.agent_id)
-  validate_ibu_tools(IBU_BASE_URL,"ibu_client_by_name")
-  validate_get_credit_score(IBU_BASE_URL,"Robert", "Smith")
+    print("################ Non Regression Tests ##############")
+    unittest.main()
+  
   
 
 
