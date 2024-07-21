@@ -31,7 +31,13 @@ class OwlAgent(OwlAgentInterface):
             self.llm = AgentExecutor(agent= agent, tools=self.tools, verbose=True)
             
         else:
-            self.llm = {"input": lambda x: x["input"], "chat_history" : lambda x: x["chat_history"]}  | self.prompt | self.model | StrOutputParser()
+            if "input" in self.prompt.input_variables:
+                if "chat_history" in self.prompt.input_variables:
+                    self.llm = {"input": lambda x: x["input"], "chat_history" : lambda x: x["chat_history"]}  | self.prompt | self.model | StrOutputParser()
+                else:
+                    self.llm = {"input": lambda x: x["input"]}  | self.prompt | self.model | StrOutputParser()
+            else:
+                self.llm = self.prompt | self.model | StrOutputParser()
             self.tools = []
        
     def get_runnable(self):
