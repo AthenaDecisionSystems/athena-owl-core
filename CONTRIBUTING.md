@@ -1,19 +1,18 @@
-## Contributing to Athena OWL core
+# Contributing to the OwlAgent Framework
 
-Anyone can contribute to Athena OWL core code and their associated projects.
+Anyone can contribute to OwlAgent Framework and associated projects.
 
-There are multiple ways to contribute: report bugs and improvement suggestions, improve documentation, and contribute code.
-
+There are multiple ways to contribute: report bugs and suggest improvements, improve the documentation, and contribute code.
 
 ## Bug reports, documentation changes, and feature requests
 
-If you would like to contribute to the project in the form of encountered bug reports, necessary documentation changes, or new feature requests, this can be done through the use of the repository's [**Issues**](#) list.  
+If you would like to contribute to the project in the form of encountered bug reports, necessary documentation changes, or new feature requests, this can be done through the use of the repository's [**Issues**](https://github.com/AthenaDecisionSystems/athena-owl-core/issues) list.
 
-Before opening a new issue, please reference the existing list to make sure a similar or duplicate item does not already exist.  Otherwise, please be as explicit as possible when creating the new item and be sure to include the following:
+Before opening a new issue, please check the existing list to make sure a similar or duplicate item does not already exist.  When you create your issues, please be as explicit as possible and be sure to include the following:
 
 - **Bug reports**
 
-  - Specific Project Version
+  - Specific project version
   - Deployment environment
   - A minimal, but complete, setup of steps to recreate the problem
 
@@ -28,7 +27,7 @@ Before opening a new issue, please reference the existing list to make sure a si
   - Complete description of project feature request, including but not limited to, components of the existing project that are impacted, as well as additional components that may need to be created.
   - A minimal, but complete, setup of steps to recreate environment necessary to identify the new feature's current gap.
 
-The more explicit and thorough you are in opening GitHub Issues, the more efficient your interaction with the maintainers will be.  When creating the GitHub Issue for your bug report, documentation change, or feature request, be sure to add as many relevant labels as necessary (that are defined for that specific project).  These will vary by project, but will be helpful to the maintainers in quickly triaging your new GitHub issues.
+The more explicit and thorough you are in opening GitHub Issues, the more efficient your interaction with the maintainers will be.  When creating the GitHub issue for your bug report, documentation change, or feature request, be sure to add as many relevant labels as necessary (that are defined for that specific project).  These will vary by project, but will be helpful to the maintainers in quickly triaging your new GitHub issues.
 
 ## Code contributions
 
@@ -54,7 +53,8 @@ We really value contributions, and to maximize the impact of code contributions,
 ### Github and git flow
 
 The internet is littered with guides and information on how to use and understand git.
-However, here's a compact guide that follows the suggested workflow
+
+However, here's a compact guide that follows the suggested workflow that we try to follow:
 
 1. Fork the desired repo in github.
 
@@ -66,7 +66,7 @@ However, here's a compact guide that follows the suggested workflow
 
 4. Create new development branch off the targeted upstream branch.  This will often be `main`.
 
-    ```
+    ```sh
     git checkout -b <my-feature-branch> main
     ```
 
@@ -80,13 +80,13 @@ However, here's a compact guide that follows the suggested workflow
 
 6. Fetch latest upstream changes (in case other changes had been delivered upstream while you were developing your new feature).
 
-    ```
+    ```sh
     git fetch upstream
     ```
-    
+
 7. Rebase to the latest upstream changes, resolving any conflicts. This will 'replay' your local commits, one by one, after the changes delivered upstream while you were locally developing, letting you manually resolve any conflict.
 
-    ```
+    ```sh
     git branch --set-upstream-to=upstream/main
     git rebase
     ```
@@ -95,7 +95,7 @@ However, here's a compact guide that follows the suggested workflow
 
 8. Push the changes to your repository
 
-    ```
+    ```sh
     git push origin <my-feature-branch>
     ```
 
@@ -107,13 +107,13 @@ Once the pull request has been reviewed, accepted and merged into the main githu
 
 10. Pull to your local forked repository the latest changes upstream (that is, the pull request).
 
-    ```
+    ```sh
     git pull upstream main
     ```
 
 11. Push those latest upstream changes pulled locally to your remote forked repository.
 
-    ```
+    ```sh
     git push origin main
     ```
 
