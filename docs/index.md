@@ -1,8 +1,9 @@
 # Owl Agent Framework Documentation
 
-???- info "Version"
-    Create March 2024 - Updated 7/18/2024
-    
+* Version 0.1: Created March 2024 - Updated 7/18/2024
+
+## Introduction
+
 OwlAgent is an open source Hybrid AI framework for constructing interactive LLM-based assistants (e.g. chatbots) that include support for calling external decision services built with business rules via tool-calling to ensure precise decision-making at key moments by the interactive application. These applications can also access databases to get in-context information and a vector store of documents for doing RAG so that the chatbot can answer questions with relevant data and documents. Other tools can also be created for additional API access in the applications. This combination of technologies is called Hybrid AI and OwlAgent framework helps you create Agentic applications.
 
 ## Why This Framework?
@@ -14,6 +15,10 @@ The next generation of applications will have to make precise, accurate, explain
 This class of applications requires a different approach, specifically for making decisions and getting the right data for those decisions.   It is not sufficient to simply ask LLMs, with their probabilistic models based on large correlations of language sequences, to reason about complex policy application decisions.   Their reasoning capabilities are not sufficient (indeed, one could argue they have none at all) and the need to get precise data to make these decisions requires additional reasoning and skill.   The best solutions will be hybrid - combining LLMs for natural language with additional tools for data management and decision-making - tools like business rules, knowledge graphs, and goal-oriented engines that know how to gather just the data needed to make decisions.
 
 The OwlAgent framework makes it as easy as possible to combine these different elements into a single interactive application, by minimizing the amount of custom development work so development teams can spend more time on developing decision services and thinking about UI and other issues.   It relies on common industry substrates like LangGraph and LangChain, and lets you use a variety of LLMs, vector stores, databases, decision engines, and other back-end tools needed for operations.
+
+We call this toolbox approach _Hybrid AI_.  [You can read more about moving from a pre Generative AI approach to Hybrid AI here](./gen_ai_gs.md).
+
+## Open Source Framework
 
 The OwlAgent framework is open source and we welcome all users and contributors!   Please write to [Athena Decision Systems](mailto:contact@athenadecisions.com) if you have any questions or need any support!   We are constantly iterating the framework and we hope you can use it successfully and ideally help out yourself!
 
@@ -28,7 +33,7 @@ The OwlAgent Framework was initially written by [Athena Decision Systems](http:/
 The core OwlAgent framework leverages key parts of the generative AI and decision management ecosystem including:
 
 * LangChain, LangGraph
-* Multiple large language models that support tool calling
+* Any Large language model that supports tool calling, such as the GPT family, Claude 3.5, Mistral Large, Llama3, and some members of the Granite family, and others.
 * Multiple model hosting environments (HuggingFace, IBM WatsonX.ai, Modal, AWS Bedrock) or local model hosting (e.g. using Ollama)
 * Multiple Business Rule Management Systems for decision services ([IBM ODM](https://www.ibm.com/products/operational-decision-manager), [Decision Management Open Edition](https://decisionmanagementsolutions.com/ibm_dmoe/), [IBM Automated Decision Services](https://www.ibm.com/products/automation-decision-services), Open Source [Kogito](https://kogito.kie.org/) + potentially others)
 
@@ -38,7 +43,7 @@ This video demonstration illustrates the value of this framework to help enterpr
 
 ## Getting Started
 
-This repository includes the core elements of the OwlAgent Framework, while the [demonstration git repository](https://github.com/AthenaDecisionSystems/athena-owl-demos) includes how to develop solutions from the core framework, or leveraging existing demonstrations.
+This repository includes the core elements of the OwlAgent Framework, while the [demonstration git repository](https://github.com/AthenaDecisionSystems/athena-owl-demos) includes documentation on how to develop solutions from the core framework and leverage existing demonstrations.
 
 To get started we recommend cloning both repositories:
 
@@ -49,9 +54,7 @@ git clone https://github.com/AthenaDecisionSystems/athena-owl-demos
 
 And [go to the demonstration documentation](https://athenadecisionsystems.github.io/athena-owl-demos/) to run one of the existing demonstration or [build your own solution](https://athenadecisionsystems.github.io/athena-owl-demos/build_sol/).
 
-## What is in this documentation?
-
-### OwlAssistants
+## OwlAssistants
 
 With the OwlAgent Framework, you can create assistants called OwlAssistants.   Each new use case or combination of components is an assistant.   For example, you can make an assistant for doing next best actions for customer service reps for your industry, or for helping maintenance technicians decide what inspections or maintenance operations to perform.   If you have a new decision service or domain model or functionality, you will typically make a new assistant.
 
@@ -73,7 +76,6 @@ Tools can be used to:
 
 The Owl Platform portal includes assistants, agents, and a tools hub that enterprises can use to let employees and other stakeholders select the best assistant for their tasks. The OwAssistant server is a deployable docker image that can run on any hybrid cloud platform.
 
-You can review [the blog about moving from Generative AI to Hybrid AI](./gen_ai_gs.md).
 
 ## Contact us
 
