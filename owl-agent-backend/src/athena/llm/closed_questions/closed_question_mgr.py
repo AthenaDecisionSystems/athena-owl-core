@@ -33,17 +33,17 @@ class OwlClosedQuestionEntity(BaseModel):
 """
 # this is a sample yaml describing a closed question
 
-age_of_the_captain:
-  - question_id: age_oF_the_captain
-  - key_name: "the boat.captain.age"      # used to look for a question
+power_of_the_vehicle_engine:
+  - question_id: power_of_the_vehicle_engine
+  - key_name: "the vehicle.engine.power"      # used to look for a question and reinject a value in the agent state
   - labels:
     - locale: en
       text: |
-        "What is the age of the captain?"
+        "What is the power of the vehicle's engine?"
     - locale: fr
       text: |
-        "Quel est l'age du capitaine ?"
-  - data_type: integer
+        "Quel est la puissance du moteur du véhicle ?"
+  - data_type: double
 """
 
 
@@ -58,13 +58,13 @@ class OwlDecisionSignatureEntity(BaseModel):
 # call to decision service = tool with parameters
 
 parameters:
-  - name: "boat"              # id using in AgentState dictionary
-    alias: "the boat"         # optional, this can be the param name used in decision service
-    data_type: "org.myrace.Boat"
-  - name: "race"
-    alias: "the race"
-    data_type: "org.myrace.Race"
-  - name: "harbor"
-    alias: "the harbor"
-    data_type: "org.myrace.Harbor"
+  - name: "vehicle"              # id using in AgentState dictionary
+    alias: "the vehicle"         # optional, this can be the param name used in decision service
+    data_type: "org.dt.cartax.Vehicle"
+  - name: "requester"
+    alias: "the requester"
+    data_type: "org.dt.cartax.Requester"
+  - name: "declaration"
+    alias: "the declaration"
+    data_type: "org.dt.cartax.Declaration"
 """
