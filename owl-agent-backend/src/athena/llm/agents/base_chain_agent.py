@@ -1,5 +1,5 @@
 
-from athena.app_settings import get_config, AppSettings
+
 from athena.llm.agents.agent_mgr import OwlAgentInterface, OwlAgentEntity
 
 from langchain_core.output_parsers import StrOutputParser
