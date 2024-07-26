@@ -9,7 +9,7 @@ from pydantic import BaseModel
 import uuid
 
 # THIS IS THE USE CASE IN WHICH CLOSED QUESTIONS ARE USED:
-# 1. given the goal at hand, define the agent state to keep named business entities needed by the decision service
+# 1. given the goal/intent at hand, define the agent state to keep named business entities needed by the decision service
 # 2. initialize the named entities as empty or by fetching them by ID from a datasource
 # 3. call the decision service iteratively until we reach a conclusion
 #   - use closed questions to enrich the business entities stored in the AgentState and needed by the Decision Service
@@ -45,6 +45,7 @@ power_of_the_vehicle_engine:
       text: |
         "Quel est la puissance du moteur du véhicle ?"
   - data_type: "double"
+  - data_constraint: ">0"   # to be defined
 """
 
 # a closed answer is received from the client-side UI app that interacts with the server-side assistant
@@ -62,6 +63,18 @@ class OwlClosedAnswer(BaseModel):
 power_of_the_vehicle_engine:
   - key_name: "the vehicle.engine.power"      # used to reinject a value in the agent state
   - input: "120.0"                            # the value to be reinjected
+
+
+[
+  {
+    "key_name": "the vehicle.engine.power",
+    "input": "120.0"
+  },
+  {
+    "key_name": "the vehicle.registration_date",
+    "input": "2021-10-26"
+  }
+]  
 """
 
 class OwlDecisionSignatureEntity(BaseModel):
