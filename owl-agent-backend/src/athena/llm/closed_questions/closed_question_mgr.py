@@ -24,13 +24,14 @@ class DataTypeEnum(str, Enum):
     text_type = 'text'
     integer_type = 'integer'
     double_type = 'double'
-    date_type = 'date'
+    date_type = 'date'              # The most common ISO Date Format yyyy-MM-dd — for example, "2000-10-31".
+    datetime_type = 'datetime'      # The most common ISO Date Time Format yyyy-MM-dd'T'HH:mm:ss.SSSXXX — for example, "2000-10-31T01:30:00.000-05:00".
 
 class DataRestrictions(BaseModel):
     possible_values: Optional[List[str]] = None
-    regex: Optional[str] = None
-    min: Optional[float] = None
-    max: Optional[float] = None
+    regex: Optional[str] = None   # only applicable if data_type is text
+    min: Optional[str] = None     # min string will be converted to integer, floating point number, date or datetime depending on the data_type
+    max: Optional[str] = None     # max string will be converted to integer, floating point number, date or datetime depending on the data_type
 
 # a closed question entity can be read from a yaml configuration file or generated dynamically by an "interactive" decision service
 class OwlClosedQuestionEntity(BaseModel):
