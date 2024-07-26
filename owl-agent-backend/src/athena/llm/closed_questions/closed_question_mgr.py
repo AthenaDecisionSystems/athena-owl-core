@@ -15,9 +15,6 @@ import uuid
 # 3. call the decision service iteratively until we reach a conclusion
 #   - use closed questions to enrich the business entities stored in the AgentState and needed by the Decision Service
 
-# TODO: instead of representing the data_type attributes, we should have a representation of the different types.
-
-
 
 class DataTypeEnum(str, Enum):
     boolean_type = 'boolean'
@@ -67,6 +64,7 @@ power_of_the_vehicle_engine:
   - data_type: "double"
   - restrictions:
     - min: "0.0"
+  - default_value: "100.0"
 """
 
 # a closed answer is received from the client-side UI app that interacts with the server-side assistant
