@@ -4,6 +4,7 @@ Copyright 2024 Athena Decision Systems
 
 """
 
+from typing import Optional
 from pydantic import BaseModel
 import uuid
 
@@ -43,22 +44,41 @@ power_of_the_vehicle_engine:
     - locale: fr
       text: |
         "Quel est la puissance du moteur du véhicle ?"
-  - data_type: double
+  - data_type: "double"
 """
 
+# a closed answer is received from the client-side UI app that interacts with the server-side assistant
+class OwlClosedAnswer(BaseModel):
+    """
+    Definition of an answer to a closed question
+    Answers to closed questions are used to enrich the objects kept as named parameters in the LangGraph AgentState
+    """
+    key_name: str = ""
+    input: str = ""
+
+"""
+# this is a sample yaml describing an answer to a closed question
+
+power_of_the_vehicle_engine:
+  - key_name: "the vehicle.engine.power"      # used to reinject a value in the agent state
+  - input: "120.0"                            # the value to be reinjected
+"""
 
 class OwlDecisionSignatureEntity(BaseModel):
+
     class namedParameter(BaseModel):
         name: str
-        alias: str
+        alias: Optional[str] = None       # if provided, the alias is used to find a named parameter in the list of decision service inputs
         data_type: str
+
+    parameters: list[namedParameter]
 
 """
 # this is a sample yaml defining an OwlDecisionSignatureEntity
 # call to decision service = tool with parameters
 
 parameters:
-  - name: "vehicle"              # id using in AgentState dictionary
+  - name: "vehicle"              # id using in AgentState dictionary, it has to be a valid Python variable name. In particular, it cannot contain spaces
     alias: "the vehicle"         # optional, this can be the param name used in decision service
     data_type: "org.dt.cartax.Vehicle"
   - name: "requester"
