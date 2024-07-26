@@ -23,8 +23,14 @@ class DataTypeEnum(str, Enum):
     boolean_type = 'boolean'
     text_type = 'text'
     integer_type = 'integer'
-    double_type = 'decimal'
+    double_type = 'double'
     date_type = 'date'
+
+class DataRestrictions(BaseModel):
+    possible_values: Optional[List[str]] = None
+    regex: Optional[str] = None
+    min: Optional[float] = None
+    max: Optional[float] = None
 
 # a closed question entity can be read from a yaml configuration file or generated dynamically by an "interactive" decision service
 class OwlClosedQuestionEntity(BaseModel):
@@ -39,9 +45,7 @@ class OwlClosedQuestionEntity(BaseModel):
     question_id: str = str(uuid.uuid4())
     key_name: str
     data_type: DataTypeEnum
-    possible_values: Optional[List[str]] = None
-
-    #constraint: str= ""                  # possible future improvements e.g. number in [0.0, 100.0]
+    restrictions: Optional[DataRestrictions] # e.g. number in [0.0, 100.0] => restrictions.min = "0.0", restrictions.max = "100.0"
     locales: list[localeStructure]
 
 """
@@ -58,7 +62,8 @@ power_of_the_vehicle_engine:
       text: |
         "Quel est la puissance du moteur du véhicle ?"
   - data_type: "double"
-  - data_constraint: ">0"   # to be defined
+  - restrictions:
+    - min: "0.0"
 """
 
 # a closed answer is received from the client-side UI app that interacts with the server-side assistant
