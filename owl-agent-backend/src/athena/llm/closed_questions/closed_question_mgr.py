@@ -44,9 +44,11 @@ class OwlClosedQuestionEntity(BaseModel):
 
     question_id: str = str(uuid.uuid4())
     key_name: str
-    data_type: DataTypeEnum
-    restrictions: Optional[DataRestrictions] # e.g. number in [0.0, 100.0] => restrictions.min = "0.0", restrictions.max = "100.0"
     locales: list[localeStructure]
+
+    data_type: DataTypeEnum
+    restrictions: Optional[DataRestrictions]  # e.g. number in [0.0, 100.0] => restrictions.min = "0.0", restrictions.max = "100.0"
+    default_value: Optional[str] = None       # can be used to propose a default value in the UI
 
 """
 # this is a sample yaml describing a closed question
