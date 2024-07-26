@@ -4,7 +4,8 @@ Copyright 2024 Athena Decision Systems
 
 """
 
-from typing import Optional
+from typing import Optional, List
+from enum import Enum
 from pydantic import BaseModel
 import uuid
 
@@ -15,6 +16,15 @@ import uuid
 #   - use closed questions to enrich the business entities stored in the AgentState and needed by the Decision Service
 
 # TODO: instead of representing the data_type attributes, we should have a representation of the different types.
+
+
+
+class DataTypeEnum(str, Enum):
+    boolean_type = 'boolean'
+    text_type = 'text'
+    integer_type = 'integer'
+    double_type = 'decimal'
+    date_type = 'date'
 
 # a closed question entity can be read from a yaml configuration file or generated dynamically by an "interactive" decision service
 class OwlClosedQuestionEntity(BaseModel):
@@ -27,8 +37,11 @@ class OwlClosedQuestionEntity(BaseModel):
         text: str
 
     question_id: str = str(uuid.uuid4())
-    key_name: str = ""
-    data_type: str = ""
+    key_name: str
+    data_type: DataTypeEnum
+    possible_values: Optional[List[str]] = None
+
+    #constraint: str= ""                  # possible future improvements e.g. number in [0.0, 100.0]
     locales: list[localeStructure]
 
 """
