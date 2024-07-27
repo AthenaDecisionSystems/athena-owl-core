@@ -24,8 +24,12 @@ class DataTypeEnum(str, Enum):
     date_type = 'date'              # The most common ISO Date Format yyyy-MM-dd — for example, "2000-10-31".
     datetime_type = 'datetime'      # The most common ISO Date Time Format yyyy-MM-dd'T'HH:mm:ss.SSSXXX — for example, "2000-10-31T01:30:00.000-05:00".
 
+class LabelValuePair(BaseModel):
+    label: str                      # label shown in the UI in a dropdown list
+    value: str
+
 class DataRestrictions(BaseModel):
-    possible_values: Optional[List[str]] = None
+    possible_values: Optional[List[LabelValuePair]] = None
     regex: Optional[str] = None   # only applicable if data_type is text
     min: Optional[str] = None     # min string will be converted to integer, floating point number, date or datetime depending on the data_type
     max: Optional[str] = None     # max string will be converted to integer, floating point number, date or datetime depending on the data_type
@@ -37,12 +41,12 @@ class OwlClosedQuestionEntity(BaseModel):
     Closed questions are used to enrich the objects kept as named parameters in the LangGraph AgentState
     """
     class localeStructure(BaseModel):
-        locale: str
-        text: str
+      locale: str
+      text: str
 
     question_id: str = str(uuid.uuid4())
     key_name: str
-    locales: list[localeStructure]
+    labels: list[localeStructure]
 
     data_type: DataTypeEnum
     restrictions: Optional[DataRestrictions] = None   # e.g. number in [0.0, 100.0] => restrictions.min = "0.0", restrictions.max = "100.0"
@@ -54,47 +58,18 @@ class OwlClosedQuestionEntity(BaseModel):
 power_of_the_vehicle_engine:
   - question_id: power_of_the_vehicle_engine
   - key_name: "the vehicle.engine.power"      # used to look for a question and reinject a value in the agent state
-  - labels:
+  - labels: 
     - locale: en
-      text: |
-        "What is the power of the vehicle's engine?"
+      text: "What is the power of the vehicle's engine?"
     - locale: fr
-      text: |
-        "Quel est la puissance du moteur du véhicle ?"
+      text: "Quelle est la puissance du moteur du véhicle?"
   - data_type: "double"
   - restrictions:
     - min: "0.0"
   - default_value: "100.0"
 """
 
-# a closed answer is received from the client-side UI app that interacts with the server-side assistant
-class OwlClosedAnswer(BaseModel):
-    """
-    Definition of an answer to a closed question
-    Answers to closed questions are used to enrich the objects kept as named parameters in the LangGraph AgentState
-    """
-    key_name: str = ""
-    input: str = ""
 
-"""
-# this is a sample yaml describing an answer to a closed question
-
-power_of_the_vehicle_engine:
-  - key_name: "the vehicle.engine.power"      # used to reinject a value in the agent state
-  - input: "120.0"                            # the value to be reinjected
-
-
-[
-  {
-    "key_name": "the vehicle.engine.power",
-    "input": "120.0"
-  },
-  {
-    "key_name": "the vehicle.registration_date",
-    "input": "2021-10-26"
-  }
-]  
-"""
 
 class OwlDecisionSignatureEntity(BaseModel):
 
