@@ -34,19 +34,20 @@ class DataRestrictions(BaseModel):
     min: Optional[str] = None     # min string will be converted to integer, floating point number, date or datetime depending on the data_type
     max: Optional[str] = None     # max string will be converted to integer, floating point number, date or datetime depending on the data_type
 
+class LocalizedText(BaseModel):
+  locale: str
+  text: str
+
 # a closed question entity can be read from a yaml configuration file or generated dynamically by an "interactive" decision service
 class OwlClosedQuestionEntity(BaseModel):
     """
     Entity definition for closed questions
     Closed questions are used to enrich the objects kept as named parameters in the LangGraph AgentState
     """
-    class localeStructure(BaseModel):
-      locale: str
-      text: str
 
     question_id: str = str(uuid.uuid4())
     key_name: str
-    labels: list[localeStructure]
+    labels: list[LocalizedText]
 
     data_type: DataTypeEnum
     restrictions: Optional[DataRestrictions] = None   # e.g. number in [0.0, 100.0] => restrictions.min = "0.0", restrictions.max = "100.0"
