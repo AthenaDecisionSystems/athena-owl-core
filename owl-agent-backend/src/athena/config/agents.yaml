@@ -62,15 +62,17 @@ fake_agent:
   tools:
   - query_crm
 
-anthropic_claude_3:
-  agent_id: anthropic_claude_3
-  name: anthropic_claude_3
-  description: Claude 3 with tool calling
-  class_name: athena.llm.agents.agent_anthropic.AnthropicAgent
-  modelName: claude-3-opus-20240229
-  prompt_ref: default_prompt
+
+mistral_large:
+  agent_id: mistral_large
+  class_name: athena.llm.agents.base_chain_agent.OwlAgent
+  description:  A Mistral large agent for RAG question and answer
+  modelClassName: langchain_mistralai.chat_models.ChatMistralAI
+  modelName: mistral-large-latest
+  name: Mistral based agent
+  prompt_ref: mistral_rag_prompt
   temperature: 0
   top_k: 1
-  top_p: 1
-  tools:
-  - tavily
+  tools: []
+
+

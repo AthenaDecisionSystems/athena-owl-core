@@ -1,6 +1,10 @@
 """
 Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
+
+The agent manager supports CRUD operations for the OwlAgentEntity and 
+a factory method to create the agent.
+It is deployed as a Singleton
 """
 from pydantic import BaseModel
 import uuid, yaml
@@ -12,8 +16,31 @@ from athena.routers.dto_models import ConversationControl, ResponseControl
 from athena.llm.prompts.prompt_mgr import get_prompt_manager
 from athena.llm.tools.tool_mgr import get_tool_entity_manager
 
+
+class OwlAgentEntity(BaseModel):
+    """
+    Entity definition to persist data about a OwlAgent
+    """
+    agent_id: str = str(uuid.uuid4())
+    name: str = ""
+    description: Optional[str] = None
+    modelName: str = ""
+    modelClassName: Optional[str] = None
+    class_name: Optional[str] = None
+    prompt_ref:  Optional[str] = None
+    temperature: int = 0  # between 0 to 100 and will be converted depending of te LLM
+    top_k: int = 1
+    top_p: int = 1
+    tools: list[str] = []
+
+
+
 class OwlAgentInterface(object):
-    
+    """
+    Base class to represent an instance of an agent. So it defines a contract to support 
+    conversations and the integration inside an assistant.
+    """
+
     def send_query(self,controller: ConversationControl) -> ResponseControl | None:
         """
         Send the given query to a backend LLM, as the conversation control may have settings for RAG and decision services
@@ -46,23 +73,11 @@ class OwlAgentInterface(object):
         klass = getattr(mod, class_name)
         return klass(model=modelName, temperature= temperature/100)
  
- 
-    
-class OwlAgentEntity(BaseModel):
-    agent_id: str = str(uuid.uuid4())
-    name: str = ""
-    description: Optional[str] = None
-    modelName: str = ""
-    modelClassName: Optional[str] = None
-    class_name: str = "athena.llm.agents.agent_openai.OpenAIClient"
-    prompt_ref:  str = "default_prompt"
-    temperature: int = 0  # between 0 to 100 and will be converted depending of te LLM
-    top_k: int = 1
-    top_p: int = 1
-    tools: list[str] = []
-    
     
 class AgentManager(object):
+    """
+    The agent manager manages OwlAgent Entities.
+    """
     
     def __init__(self):
         self.AGENTS: dict = dict()
@@ -98,17 +113,20 @@ class AgentManager(object):
         return "Done"
     
     def build_agent(self, agent_id : str, locale: str) -> OwlAgentInterface | None:
-        """_summary_
+        """
         Factory to create agent from its definition. Agent has a class to support the implementation.
         Prompt is the string, tools is a list of unique tool_id to get the definition within the agent class.
         Args:
             agent_id (str): _description_
 
         Returns:
-            OwlAgentInterface | None: _description_
+            OwlAgentInterface
         """
         agent_entity = self.get_agent_by_id(agent_id)
-        if agent_entity is not None:
+        return self.build_agent_from_entity(agent_entity,locale)
+
+    def build_agent_from_entity(self, agent_entity: OwlAgentEntity, locale: str = "en") -> OwlAgentInterface | None:
+        if agent_entity:
             module_path, class_name = agent_entity.class_name.rsplit('.',1)
             mod = import_module(module_path)
             klass = getattr(mod, class_name)
@@ -118,9 +136,8 @@ class AgentManager(object):
                 tool_entities.append(get_tool_entity_manager().get_tool_by_id(tid))
             tool_instances=get_config().get_tool_factory().build_tool_instances(tool_entities)
             return klass(agent_entity, prompt, tool_instances)
-            #return klass(agent_entity.modelName, sys_prompt, agent_entity.temperature, tools)
         return None
-            
+
 _instance = None
 
 @lru_cache

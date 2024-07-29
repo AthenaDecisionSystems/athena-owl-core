@@ -53,7 +53,7 @@ class TestConversationWithTool(unittest.TestCase):
         assert rep.message
         print(f"Assistant --> {rep}")        
     
-    def _test_conversation_with_tool_graph_assistant(self):
+    def test_conversation_with_tool_graph_assistant(self):
         cc = ConversationControl()
         cc.assistant_id="base_tool_graph_assistant"
         cc.user_id="unit_test"

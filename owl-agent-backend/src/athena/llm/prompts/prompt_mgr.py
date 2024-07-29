@@ -79,6 +79,8 @@ class Prompts:
  
 
     def build_prompt(self, prompt_key: str, locale: str = CURRENT_LOCALE) -> BaseModel:
+        if prompt_key is None or len(prompt_key) == 0:
+            return None
         if "/" in prompt_key:
             return hub.pull(prompt_key)
         else:
@@ -89,7 +91,8 @@ class Prompts:
                 return ChatPromptTemplate.from_messages([
                         ("system", text),
                         MessagesPlaceholder(variable_name="chat_history", optional=True),
-                        ("human", "{input}"),
+                        MessagesPlaceholder(variable_name="input", optional=True),
+                        #("human", "{input}"),
                         MessagesPlaceholder(variable_name="agent_scratchpad", optional=True),
                     ])
         

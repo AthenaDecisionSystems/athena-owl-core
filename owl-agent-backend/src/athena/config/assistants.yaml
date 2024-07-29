@@ -57,8 +57,8 @@ base_graph_assistant:
 
 mistral_tool_assistant:
   assistant_id: mistral_tool_assistant
-  class_name: athena.llm.assistants.IBU_Assistant_LG.BaseToolGraphAssistant
-  description: A default assistant that uses Mistral on Ollama and search tool to do web search
-  name: Mistral Ollama tool assistant
+  class_name: athena.llm.assistants.BaseGraphAssistant.BaseGraphAssistant
+  description: A default assistant that uses Mistral
+  name: Mistral large with tool assistant
   agents: 
-    - ollama_mistral
+    - mistral_large

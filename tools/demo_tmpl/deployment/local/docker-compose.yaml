@@ -1,0 +1,45 @@
+services:
+  owl-backend:
+    hostname: owl-backend
+    image: jbcodeforce/athena-owl-backend:latest 
+    container_name: owl-backend
+    ports:
+      - 8000:8000
+    environment:
+      CONFIG_FILE: /app/config/config.yaml
+      #OPENAI_API_KEY: $OPENAI_API_KEY
+    env_file:
+      - ../../.env
+    volumes:
+      - ../../ibu_backend/config:/app/config
+      - ../../.env:/app/.env
+      - ./data/file_content:/app/file_content
+      - ./data/chromadb:/app/chromadb
+      - ../../ibu_backend/src/ibu:/app/ibu
+  owl-frontend:
+    hostname: owl-frontend
+    image: jbcodeforce/athena-owl-frontend:latest 
+    container_name: owl-frontend
+    ports:
+      - 3000:80
+    environment:
+      - REACT_APP_OWL_AGENT_NAME="YOUR DEMO NAME"
+      - REACT_APP_BACKEND_URL=http://localhost:8000/api/v1/
+      - REACT_APP_ASSISTANT_ID_WITH_RULES='ibu_assistant'
+      - REACT_APP_ASSISTANT_ID_WITHOUT_RULES='ibu_assistant_limited'
+      - REACT_APP_DEMO_TEXT="One of our client Robert Smith wants a loan for \$500,000 for a duration of 60 months and a yearly repayment of $60,000 do we approve it?"
+
+  decisionsvc:
+    image: icr.io/cpopen/odm-k8s/odm:8.12
+    hostname: decisionsvc
+    container_name: decisionsvc
+    ports:
+      - 9443:9443
+      - 9060:9060
+    environment:
+      - SAMPLE=true
+      - LICENSE=accept
+    volumes:
+      - ../../decisions/persistence:/config/dbdata/
+
+  
