@@ -1,0 +1,72 @@
+{
+  "name": "OwlAgent",
+  "version": "0.1.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start",
+    "lint": "next lint",
+    "ci-check": "yarn format:diff",
+    "clean": "yarn cache clean && yarn install",
+    "format": "prettier --write \"**/*.{js,md,scss}\"",
+    "format:diff": "prettier --list-different \"**/*.{js,md,scss}\""
+  },
+  "dependencies": {
+    "@carbon/ibm-products": "^2.43.1",
+    "@carbon/ibmdotcom-web-components": "^2.10.0",
+    "@carbon/pictograms-react": "^11.62.0",
+    "@carbon/react": "^1.59.0",
+    "@octokit/core": "4.2.0",
+    "encoding": "^0.1.13",
+    "eslint": "8.44.0",
+    "eslint-config-next": "13.4.9",
+    "next": "^14.2.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-markdown": "^9.0.1",
+    "sass": "^1.77.6",
+    "sharp": "^0.33.4"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "7.5.2",
+    "@commitlint/config-conventional": "7.5.0",
+    "@types/node": "20.14.5",
+    "@types/react": "18.3.3",
+    "lint-staged": "8.1.5",
+    "prettier": "^2.8.8",
+    "typescript": "5.4.5"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --cache --write",
+      "git add"
+    ],
+    "*.{scss,css}": [
+      "prettier --cache --write",
+      "git add"
+    ],
+    "*.md": [
+      "prettier --cache --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "jsxBracketSameLine": true,
+    "printWidth": 80,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  }
+}

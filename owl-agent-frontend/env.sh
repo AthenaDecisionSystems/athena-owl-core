@@ -11,7 +11,7 @@ touch ./env-config.js
 # Add assignment 
 echo "window._env_ = {" >> ./env-config.js
 
-# Loop through REAT_APP environment variables
+# Loop through REACT_APP environment variables
 printenv | grep ^REACT_APP | awk -F'=' '{
   if ($2 ~ /^".*"$|^\x27.*\x27$/) {
     print $1 " : " $2 ","

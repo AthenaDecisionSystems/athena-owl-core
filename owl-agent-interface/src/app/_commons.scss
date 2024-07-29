@@ -1,0 +1,220 @@
+@use '@carbon/react/scss/spacing' as *;
+@use '@carbon/react/scss/theme' as *;
+@use '@carbon/react/scss/colors' as *;
+
+// Common for Assistants, Agents, Tools, Prompts, and Documents
+.page__r1 {
+    padding-top: $spacing-05;
+    padding-bottom: $spacing-05;
+}
+
+.page__r2 {
+    padding-top: $spacing-05 * 4;
+    padding-bottom: $spacing-05;
+}
+
+.upload-area {
+    padding-top: $spacing-03;
+}
+
+.card {
+    background-color: $layer-01;
+    padding: $spacing-05;
+    margin-top: $spacing-05;
+    margin-bottom: $spacing-05;
+    border-radius: $spacing-03;
+    box-shadow: 0px 4px 8px rgba($blue-80, 0.1);
+    //    cursor: pointer;
+    transition: background-color 1s;
+    min-width: 14rem;
+    min-height: 18rem;
+
+    &:hover {
+        background-color: $blue-20;
+    }
+
+    //    &:active {
+    //        background-color: $blue-60;
+    //    }
+}
+
+.card-name {
+    font-size: 1rem;
+    padding-bottom: $spacing-03;
+    font-weight: bold;
+    word-break: break-all;
+}
+
+.card-label {
+    padding-top: $spacing-03;
+    font-size: 0.75rem;
+    padding-bottom: $spacing-02;
+    word-break: break-all;
+}
+
+.card-item-id {
+    font-size: 1rem;
+    padding-bottom: $spacing-03;
+}
+
+.card-description {
+    font-size: 0.8rem;
+    padding-top: $spacing-03;
+    padding-bottom: $spacing-05;
+    min-height: 3rem;
+}
+
+.card-description ul {
+    list-style-type: circle;
+    list-style-position: inside;
+}
+
+.card-class-name {
+    font-size: 0.75rem;
+    padding-bottom: $spacing-05;
+    word-break: break-all;
+}
+
+.card-sub-item-id {
+    font-size: 1rem;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-menu {
+    position: absolute;
+    left: -1.5rem;
+    top: -1rem;
+}
+
+.card-popover-content {
+    background-color: $layer-02;
+    padding: $spacing-03;
+    margin: $spacing-01;
+    box-shadow: 0px 4px 8px rgba($blue-80, 0.1);
+    transition: background-color 1s;
+    min-height: 10rem;
+    max-inline-size: 44vw;
+}
+
+.card-popover-dark-background {
+    background-color: $layer-accent-02;
+}
+
+.card-popover-content-block {
+    background-color: $layer-01;
+    padding: $spacing-05;
+    margin: $spacing-05;
+    border-radius: $spacing-03;
+    box-shadow: 0px 4px 8px rgba($blue-80, 0.1);
+}
+
+.card-detail {
+    font-size: 0.85rem;
+    padding-bottom: $spacing-02;
+    word-break: break-all;
+}
+
+.card-detail-large {
+    font-size: 0.95rem;
+    padding-bottom: $spacing-02;
+    width: 100%;
+}
+
+
+.owl-agent-chats {
+    background: $cool-gray-10;
+    overflow: hidden;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+    width: 100%;
+    height: 50vh;
+    padding: 0.5rem;
+}
+
+.chat-system-message {
+    background: $cool-gray-10;
+    margin-right: 5rem;
+    display: flex;
+    align-items: flex-start;
+    text-align: justify;
+    width: fit-content;
+    margin-bottom: 0.5rem;
+}
+
+.chat-user-message {
+    background: $cool-gray-70;
+    margin-left: 5rem;
+    color: $white;
+    display: flex;
+    align-items: flex-start;
+    text-align: justify;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 0.3rem;
+}
+
+.chat-icon {
+    width: 2rem;
+    min-width: 2rem;
+    height: auto;
+    margin-right: 0.5rem;
+}
+
+.chat-system-message>div>div>p>strong {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.chat-system-message>div>div>p>a {
+    color: $blue-80;
+}
+
+.chat-system-message>div>div>ul {
+    padding-left: 2rem;
+    list-style-type: disc;
+}
+
+.chat-system-message>div>div>ol {
+    padding-left: 1rem;
+    list-style-type: decimal;
+    list-style-position: inside;
+}
+
+.waiting-for-response>img {
+    height: 2rem;
+}
+
+.horizontal-line {
+    width: 100%;
+    height: 0px;
+    border: none;
+    border-top: 1px solid $black;
+}
+
+.owl-agent-input {
+    padding: 0.1rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+.owl-agent-input>input,
+.owl-agent-input>textarea {
+    width: calc(100% - 3rem);
+    outline: none;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background: transparent;
+    border: none;
+}
+
+.same-line {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}

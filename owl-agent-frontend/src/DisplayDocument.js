@@ -31,7 +31,7 @@ const DisplayDocument = ({ name, type, content, dismiss }) => {
     function onDocumentLoadSuccess({ numPages }) {
         setNumPages(numPages);
     }
-    console.log("DisplayDocument.js: name: " + name + ", type: " + type + ", content: " + content);
+
     /*<div className="display-annotation-content"><pre>{JSON.stringify(annotations, null, 2)}</pre></div>*/
 
     return (

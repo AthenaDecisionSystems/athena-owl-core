@@ -1,0 +1,8 @@
+node_modules
+.git
+.dockerignore
+Dockerfile
+README.md
+.next
+!.next/static
+!.next/standalone
