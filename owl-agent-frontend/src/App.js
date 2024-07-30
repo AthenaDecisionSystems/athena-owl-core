@@ -129,13 +129,39 @@ function App() {
 
     const body = {
       "locale": i18n.language,
-      "query": text,
+      "query": text,           
       "reset": resetHistory,
       "user_id": userId,
       "assistant_id": (useODM ? assistantId : assistantIdWithoutRules),
       "thread_id": threadId,
       "chat_history": (resetHistory ? [] : chatHistory)
     }
+
+/* 
+
+    const closed_answers_body = {
+      "locale": i18n.language,
+      "closed_answers": [
+        {
+          "key_name": "the vehicle.engine.power",
+          "input": "120.0"
+        },
+        {
+          "key_name": "the vehicle.registration_date",
+          "input": "2021-10-26"
+        }
+      ],
+      "reset": resetHistory,
+      "user_id": userId,
+      "assistant_id": (useODM ? assistantId : assistantIdWithoutRules),
+      "thread_id": threadId,
+      "chat_history": (resetHistory ? [] : chatHistory)
+    }
+
+    fetch(serverUrl + "c/closed_answers", requestOptions)
+
+
+*/
 
     const requestOptions = {
       method: 'POST',
@@ -149,7 +175,8 @@ function App() {
         console.log("submitMessage: " + JSON.stringify(data));
         let answer = ""
         if (data.status === 200) {
-          answer = data.message
+          answer = data.message  //TODO JM-JCJ: or data.closed_questions (in data, )  <============================
+
           // setChatHistory([...chatHistory, { "role": "human", "content": text }, { "role": "assistant", "content": answer }]);
           setThreadId(data.thread_id)
           setChatHistory(data.chat_history)

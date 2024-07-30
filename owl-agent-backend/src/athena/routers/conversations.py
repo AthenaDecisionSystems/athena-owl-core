@@ -8,7 +8,7 @@ from fastapi.responses import StreamingResponse, HTMLResponse
 import logging
 from typing import AsyncGenerator, NoReturn
 
-from athena.routers.dto_models import ResponseControl, ConversationControl
+from athena.routers.dto_models import ClosedQuestionControl, ResponseControl, ConversationControl
 from athena.app_settings import get_config
 from athena.glossary.glossary_mgr import build_get_glossary
 from athena.llm.conversations.conversation_mgr import get_or_start_conversation
@@ -42,6 +42,13 @@ def init_logger():
 
 router = APIRouter( prefix=get_config().api_route + "/c",
                    dependencies=[Depends(get_config),Depends(init)])
+
+
+
+@router.post("/closed_answers")
+def closed_answer(conversationControl: ClosedQuestionControl) -> ResponseControl:
+    #TODO: not yet implemented
+    return None
 
 
 @router.post("/generic_chat")
