@@ -17,22 +17,44 @@ import uuid
 
 
 class DataTypeEnum(str, Enum):
-    boolean_type = 'boolean'
-    text_type = 'text'
-    integer_type = 'integer'
-    double_type = 'double'
-    date_type = 'date'              # The most common ISO Date Format yyyy-MM-dd — for example, "2000-10-31".
-    datetime_type = 'datetime'      # The most common ISO Date Time Format yyyy-MM-dd'T'HH:mm:ss.SSSXXX — for example, "2000-10-31T01:30:00.000-05:00".
+    boolean_type = 'Boolean'
+    text_type = 'Text'
+    integer_type = 'Integer'
+    double_type = 'Number'          # a double float
+    #big_integer_type = 'BigInteger'
+    #big_decimal_type = 'BigDecimal'
+    date_type = 'Date'              # The most common ISO Date Format yyyy-MM-dd — for example, "2000-10-31".
+    datetime_type = 'DateTime'      # The most common ISO Date Time Format yyyy-MM-dd'T'HH:mm:ss.SSSXXX — for example, "2000-10-31T01:30:00.000-05:00".
 
 class LabelValuePair(BaseModel):
     label: str                      # label shown in the UI in a dropdown list
     value: str
 
-class DataRestrictions(BaseModel):
+class EnumRestrictions(BaseModel):
     possible_values: Optional[List[LabelValuePair]] = None
-    regex: Optional[str] = None   # only applicable if data_type is text
-    min: Optional[str] = None     # min string will be converted to integer, floating point number, date or datetime depending on the data_type
-    max: Optional[str] = None     # max string will be converted to integer, floating point number, date or datetime depending on the data_type
+
+class TextRestrictions(BaseModel):
+    regex: Optional[str] = None       # only applicable if data_type is text
+    minLength: Optional[int] = None   # minimum string length
+    maxLength: Optional[int] = None   # maximum string length
+
+class RangeRestrictions(BaseModel):
+    min: Optional[str] = None         # min string will be converted to integer, floating point number, date or datetime depending on the data_type
+    max: Optional[str] = None         # max string will be converted to integer, floating point number, date or datetime depending on the data_type
+    step: Optional[str] = None
+
+class DataRestrictions(BaseModel):    # this object will populate one of the three following members
+    range: Optional[RangeRestrictions] = None
+    text: Optional[TextRestrictions] = None
+    enumeration: Optional[EnumRestrictions] = None
+"""
+    possible_values: Optional[List[LabelValuePair]] = None
+    regex: Optional[str] = None       # only applicable if data_type is text
+    min: Optional[str] = None         # min string will be converted to integer, floating point number, date or datetime depending on the data_type
+    max: Optional[str] = None         # max string will be converted to integer, floating point number, date or datetime depending on the data_type
+    minLength: Optional[int] = None   # minimum string length
+    maxLength: Optional[int] = None   # maximum string length
+"""
 
 class LocalizedText(BaseModel):
   locale: str
@@ -64,9 +86,10 @@ power_of_the_vehicle_engine:
       text: "What is the power of the vehicle's engine?"
     - locale: fr
       text: "Quelle est la puissance du moteur du véhicle?"
-  - data_type: "double"
+  - data_type: "Number"
   - restrictions:
-    - min: "0.0"
+    - range:
+      - min: "0.0"
   - default_value: "100.0"
 """
 
