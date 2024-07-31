@@ -26,9 +26,15 @@ class DataTypeEnum(str, Enum):
     date_type = 'Date'              # The most common ISO Date Format yyyy-MM-dd — for example, "2000-10-31".
     datetime_type = 'DateTime'      # The most common ISO Date Time Format yyyy-MM-dd'T'HH:mm:ss.SSSXXX — for example, "2000-10-31T01:30:00.000-05:00".
 
+
+
+class LocalizedText(BaseModel):
+  locale: str
+  text: str
+
 class LabelValuePair(BaseModel):
-    label: str                      # label shown in the UI in a dropdown list
     value: str
+    labels: List[LocalizedText]                      # localized labels shown in the UI in a dropdown list
 
 class EnumRestrictions(BaseModel):
     possible_values: Optional[List[LabelValuePair]] = None
@@ -47,18 +53,8 @@ class DataRestrictions(BaseModel):    # this object will populate one of the thr
     range: Optional[RangeRestrictions] = None
     text: Optional[TextRestrictions] = None
     enumeration: Optional[EnumRestrictions] = None
-"""
-    possible_values: Optional[List[LabelValuePair]] = None
-    regex: Optional[str] = None       # only applicable if data_type is text
-    min: Optional[str] = None         # min string will be converted to integer, floating point number, date or datetime depending on the data_type
-    max: Optional[str] = None         # max string will be converted to integer, floating point number, date or datetime depending on the data_type
-    minLength: Optional[int] = None   # minimum string length
-    maxLength: Optional[int] = None   # maximum string length
-"""
 
-class LocalizedText(BaseModel):
-  locale: str
-  text: str
+
 
 # a closed question entity can be read from a yaml configuration file or generated dynamically by an "interactive" decision service
 class OwlClosedQuestionEntity(BaseModel):
