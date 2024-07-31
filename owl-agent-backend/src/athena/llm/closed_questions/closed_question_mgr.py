@@ -46,7 +46,7 @@ class RangeRestrictions(BaseModel):
 class DataRestrictions(BaseModel):    # this object will populate one of the three following members
     range: Optional[RangeRestrictions] = None
     text: Optional[TextRestrictions] = None
-    enum: Optional[EnumRestrictions] = None
+    enumeration: Optional[EnumRestrictions] = None
 """
     possible_values: Optional[List[LabelValuePair]] = None
     regex: Optional[str] = None       # only applicable if data_type is text
