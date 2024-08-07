@@ -40,20 +40,14 @@ power_of_the_vehicle_engine:
 ]  
 """
 
-class ClosedQuestionControl(BaseModel):
-    locale: Optional[str] = "en"
-    closed_answers: List[ClosedAnswer]
-    reset: bool = False  # to reset everything back to default config.
-    callWithVectorStore: Optional[bool] = False
-    user_id: Optional[str] = ""
-    assistant_id: Optional[str] = ""
-    thread_id: Optional[str] = ""
-    chat_history:   List[ChatMessage] = []
-
     
 class ConversationControl(BaseModel):
     locale: Optional[str] = "en"
-    query: str = ""
+
+    query: Optional[str] = None
+    closed_answers: Optional[List[ClosedAnswer]] = None
+    reenter_into: Optional[str] = None
+
     reset: bool = False  # to reset everything back to default config.
     callWithVectorStore: Optional[bool] = False
     user_id: Optional[str] = ""
