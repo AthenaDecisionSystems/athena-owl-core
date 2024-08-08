@@ -4,6 +4,8 @@ Copyright 2024 Athena Decision Systems
 """
 from pydantic import BaseModel
 from typing import List, Optional
+from enum import Enum
+
 from athena.llm.closed_questions.closed_question_mgr import OwlClosedQuestionEntity
 
 
@@ -42,7 +44,7 @@ power_of_the_vehicle_engine:
 ]  
 """
 
-    
+
 class ConversationControl(BaseModel):
     locale: Optional[str] = "en"
 
@@ -61,10 +63,15 @@ class ConversationControl(BaseModel):
 class ResponseChoice(BaseModel):
     choice: str = ""
 
+
+class ConversationModeEnum(str, Enum):
+    open_question = 'OpenQuestion'
+    closed_question = 'ClosedQuestion'
+
 class ResponseControl(BaseModel):
     message: Optional[str] = ''
     status: int = 200
-    type: str = "OpenQuestion"
+    type: ConversationModeEnum = ConversationModeEnum.open_question
     
     #question: Optional[str] = ''
     #question_type: Optional[str] = ''
