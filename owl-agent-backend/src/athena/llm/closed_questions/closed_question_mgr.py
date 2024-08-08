@@ -37,7 +37,7 @@ class LabelValuePair(BaseModel):
     labels: List[LocalizedText]                      # localized labels shown in the UI in a dropdown list
 
 class EnumRestrictions(BaseModel):
-    possible_values: Optional[List[LabelValuePair]] = None
+    possible_values: List[LabelValuePair] = None
 
 class TextRestrictions(BaseModel):
     regex: Optional[str] = None       # only applicable if data_type is text
