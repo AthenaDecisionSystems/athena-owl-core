@@ -4,7 +4,9 @@ Copyright 2024 Athena Decision Systems
 """
 from pydantic import BaseModel
 from typing import List, Optional
-    
+from athena.llm.closed_questions.closed_question_mgr import OwlClosedQuestionEntity
+
+
 class ChatMessage(BaseModel):
     content: str
     role: str
@@ -63,9 +65,12 @@ class ResponseControl(BaseModel):
     message: Optional[str] = ''
     status: int = 200
     type: str = "OpenQuestion"
-    question: Optional[str] = ''
-    question_type: Optional[str] = ''
-    possibleResponse: Optional[List[ResponseChoice]] = None
+    
+    #question: Optional[str] = ''
+    #question_type: Optional[str] = ''
+    #possibleResponse: Optional[List[ResponseChoice]] = None
+    closed_questions: List[OwlClosedQuestionEntity] = []
+
     error: Optional[str] = ''
     chat_history: List[ChatMessage] = []
     user_id: Optional[str] = ""
