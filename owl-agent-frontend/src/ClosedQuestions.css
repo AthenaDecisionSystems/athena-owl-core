@@ -1,0 +1,19 @@
+.closed-questions-button {
+    font-size: 1.3rem;
+    text-align: left;
+    padding: 0.4rem;
+    margin: 0.8rem auto;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(148, 148, 148, 1);
+    background-color: rgba(28, 30, 58, 1);
+    color: whitesmoke;
+    cursor: pointer;
+}
+
+.closed-questions-button:hover {
+    background-color: rgb(50, 54, 105);
+}
+
+.closed-questions-button:active {
+    background-color: rgb(100, 107, 205);
+}

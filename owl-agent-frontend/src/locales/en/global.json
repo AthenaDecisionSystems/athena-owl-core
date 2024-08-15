@@ -11,6 +11,7 @@
         "alt.configuration": "Configuration",
         "btn.displayRunSteps": "Show the run steps",
         "btn.displayTools": "Show agent's tools",
+        "btn.send": "Send",
         "lbl.runStatus": "Run status: {{runStatus}}",
         "msg.loading": "Thinking...",
         "msg.responseTime": "Answer in {{seconds}}s",

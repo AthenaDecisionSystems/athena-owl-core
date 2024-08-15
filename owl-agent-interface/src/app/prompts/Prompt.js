@@ -1,9 +1,8 @@
-import { Dropdown, DropdownSkeleton, Modal, Select, SelectItem, TextArea, TextInput } from '@carbon/react';
+import { Modal, TextArea, TextInput } from '@carbon/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { AiGovernancePrompt } from '@carbon/pictograms-react';
 import { Octokit } from '@octokit/core';
 import { useEnv } from '../providers';
-import { getEnv } from '../env';
 
 const octokitClient = new Octokit({});
 

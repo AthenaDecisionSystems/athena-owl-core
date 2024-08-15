@@ -20,6 +20,99 @@ import { setError } from './reducer/error.action';
 import Configuration from './Configuration';
 import Assistant from './Assistant';
 import { useTranslation } from 'react-i18next';
+import ClosedQuestions from './ClosedQuestions';
+
+const closedQuestionsDemo = {
+  questions: [{
+    "question_id": "4cf3f2a0-862a-4340-86d3-47099321e293", "key_name": "the requester.fiscalID",
+    "labels": [
+      { "locale": "en", "text": "what is the fiscal ID of the requester?" },
+      { "locale": "fr", "text": "quel est l'identifiant fiscal du demandeur ?" }
+    ],
+    "data_type": "Text",
+    "restrictions": {
+      "range": null,
+      "text": { "regex": "\\b[0-9]{9}\\b", "minLength": 1, "maxLength": 10 },
+      "enumeration": null
+    },
+    "default_value": "1234567890"
+  },
+  {
+    "question_id": "4cf3f2a0-862a-4340-86d3-47099321e293", "key_name": "the requester.Eiffel",
+    "labels": [
+      { "locale": "en", "text": "what is heigth of the Eiffel Tower?" },
+      { "locale": "fr", "text": "Quelle est la hauteur de la Tour Eiffel ?" }
+    ],
+    "data_type": "Integer",
+    "restrictions": {
+      "range": { "min": 100, "max": 1000, "step": 1 },
+      "text": null,
+      "enumeration": null
+    },
+    "default_value": 0
+  },
+  {
+    "question_id": "4cf3f2a0-862a-4340-86d3-47099321e293", "key_name": "the requester.Pi",
+    "labels": [
+      { "locale": "en", "text": "What is the value of Pi?" },
+      { "locale": "fr", "text": "Quelle est la valeur de Pi ?" }
+    ],
+    "data_type": "Number",
+    "restrictions": {
+      "range": { "min": 3, "max": 4, "step": 0.0001 },
+      "text": null,
+      "enumeration": null
+    },
+    "default_value": 3.1
+  },
+  {
+    "question_id": "4cf3f2a0-862a-4340-86d3-47099321e293", "key_name": "the declaration.birth",
+    "labels": [
+      { "locale": "en", "text": "what is your birth date?" }
+    ],
+    "data_type": "Date",
+    "restrictions": null,
+    "default_value": "1970-01-01"
+  },
+  {
+    "question_id": "4cf3f2a0-862a-4340-86d3-47099321e293", "key_name": "the declaration.time",
+    "labels": [
+      { "locale": "fr", "text": "A quel instant, a eu lieu l'intrusion?" }
+    ],
+    "data_type": "DateTime",
+    "restrictions": {
+      "range": { "min": "2024-07-31T17:00", "max": "2024-08-01T08:59" },
+      "text": null,
+      "enumeration": null
+    },
+    "default_value": "2024-07-31T17:00"
+  },
+  {
+    "question_id": "4cf3f2a0-862a-4340-86d3-47099321e293", "key_name": "the declaration.isSigned",
+    "labels": [
+      { "locale": "en", "text": "what is isSigned?" }
+    ],
+    "data_type": "Boolean",
+    "restrictions": null,
+    "default_value": false
+  },
+  {
+    "question_id": "4cf3f2a0-862a-4340-86d3-47099321e293", "key_name": "the declaration.type",
+    "labels": [
+      { "locale": "en", "text": "what is the type of the car tax reduction request? " },
+      { "locale": "fr", "text": "quel est le type de demande de remise fiscale sur véhicule ? " }
+    ],
+    "data_type": "Text",
+    "restrictions": {
+      "range": null,
+      "text": null,
+      "enumeration": { "possible_values": [{ "value": "HorseTrailer", "labels": [{ "locale": "en", "text": "Horse trailer" }, { "locale": "fr", "text": "Remorque à chevaux" }] }, { "value": "Camper", "labels": [{ "locale": "en", "text": "Camper" }, { "locale": "fr", "text": "Camping-car" }] }] }
+    },
+    "default_value": null
+  }],
+  isBot: true,
+  closedQuestions: true
+};
 
 function App() {
   // Redux state variables
@@ -42,7 +135,7 @@ function App() {
 
   const [input, setInput] = useState("");
   const [lastMessage, setLastMessage] = useState("");
-  const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true }]);
+  const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true },]);
   const [chatHistory, setChatHistory] = useState([]);
 
   const [assistantId, setAssistantId] = useState(window._env_.REACT_APP_ASSISTANT_ID_WITH_RULES);
@@ -129,7 +222,7 @@ function App() {
 
     const body = {
       "locale": i18n.language,
-      "query": text,           
+      "query": text,
       "reset": resetHistory,
       "user_id": userId,
       "assistant_id": (useODM ? assistantId : assistantIdWithoutRules),
@@ -137,31 +230,31 @@ function App() {
       "chat_history": (resetHistory ? [] : chatHistory)
     }
 
-/* 
-
-    const closed_answers_body = {
-      "locale": i18n.language,
-      "closed_answers": [
-        {
-          "key_name": "the vehicle.engine.power",
-          "input": "120.0"
-        },
-        {
-          "key_name": "the vehicle.registration_date",
-          "input": "2021-10-26"
+    /* 
+    
+        const closed_answers_body = {
+          "locale": i18n.language,
+          "closed_answers": [
+            {
+              "key_name": "the vehicle.engine.power",
+              "input": "120.0"
+            },
+            {
+              "key_name": "the vehicle.registration_date",
+              "input": "2021-10-26"
+            }
+          ],
+          "reset": resetHistory,
+          "user_id": userId,
+          "assistant_id": (useODM ? assistantId : assistantIdWithoutRules),
+          "thread_id": threadId,
+          "chat_history": (resetHistory ? [] : chatHistory)
         }
-      ],
-      "reset": resetHistory,
-      "user_id": userId,
-      "assistant_id": (useODM ? assistantId : assistantIdWithoutRules),
-      "thread_id": threadId,
-      "chat_history": (resetHistory ? [] : chatHistory)
-    }
-
-    fetch(serverUrl + "c/closed_answers", requestOptions)
-
-
-*/
+    
+        fetch(serverUrl + "c/closed_answers", requestOptions)
+    
+    
+    */
 
     const requestOptions = {
       method: 'POST',
@@ -203,6 +296,12 @@ function App() {
       })
   };
 
+  const sendClosedAnswers = async (answers) => {
+    // Send closed answers to the server
+
+    informUser("**Answers to closed questions :** \n" + JSON.stringify(answers, null, 2));
+  }
+
   const handleSend = async () => {
     // Handle send button click
     if (input) {
@@ -221,6 +320,10 @@ function App() {
     if (e.target.value.trim() === "demo") {
       e.target.value = window._env_.REACT_APP_DEMO_TEXT;
     }
+    if (e.target.value.trim() === "cqdemo") {
+      e.target.value = "";
+      setMessages([...messages, closedQuestionsDemo]);
+    }
     setInput(e.target.value)
   };
 
@@ -235,6 +338,10 @@ function App() {
       setDisplayConfigurationPanel(false);
     }
   };
+
+  const validateClosedAnswers = (i) => {
+
+  }
 
   if (isLoading) {
     return (
@@ -292,32 +399,36 @@ function App() {
             {messages.map((message, i) =>
               <div key={i} className={message.isBot ? "chat bot" : (useODM ? "chat color-black" : "chat")}>
                 <img src={message.isBot ? (useODM ? owlLogo : chatbotLogo) : userIcon} alt="" className="chatImg" />
-                {message.text === "Clear" ?
-                  <div>
-                    {t("app.msg.newThreadCreated")}
-                    <br />
-                    <br />
-                    <button className="app-button" onClick={() => setMessages([{ text: t("app.msg.welcome"), isBot: true }])}>{t("app.btn.restartConversation")}</button>
-                  </div> :
-                  message.text === "..." ?
-                    <div className="loader"><img src={loadingImage} alt={t("app.msg.loading")} /> </div> :
+                {message.closedQuestions ? <div className="closed-questions">
+                  <ClosedQuestions lastMessage={i === messages.length - 1} questions={message.questions} feedback={sendClosedAnswers} />
+                </div> :
+                  message.text === "Clear" ?
                     <div>
-                      {message.text.split('\n').map((line, j) =>
-                        line === "" ? <br key={j} /> :
-                          <div key={j}>
-                            <ReactMarkdown>{line}</ReactMarkdown>
-                          </div>
-                      )}
-                      {message.time && <div>
-                        <br />
-                        <div className="response-time">{t("app.msg.responseTime", { seconds: message.time })}</div>
-                      </div>}
-                    </div>}
+                      {t("app.msg.newThreadCreated")}
+                      <br />
+                      <br />
+                      <button className="app-button" onClick={() => setMessages([{ text: t("app.msg.welcome"), isBot: true }])}>{t("app.btn.restartConversation")}</button>
+                    </div> :
+                    message.text === "..." ?
+                      <div className="loader"><img src={loadingImage} alt={t("app.msg.loading")} /> </div> :
+                      <div>
+                        {message.text.split('\n').map((line, j) =>
+                          line === "" ? <br key={j} /> :
+                            <div key={j}>
+                              <ReactMarkdown>{line}</ReactMarkdown>
+                            </div>
+                        )}
+                        {message.time && <div>
+                          <br />
+                          <div className="response-time">{t("app.msg.responseTime", { seconds: message.time })}</div>
+                        </div>}
+                      </div>
+                }
               </div>
             )}
             <div ref={msgEnd} />
           </div>
-          <div className="chatFooter">
+          <div className="chatFooter" style={{ visibility: messages[messages.length - 1].closedQuestions === undefined ? "visible" : "hidden" }}>
             <hr className="sep" />
             <div className="inp">
               <textarea
@@ -328,7 +439,6 @@ function App() {
                 onKeyDown={handleEnter} />
               <button className="send" onClick={handleSend}><img src={sendBtn} alt={t("app.alt.send")} title={t("app.alt.send")} /></button>
             </div>
-            <p className={useODM ? "color-background-with-odm" : "color-background-without-odm"}>{t("app.msg.chatGPTCanMakeMistakes")}</p>
           </div>
         </div>
       </Suspense>

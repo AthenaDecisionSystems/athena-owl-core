@@ -11,6 +11,7 @@
         "alt.configuration": "Configuración",
         "btn.displayRunSteps": "Mostrar los pasos de ejecución",
         "btn.displayTools": "Mostrar herramientas del agente",
+        "btn.send": "Enviar",
         "lbl.runStatus": "Estado de ejecución: {{runStatus}}",
         "msg.loading": "Preparando la respuesta...",
         "msg.responseTime": "Respuesta en {{seconds}}s",

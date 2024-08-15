@@ -179,7 +179,7 @@ const Assistant = forwardRef(({ assistantId, informUser, changeUseODMStatus, cha
             <div className="assistant-input-zone">
                 <div className="assistant-one-line">
                     <div className="assistant-label">{t("assistant.chk.useFileSearch")}</div>
-                    < Switch value={useFileSearch} onClick={setUseFileSearch} />
+                    <Switch value={useFileSearch} onClick={setUseFileSearch} />
                 </div>
                 <div className={useFileSearch ? "assistant-object-visible" : "assistant-object-hidden"}>
                     <Attachments informUser={informUser} />
