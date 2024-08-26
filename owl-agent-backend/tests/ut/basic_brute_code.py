@@ -1,10 +1,10 @@
 import os, sys
 module_path = "./src"
 sys.path.append(os.path.abspath(module_path))
-from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgentEntity
+from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgent
 import yaml, json
 
-oae = OwlAgentEntity()
+oae = OwlAgent()
 oae.tools=["tool_1","tool_2"]
 oae_json = oae.model_dump()
 print(oae_json)
@@ -31,7 +31,7 @@ default_agent:
 
 obj = yaml.load(yaml_definition, yaml.BaseLoader)  # return a dict
 oad = obj["default_agent"] 
-oa = OwlAgentEntity.model_validate(oad)
+oa = OwlAgent.model_validate(oad)
 print(oa)
 
 

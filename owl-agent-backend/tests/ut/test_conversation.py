@@ -32,7 +32,7 @@ class TestConversation(unittest.TestCase):
         """
         print("\n------- test_base_assistant_with_chat_history")
         cc = ConversationControl()
-        cc.assistant_id="base_openai_assistant"
+        cc.agent_id="base_openai_assistant"
         cc.user_id="unit_test"
         cc.thread_id="1"
         cc.chat_history=[]

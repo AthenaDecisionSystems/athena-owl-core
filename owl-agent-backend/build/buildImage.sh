@@ -2,6 +2,7 @@
 scriptDir=$(dirname $0)
 
 IMAGE_NAME=jbcodeforce/athena-owl-backend
+#IMAGE_NAME=athenadecisionsystems/athena-owl-backend
 
 if [[ $# -eq 2 ]]
 then

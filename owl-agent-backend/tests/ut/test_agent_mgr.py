@@ -1,30 +1,30 @@
 import unittest, sys, os
+from dotenv import load_dotenv
+load_dotenv()
 # Order of the following code is important to make the tests working
 os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 module_path = "./src"
 sys.path.append(os.path.abspath(module_path))
 import yaml,json
 from typing import Optional 
-from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgentEntity
+from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgent
+from athena.routers.dto_models import ConversationControl
 
 class TestAgentsManager(unittest.TestCase):
     """
     Validate CRUD on agent entity and factory of agent instance
     """
-
-
-
     def test_owl_agent_entity_to_json_to_yaml(self):
         print("\n\n >>> test_owl_agent_entity_to_json_to_yaml\n")
         # Use the default setting of the OwlAssistantEntity
-        oae = OwlAgentEntity()
+        oae = OwlAgent()
         assert oae.agent_id
         oae_dict = oae.model_dump()
-        assert oae_dict["class_name"] == "athena.llm.agents.agent_openai.OpenAIClient"
+        assert oae_dict["runner_class_name"] == "athena.agent.llm.agent_mgr.OwlAgentAbstractRunner"
         oaes= {}
         oaes[oae.agent_id]=oae_dict
         oaes_json_str=json.dumps(oaes)
-        assert "OpenAIClient" in oaes_json_str
+        assert "OwlAgentAbstractRunner" in oaes_json_str
         # to map to a yaml
         oaes_yaml_str=yaml.dump(json.dumps(oaes))
         print(oaes_yaml_str)
@@ -35,7 +35,7 @@ class TestAgentsManager(unittest.TestCase):
         
     def test_create_get_by_id_delete_agent_entity(self):
         print("\n\n >>> test_create_get_by_id_delete_agent_entity\n")
-        oae = OwlAgentEntity()
+        oae = OwlAgent()
         oae.name="test_agent"
         oae.description="an openai based agent"
         mgr = get_agent_manager()
@@ -48,8 +48,8 @@ class TestAgentsManager(unittest.TestCase):
         rep = mgr.delete_agent(oad_id)
         assert "Done" == rep
     
-    def get_all_predefined(self):
-        print("\n\n >>> get_all_predefined\n")
+    def test_get_all_predefined_agents(self):
+        print("\n\n >>> test_get_all_predefined_agents\n")
         mgr = get_agent_manager()
         l = mgr.get_agents()
         assert l
@@ -67,22 +67,36 @@ class TestAgentsManager(unittest.TestCase):
     def test_read_tool_list(self):
         print("\n\n >>> test_read_tool_list\n")
         mgr=get_agent_manager()
-        p=mgr.get_agent_by_name("anthropic_claude_3")
-        assert type(p) == OwlAgentEntity
-        assert p.tools
+        p=mgr.get_agent_by_name("claude-3-opus")
+        assert type(p) == OwlAgent
+        assert len(p.tools) == 0 
         print(p)
         
-    def _test_calling_fake_agent(self):
+    def test_calling_fake_agent(self):
         mgr = get_agent_manager()
-        oae: Optional[OwlAgentEntity] = mgr.get_agent_by_id("fake_agent")
+        oae: Optional[OwlAgent] = mgr.get_agent_by_id("fake_agent")
         if oae is None:
             raise ValueError("Fake agent not found")
-        fake_assistant = mgr.build_agent(oae.agent_id,"en")
-        assert fake_assistant
-        rep = fake_assistant.invoke("what is langgraph?")
+        fake_agent = mgr.build_agent_runner(oae.agent_id,"en")
+        assert fake_agent
+        rep = fake_agent.invoke("what is langgraph?")
         assert "one" == rep
-        rep = fake_assistant.invoke("really?")
+        rep = fake_agent.invoke("really?")
         assert "two" == rep
     
+    def test_calling_base_agent(self):
+        print("\n\n test_calling_base_agent\n")
+        mgr = get_agent_manager()
+        oae: Optional[OwlAgent] = mgr.get_agent_by_id("openai_chain_agent")
+        if oae is None:
+            raise ValueError("Base agent not found")
+        base_assistant =  mgr.build_agent_runner(oae.agent_id,"en")
+        assert base_assistant
+        # Default assistant has one LLM and one tool to search the web
+        cc = ConversationControl(query="what is langgraph?", thread_id="thread_test")
+        rep = base_assistant.send_conversation(cc)
+        assert rep
+        print(rep)
+
 if __name__ == '__main__':
     unittest.main()

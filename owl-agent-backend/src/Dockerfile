@@ -1,4 +1,5 @@
-FROM python:3.12.3-slim
+#FROM python:3.12.3-slim
+FROM python:3.11.9-slim
 ENV HNSWLIB_NO_NATIVE=1
 WORKDIR /app
 RUN export HNSWLIB_NO_NATIVE=1

@@ -1,9 +1,9 @@
-openai_chain:
-  agent_id: openai_chain
+openai_chain_agent:
+  agent_id: openai_chain_agent
   name: open_ai_gpt35
   description: openai based agent with simple prompt 
   #class_name: athena.llm.agents.agent_openai.OpenAIAgent
-  class_name: athena.llm.agents.base_chain_agent.OwlAgent
+  runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
   modelClassName: langchain_openai.ChatOpenAI
   modelName: gpt-3.5-turbo-0125
   prompt_ref: default_prompt
@@ -15,7 +15,7 @@ openai_tool_chain:
   agent_id: openai_tool_chain
   name: open_ai_gpt35
   description: openai based agent with prompt coming from langchain hub  and tool
-  class_name: athena.llm.agents.base_chain_agent.OwlAgent
+  runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
   modelName: gpt-3.5-turbo-0125
   modelClassName: langchain_openai.ChatOpenAI
   prompt_ref: hwchase17/openai-functions-agent
@@ -29,7 +29,7 @@ anthropic_claude_3_base:
   agent_id: anthropic_claude_3_base
   name: claude-3-opus
   description: Anthropic Claude 3 based agent with simple prompt 
-  class_name: athena.llm.agents.base_chain_agent.OwlAgent
+  runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
   modelClassName: langchain_anthropic.ChatAnthropic
   modelName: claude-3-opus-20240229
   prompt_ref: default_prompt
@@ -41,10 +41,10 @@ ollama_mistral:
   agent_id: ollama_mistral
   name: "ollama mistral"
   description: Mistral model running locally with Ollama
-  class_name: athena.llm.agents.base_chain_agent.OwlAgent
+  runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
   modelName: mistral
   modelClassName: langchain_community.chat_models.ChatOllama
-  prompt_ref: hwchase17/openai-functions-agent
+  prompt_ref: default_prompt
   temperature: 0
   top_k: 1
   top_p: 1
@@ -53,19 +53,17 @@ fake_agent:
   agent_id: fake_agent
   name: fake_agent
   description: Fake agent for testing 
-  class_name: athena.llm.agents.fake_agent.FakeAgent
+  runner_class_name: athena.llm.agents.fake_agent.FakeAgent
   modelName: not_needed
   prompt_ref: default_prompt
   temperature: 0
   top_k: 1
   top_p: 1
-  tools:
-  - query_crm
 
 
 mistral_large:
   agent_id: mistral_large
-  class_name: athena.llm.agents.base_chain_agent.OwlAgent
+  runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
   description:  A Mistral large agent for RAG question and answer
   modelClassName: langchain_mistralai.chat_models.ChatMistralAI
   modelName: mistral-large-latest

@@ -46,7 +46,7 @@ class ClosedQuestionControl(BaseModel):
     reset: bool = False  # to reset everything back to default config.
     callWithVectorStore: Optional[bool] = False
     user_id: Optional[str] = ""
-    assistant_id: Optional[str] = ""
+    agent_id: Optional[str] = ""
     thread_id: Optional[str] = ""
     chat_history:   List[ChatMessage] = []
 
@@ -57,7 +57,7 @@ class ConversationControl(BaseModel):
     reset: bool = False  # to reset everything back to default config.
     callWithVectorStore: Optional[bool] = False
     user_id: Optional[str] = ""
-    assistant_id: Optional[str] = ""
+    agent_id: Optional[str] = ""
     thread_id: Optional[str] = ""
     chat_history:   List[ChatMessage] = []
 
@@ -75,7 +75,7 @@ class ResponseControl(BaseModel):
     error: Optional[str] = ''
     chat_history: List[ChatMessage] = []
     user_id: Optional[str] = ""
-    assistant_id: Optional[str] = ""
+    agent_id: Optional[str] = ""
     thread_id: Optional[str] = ""
 
 
