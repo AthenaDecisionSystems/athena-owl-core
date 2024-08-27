@@ -34,3 +34,12 @@ mistral_rag_prompt:
 
         Question: {input}"
       
+openai-functions-agent:
+  name: openai-functions-agent
+  prompt_id: openai-functions-agent
+  locales:
+  - locale: en
+    text: |
+      you are a helpful assistant using tools when needed by using {agent_scratchpad}
+      keeping conversation history: {chat_history}
+      to answer the question: {input}

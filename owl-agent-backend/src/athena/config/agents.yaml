@@ -17,7 +17,7 @@ openai_tool_chain:
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
   modelName: gpt-3.5-turbo
   modelClassName: langchain_openai.ChatOpenAI
-  prompt_ref: hwchase17/openai-functions-agent
+  prompt_ref: openai-functions-agent
   temperature: 0
   top_k: 1
   top_p: 1
@@ -26,7 +26,7 @@ openai_tool_chain:
 
 openai_graph_agent:
   agent_id: openai_graph_agent
-  name: open_ai_gpt35
+  name: "Base Graph Agent using openAI"
   description: openai based agent using graph and simple prompt 
   runner_class_name: athena.llm.agents.base_graph_agent.BaseGraphAgent
   modelClassName: langchain_openai.ChatOpenAI
@@ -36,6 +36,19 @@ openai_graph_agent:
   top_k: 1
   top_p: 1
 
+base_tool_graph_agent:
+  agent_id: base_tool_graph_agent
+  name: "Base Graph Agent using tools"
+  runner_class_name: athena.llm.agents.base_tool_graph_agent.BaseToolGraphAgent
+  modelClassName: langchain_openai.ChatOpenAI
+  description: A default agent that uses LLM and search tool to do web search
+  modelName: gpt-3.5-turbo
+  prompt_ref: openai-functions-agent
+  temperature: 0
+  top_k: 1
+  top_p: 1
+  tools:
+  - tavily
 
 anthropic_claude_3_base:
   agent_id: anthropic_claude_3_base
