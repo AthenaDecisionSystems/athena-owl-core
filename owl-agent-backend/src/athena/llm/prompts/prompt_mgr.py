@@ -87,6 +87,15 @@ class Prompts:
             text = self.get_prompt(prompt_key, locale)
             if text == None:
                 return None
+            elif "context" in text:
+                return ChatPromptTemplate.from_messages([
+                        ("system", text),
+                        MessagesPlaceholder(variable_name="chat_history", optional=True),
+                        MessagesPlaceholder(variable_name="context", optional=True),
+                        MessagesPlaceholder(variable_name="input", optional=True),
+                        #("human", "{input}"),
+                        MessagesPlaceholder(variable_name="agent_scratchpad", optional=True),
+                    ])
             else:
                 return ChatPromptTemplate.from_messages([
                         ("system", text),

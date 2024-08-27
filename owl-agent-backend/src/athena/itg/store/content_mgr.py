@@ -6,7 +6,7 @@ Copyright 2024 Athena Decision Systems
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownHeaderTextSplitter
 from langchain_text_splitters.markdown import MarkdownTextSplitter
 from langchain_openai import OpenAIEmbeddings
-from langchain_community.vectorstores import Chroma
+from langchain_chroma.vectorstores import Chroma
 from langchain_community.document_loaders import PyMuPDFLoader, BSHTMLLoader, WebBaseLoader
 import os, logging
 from typing import List, Optional 

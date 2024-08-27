@@ -2,10 +2,9 @@ openai_chain_agent:
   agent_id: openai_chain_agent
   name: open_ai_gpt35
   description: openai based agent with simple prompt 
-  #class_name: athena.llm.agents.agent_openai.OpenAIAgent
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
   modelClassName: langchain_openai.ChatOpenAI
-  modelName: gpt-3.5-turbo-0125
+  modelName: gpt-3.5-turbo
   prompt_ref: default_prompt
   temperature: 0
   top_k: 1
@@ -16,7 +15,7 @@ openai_tool_chain:
   name: open_ai_gpt35
   description: openai based agent with prompt coming from langchain hub  and tool
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
-  modelName: gpt-3.5-turbo-0125
+  modelName: gpt-3.5-turbo
   modelClassName: langchain_openai.ChatOpenAI
   prompt_ref: hwchase17/openai-functions-agent
   temperature: 0
@@ -24,6 +23,19 @@ openai_tool_chain:
   top_p: 1
   tools:
   - tavily
+
+openai_graph_agent:
+  agent_id: openai_graph_agent
+  name: open_ai_gpt35
+  description: openai based agent using graph and simple prompt 
+  runner_class_name: athena.llm.agents.base_graph_agent.BaseGraphAgent
+  modelClassName: langchain_openai.ChatOpenAI
+  modelName: gpt-3.5-turbo
+  prompt_ref: default_prompt
+  temperature: 0
+  top_k: 1
+  top_p: 1
+
 
 anthropic_claude_3_base:
   agent_id: anthropic_claude_3_base
@@ -44,7 +56,19 @@ ollama_mistral:
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
   modelName: mistral
   modelClassName: langchain_community.chat_models.ChatOllama
-  prompt_ref: default_prompt
+  prompt_ref: mistral_rag_prompt
+  temperature: 0
+  top_k: 1
+  top_p: 1
+
+mistral_large_agent:
+  agent_id: mistral_large_agent
+  name: "mistral_large_agent"
+  description: Mistral large model via Mistral API 
+  runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
+  modelName: mistral
+  modelClassName: langchain_mistralai.chat_models.ChatMistralAI
+  prompt_ref: mistral_rag_prompt
   temperature: 0
   top_k: 1
   top_p: 1

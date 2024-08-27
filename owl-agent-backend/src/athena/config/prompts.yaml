@@ -21,4 +21,4 @@ mistral_rag_prompt:
         {context}
         </context>
 
-        Question: {input}"
+        Question: "

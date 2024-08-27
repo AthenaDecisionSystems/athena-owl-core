@@ -9,6 +9,7 @@ import yaml,json
 from typing import Optional 
 from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgent
 from athena.routers.dto_models import ConversationControl
+from athena.llm.conversations.conversation_mgr import get_or_start_conversation
 
 class TestAgentsManager(unittest.TestCase):
     """
@@ -16,11 +17,11 @@ class TestAgentsManager(unittest.TestCase):
     """
     def test_owl_agent_entity_to_json_to_yaml(self):
         print("\n\n >>> test_owl_agent_entity_to_json_to_yaml\n")
-        # Use the default setting of the OwlAssistantEntity
+        # Use the default setting of the OwlAgent
         oae = OwlAgent()
         assert oae.agent_id
         oae_dict = oae.model_dump()
-        assert oae_dict["runner_class_name"] == "athena.agent.llm.agent_mgr.OwlAgentAbstractRunner"
+        assert oae_dict["runner_class_name"] == "athena.llm.agents.agent_mgr.OwlAgentAbstractRunner"
         oaes= {}
         oaes[oae.agent_id]=oae_dict
         oaes_json_str=json.dumps(oaes)
@@ -71,7 +72,8 @@ class TestAgentsManager(unittest.TestCase):
         assert type(p) == OwlAgent
         assert len(p.tools) == 0 
         print(p)
-        
+    
+    # ---------- now create agent runners -------------
     def test_calling_fake_agent(self):
         mgr = get_agent_manager()
         oae: Optional[OwlAgent] = mgr.get_agent_by_id("fake_agent")
@@ -84,19 +86,59 @@ class TestAgentsManager(unittest.TestCase):
         rep = fake_agent.invoke("really?")
         assert "two" == rep
     
+    def _validate_history(self, cc : ConversationControl):
+        rep = get_or_start_conversation(cc)
+        assert rep
+        assert rep.message
+        
+        print(f"\n\nagent --> {rep}") 
+        
+        cc.chat_history=rep.chat_history
+        cc.query="What is my last name?"
+        print(f"Continue the conversation with  --> {cc}") 
+        rep = get_or_start_conversation(cc)
+        print(f"\n\nAgent --> {rep}") 
+        assert "last name is TheBuilder" in rep.message
+
+
     def test_calling_base_agent(self):
         print("\n\n test_calling_base_agent\n")
         mgr = get_agent_manager()
         oae: Optional[OwlAgent] = mgr.get_agent_by_id("openai_chain_agent")
         if oae is None:
             raise ValueError("Base agent not found")
-        base_assistant =  mgr.build_agent_runner(oae.agent_id,"en")
-        assert base_assistant
-        # Default assistant has one LLM and one tool to search the web
+        base_agent =  mgr.build_agent_runner(oae.agent_id,"en")
+        assert base_agent
+        # Default agent has one LLM and one tool to search the web
         cc = ConversationControl(query="what is langgraph?", thread_id="thread_test")
-        rep = base_assistant.send_conversation(cc)
+        rep = base_agent.send_conversation(cc)
         assert rep
         print(rep)
+
+    def test_calling_base_graph_agent(self):
+        print("\n\n test_calling_base_graph_agent\n")
+        mgr = get_agent_manager()
+        oae: Optional[OwlAgent] = mgr.get_agent_by_id("openai_graph_agent")
+        if oae is None:
+            raise ValueError("Base agent not found")
+        base_agent =  mgr.build_agent_runner(oae.agent_id,"en")
+        assert base_agent
+        # Default agent has one LLM and one tool to search the web
+        cc = ConversationControl(query="what is langgraph?", thread_id="thread_test")
+        rep = base_agent.send_conversation(cc)
+        assert rep
+        print(rep)
+
+    def _test_long_conv_openai_base_graph_agent(self):
+        # TO DO fix this test, it does not take the chat history well into account
+        print("\n------- test_conv_openai_base_graph_agent")
+        cc = ConversationControl()
+        cc.agent_id="openai_graph_agent"
+        cc.user_id="unit_test"
+        cc.thread_id="3"
+        cc.chat_history=[]
+        cc.query="Hi, I'm Bob and my last name is TheBuilder."
+        self._validate_history(cc)
 
 if __name__ == '__main__':
     unittest.main()

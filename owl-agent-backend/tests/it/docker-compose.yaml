@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   ollama:
-    image: ollama/ollama
+    image: jbcodeforce/ollama
     hostname: ollama
     volumes:
         - ./start-ollama.sh:/start-ollama.sh

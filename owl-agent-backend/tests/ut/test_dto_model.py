@@ -17,7 +17,7 @@ class TestDtoModel(unittest.TestCase):
             self.assertIsNotNone(cc)
             print(cc)
             assert cc.thread_id == ""
-            assert cc.assistant_id == ""
+            assert cc.agent_id == ""
             assert cc.chat_history == []
             assert cc.locale == "en"
         except ValidationError as exc:

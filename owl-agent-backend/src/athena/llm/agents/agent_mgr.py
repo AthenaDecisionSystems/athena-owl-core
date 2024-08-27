@@ -40,7 +40,7 @@ class OwlAgent(BaseModel):
     description: Optional[str] = None
     modelName: str = ""
     modelClassName: Optional[str] = None
-    runner_class_name: Optional[str] = "athena.agent.llm.agent_mgr.OwlAgentAbstractRunner"
+    runner_class_name: Optional[str] = "athena.llm.agents.agent_mgr.OwlAgentAbstractRunner"
     prompt_ref:  Optional[str] = None
     temperature: int = 0  # between 0 to 100 and will be converted depending of te LLM
     top_k: int = 1
@@ -50,11 +50,17 @@ class OwlAgent(BaseModel):
 
 
 class OwlAgentAbstractRunner(object):
+    agent_id: str  # keep the reference to the owl agent id, in case user change of model
+
     """
     Base class to represent an instance of an agent. So it defines a contract to support 
     conversations and the integration inside an assistant.
     """
     def __init__(self, agentEntity: OwlAgent, prompt: Optional[BasePromptTemplate], tool_instances: Optional[list[OwlToolEntity]]):
+        self.instantiate_llm(agentEntity,prompt,tool_instances)
+        self.agent_id = agentEntity.agent_id
+    
+    def instantiate_llm(self, agentEntity: OwlAgent, prompt: Optional[BasePromptTemplate], tool_instances: Optional[list[OwlToolEntity]]):
         LOGGER.debug("Initialing base chain OwlAgent")
         if prompt:
             self.prompt = prompt
@@ -69,15 +75,16 @@ class OwlAgentAbstractRunner(object):
             self.llm = AgentExecutor(agent= agent, tools=self.tools, verbose=True)
             
         else:
-            if "input" in self.prompt.input_variables:
-                if "chat_history" in self.prompt.input_variables:
+            if "input" in self.prompt.input_types:
+                if "chat_history" in self.prompt.input_types:
                     self.llm = {"input": lambda x: x["input"], "chat_history" : lambda x: x["chat_history"]}  | self.prompt | self.model | StrOutputParser()
                 else:
                     self.llm = {"input": lambda x: x["input"]}  | self.prompt | self.model | StrOutputParser()
             else:
                 self.llm = self.prompt | self.model | StrOutputParser()
             self.tools = []
-
+        return self.llm
+        
     def _transform_chat_history(self, chat_history: list[ChatMessage]):
         l=[]
         for m in chat_history:
@@ -129,7 +136,7 @@ class OwlAgentAbstractRunner(object):
         return self.prompt
     
     def invoke(self, request, thread_id: Optional[str], **kwargs) -> dict[str, Any] | Any:
-        return self.get_runnable().invoke(request)
+        return self.get_runnable().invoke(request, thread_id)
     
     def _instantiate_model(self,modelName, modelClass, temperature):
         module_path, class_name = modelClass.rsplit('.',1)
