@@ -4,7 +4,11 @@ Copyright 2024 Athena Decision Systems
 """
 from pydantic import BaseModel
 from typing import List, Optional
-    
+from enum import Enum
+
+from athena.llm.closed_questions.closed_question_mgr import OwlClosedQuestionEntity
+
+
 class ChatMessage(BaseModel):
     content: str
     role: str
@@ -50,10 +54,14 @@ class ClosedQuestionControl(BaseModel):
     thread_id: Optional[str] = ""
     chat_history:   List[ChatMessage] = []
 
-    
+
 class ConversationControl(BaseModel):
     locale: Optional[str] = "en"
-    query: str = ""
+
+    query: Optional[str] = None
+    closed_answers: Optional[List[ClosedAnswer]] = None
+    reenter_into: Optional[str] = None
+
     reset: bool = False  # to reset everything back to default config.
     callWithVectorStore: Optional[bool] = False
     user_id: Optional[str] = ""
@@ -65,13 +73,21 @@ class ConversationControl(BaseModel):
 class ResponseChoice(BaseModel):
     choice: str = ""
 
+
+class ConversationModeEnum(str, Enum):
+    open_question = 'OpenQuestion'
+    closed_question = 'ClosedQuestion'
+
 class ResponseControl(BaseModel):
     message: Optional[str] = ''
     status: int = 200
-    type: str = "OpenQuestion"
-    question: Optional[str] = ''
-    question_type: Optional[str] = ''
-    possibleResponse: Optional[List[ResponseChoice]] = None
+    type: ConversationModeEnum = ConversationModeEnum.open_question
+    
+    #question: Optional[str] = ''
+    #question_type: Optional[str] = ''
+    #possibleResponse: Optional[List[ResponseChoice]] = None
+    closed_questions: List[OwlClosedQuestionEntity] = []
+
     error: Optional[str] = ''
     chat_history: List[ChatMessage] = []
     user_id: Optional[str] = ""
