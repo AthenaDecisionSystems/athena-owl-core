@@ -45,12 +45,6 @@ router = APIRouter( prefix=get_config().api_route + "/c",
 
 
 
-@router.post("/closed_answers")
-def closed_answer(conversationControl: ClosedQuestionControl) -> ResponseControl:
-    #TODO: not yet implemented
-    return None
-
-
 @router.post("/generic_chat")
 def synchronous_chat_with_owl(conversationControl: ConversationControl) -> ResponseControl:
     global owl_agent
