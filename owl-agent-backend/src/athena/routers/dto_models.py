@@ -68,20 +68,36 @@ class ConversationModeEnum(str, Enum):
     open_question = 'OpenQuestion'
     closed_question = 'ClosedQuestion'
 
+
+
+class StyledMessage(BaseModel):
+    content: str
+    style_class: Optional[str] = None   # returned by the backend, the frontend must have defined a corresponding css class name
+
+# Examples of style_class names used for the Dutch Tax demo
+# - decision-granted                     GREEN
+# - decision-rejected                    RED
+# - decision-customer-action-required    PURPLE
+# - decision-risk-identified             ORANGE
+
+
 class ResponseControl(BaseModel):
+
+    # The response control will contain either a list of messages or a list of closed questions. This is exclusive. 
+    messages: Optional[List[StyledMessage]] = None
+    closed_questions: Optional[List[OwlClosedQuestionEntity]] = None    
+
+    #type is not needed anymore
+    #type: ConversationModeEnum = ConversationModeEnum.open_question
+
+    status: int = 200
+   
     message: Optional[str] = ''
     status: int = 200
     type: ConversationModeEnum = ConversationModeEnum.open_question
     
-    #question: Optional[str] = ''
-    #question_type: Optional[str] = ''
-    #possibleResponse: Optional[List[ResponseChoice]] = None
-    closed_questions: List[OwlClosedQuestionEntity] = []
-
     error: Optional[str] = ''
     chat_history: List[ChatMessage] = []
     user_id: Optional[str] = ""
     assistant_id: Optional[str] = ""
     thread_id: Optional[str] = ""
-
-
