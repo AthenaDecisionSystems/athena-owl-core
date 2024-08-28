@@ -64,9 +64,9 @@ class ResponseChoice(BaseModel):
     choice: str = ""
 
 
-class ConversationModeEnum(str, Enum):
-    open_question = 'OpenQuestion'
-    closed_question = 'ClosedQuestion'
+#class ConversationModeEnum(str, Enum):
+#    open_question = 'OpenQuestion'
+#    closed_question = 'ClosedQuestion'
 
 
 
@@ -92,10 +92,6 @@ class ResponseControl(BaseModel):
 
     status: int = 200
    
-    message: Optional[str] = ''
-    status: int = 200
-    type: ConversationModeEnum = ConversationModeEnum.open_question
-    
     error: Optional[str] = ''
     chat_history: List[ChatMessage] = []
     user_id: Optional[str] = ""
