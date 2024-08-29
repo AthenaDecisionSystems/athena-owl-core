@@ -3,11 +3,13 @@ fastapi
 langchain-openai
 langchain-anthropic
 langchain-mistralai
+langchain-chroma
 langchain_ibm
 langchain_community 
 langchain
 langchainhub
 langgraph
+langgraph-checkpoint-sqlite
 pydantic
 pydantic-settings
 pydantic_yaml

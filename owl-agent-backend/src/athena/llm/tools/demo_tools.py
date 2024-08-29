@@ -6,7 +6,7 @@ It has to implement the factory method to create the tools
 """
 from typing import Any, Optional
 from enum import Enum
-from pydantic import BaseModel, Field
+from pydantic.v1 import BaseModel, Field
 
 from athena.llm.tools.tool_factory import ToolInstanceFactoryInterface
 from athena.llm.tools.tool_mgr import OwlToolEntity
@@ -22,7 +22,7 @@ class CustomerClassEnum(str, Enum):
 
 class CrmArgument(BaseModel):
     """
-    The argument to the CRM call
+    The argument to the CRM call is a json with the attribute user_id, customer_id, query and customer_class
     """
     user_id: Optional[str] = Field(None, description="user id of the connected user")
     customer_id: Optional[str] = Field(None, description="the customer id to search in the CRM")
@@ -35,10 +35,7 @@ def query_crm_backend(crmArgument: CrmArgument):
     # normally process the  argument. This is for demonstration of passing a BaseModel as arg
     return [{"customer_id": "C001", "description": "The customer records from DEMO CRM"}]
 
-def retrieve_documents(question: str):
-    _vs=Chroma(persist_directory=DOMAIN_VS_PATH,collection_name="agentic_corpus", embedding_function=_embd)
-    documents = _vs.as_retriever().invoke(question)
-    return documents
+
 
 class DemoToolInstanceFactory(ToolInstanceFactoryInterface):
     # use to map to function

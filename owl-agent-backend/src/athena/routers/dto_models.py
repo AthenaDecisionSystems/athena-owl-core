@@ -44,6 +44,16 @@ power_of_the_vehicle_engine:
 ]  
 """
 
+class ClosedQuestionControl(BaseModel):
+    locale: Optional[str] = "en"
+    closed_answers: List[ClosedAnswer]
+    reset: bool = False  # to reset everything back to default config.
+    callWithVectorStore: Optional[bool] = False
+    user_id: Optional[str] = ""
+    agent_id: Optional[str] = ""
+    thread_id: Optional[str] = ""
+    chat_history:   List[ChatMessage] = []
+
 
 class ConversationControl(BaseModel):
     locale: Optional[str] = "en"
@@ -55,7 +65,7 @@ class ConversationControl(BaseModel):
     reset: bool = False  # to reset everything back to default config.
     callWithVectorStore: Optional[bool] = False
     user_id: Optional[str] = ""
-    assistant_id: Optional[str] = ""
+    agent_id: Optional[str] = ""
     thread_id: Optional[str] = ""
     chat_history:   List[ChatMessage] = []
 
@@ -91,9 +101,9 @@ class ResponseControl(BaseModel):
     #type: ConversationModeEnum = ConversationModeEnum.open_question
 
     status: int = 200
-   
+  
     error: Optional[str] = ''
     chat_history: List[ChatMessage] = []
     user_id: Optional[str] = ""
-    assistant_id: Optional[str] = ""
+    agent_id: Optional[str] = ""
     thread_id: Optional[str] = ""

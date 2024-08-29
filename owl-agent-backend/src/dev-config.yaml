@@ -5,14 +5,13 @@ logging_level_int: 10
 
 app_index_path: ./athena/routers/index.html
 owl_prompts_key_name: default_prompt
-owl_assistants_path: ./athena/config/assistants.yaml
 owl_agents_path: ./athena/config/agents.yaml
 owl_tools_path: ./athena/config/tools.yaml
-owl_prompts_path: ./tests/ut/config/prompts.yaml
+owl_prompts_path: ../tests/ut/config/prompts.yaml
 owl_glossary_path: ./athena/config/glossary.json
 
 owl_agent_llm_history_length: 5
 owl_agent_content_collection_name: base_collection
-owl_agent_content_file_path: ./tests/ut/file_content
-owl_agent_vs_path: ./tests/ut/chromadb
+owl_agent_content_file_path: ../tests/ut/file_content
+owl_agent_vs_path: ../tests/ut/chromadb
 owl_agent_vs_embedding_fct: OpenAIEmbeddings

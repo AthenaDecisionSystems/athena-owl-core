@@ -22,7 +22,6 @@ class AppSettings(BaseSettings):
     owl_glossary_path: str = "/app/athena/config/glossary.json"
     owl_prompts_path: str = "/app/athena/config/prompts.json"
     owl_prompts_key_name: str = "default_prompt"
-    owl_assistants_path: str = "/app/athena/config/assistants.yaml"
     owl_agents_path: str = "/app/athena/config/agents.yaml"
     owl_tools_path: str = "/app/athena/config/tools.yaml"
     owl_agent_content_collection_name: str = "base_collection"
@@ -34,7 +33,7 @@ class AppSettings(BaseSettings):
     owl_agent_llm_client_class: str = ""
     owl_agent_llm_history_length: int = 5
     owl_agent_llm_model: str = ""
-    owl_agent_default_assistant: str = "base_openai_assistant"
+    owl_agent_default_agent: str = "openai_chain_agent"
     owl_agent_tool_factory_class: str = "athena.llm.tools.tool_mgr.BaseToolInstanceFactory"
 
     def get_tool_factory(self):

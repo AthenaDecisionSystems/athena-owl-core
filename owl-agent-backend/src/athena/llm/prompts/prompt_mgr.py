@@ -6,7 +6,6 @@ from athena.glossary.glossary_mgr import CURRENT_LOCALE, DEFAULT_LOCALE
 import json, yaml, uuid
 from athena.app_settings import get_config
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain import hub
 from functools import lru_cache
 from pydantic import BaseModel, RootModel
 from typing import List, Optional
@@ -81,20 +80,27 @@ class Prompts:
     def build_prompt(self, prompt_key: str, locale: str = CURRENT_LOCALE) -> BaseModel:
         if prompt_key is None or len(prompt_key) == 0:
             return None
-        if "/" in prompt_key:
-            return hub.pull(prompt_key)
+
+        text = self.get_prompt(prompt_key, locale)
+        if text == None:
+            return None
+        elif "context" in text:
+            return ChatPromptTemplate.from_messages([
+                    ("system", text),
+                    MessagesPlaceholder(variable_name="chat_history", optional=True),
+                    MessagesPlaceholder(variable_name="context", optional=True),
+                    MessagesPlaceholder(variable_name="input", optional=True),
+                    #("human", "{input}"),
+                    MessagesPlaceholder(variable_name="agent_scratchpad", optional=True),
+                ])
         else:
-            text = self.get_prompt(prompt_key, locale)
-            if text == None:
-                return None
-            else:
-                return ChatPromptTemplate.from_messages([
-                        ("system", text),
-                        MessagesPlaceholder(variable_name="chat_history", optional=True),
-                        MessagesPlaceholder(variable_name="input", optional=True),
-                        #("human", "{input}"),
-                        MessagesPlaceholder(variable_name="agent_scratchpad", optional=True),
-                    ])
+            return ChatPromptTemplate.from_messages([
+                    ("system", text),
+                    MessagesPlaceholder(variable_name="chat_history", optional=True),
+                    MessagesPlaceholder(variable_name="input", optional=True),
+                    #("human", "{input}"),
+                    MessagesPlaceholder(variable_name="agent_scratchpad", optional=True),
+                ])
         
     
     def get_prompt_locales(self, prompt_key: str) -> dict[str,str]:

@@ -51,15 +51,15 @@ def synchronous_chat_with_owl(conversationControl: ConversationControl) -> Respo
     LOGGER.debug(f"\n@@@> Input from chat UI= {conversationControl}")
     resp = ResponseControl()
     try:
-        if not conversationControl.assistant_id or conversationControl.assistant_id == "":
-            conversationControl.assistant_id=get_config().owl_agent_default_assistant
+        if not conversationControl.agent_id or conversationControl.agent_id == "":
+            conversationControl.agent_id=get_config().owl_agent_default_agent
         resp = get_or_start_conversation(conversationControl)
         
     except Exception as e:
         LOGGER.debug(f"\n@@@> Exception in chat conversation with error: {str(e)}")
         resp.status = 500
         resp.error = f"ERROR: backend exception {str(e)}"
-        resp.assistant_id = conversationControl.assistant_id
+        resp.agent_id = conversationControl.agent_id
         resp.user_id = conversationControl.user_id
         resp.thread_id = conversationControl.thread_id
         resp.chat_history = conversationControl.chat_history

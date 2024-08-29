@@ -29,7 +29,7 @@ class TestAssistantsAPIs(unittest.TestCase):
 
     def build_ConversationControl(self):
         ctl = ConversationControl()
-        ctl.assistant_id="base_openai_assistant"
+        ctl.agent_id="openai_chain_agent"
         ctl.user_id="test_user"
         ctl.thread_id="1"
         return ctl
@@ -48,7 +48,7 @@ class TestAssistantsAPIs(unittest.TestCase):
     def _test_fake_assistant(self):
         print(">>> test_fake_assistant \n ")
         ctl = self.build_ConversationControl()
-        ctl.assistant_id="fake_assistant"
+        ctl.agent_id="fake_assistant"
         ctl.thread_id="2"
         ctl.query="You are an expert in AI, can you answer this question: What is the value proposition of LangChain?"
         response=self.client.post(get_config().api_route + "/c/generic_chat", json= ctl.model_dump())
@@ -59,7 +59,7 @@ class TestAssistantsAPIs(unittest.TestCase):
     def test_basic_tool_assistant(self):
         print(">>> test_basic_tool_assistant \n ")
         ctl = self.build_ConversationControl()
-        ctl.assistant_id="base_openai_tool_assistant"
+        ctl.agent_id="openai_tool_chain"
         ctl.thread_id="3"
         ctl.query="You are an expert in AI, can you answer this question: What is Athena Decision Systems?"
         response=self.client.post(get_config().api_route + "/c/generic_chat", json= ctl.model_dump())
@@ -67,6 +67,19 @@ class TestAssistantsAPIs(unittest.TestCase):
         assert response
         assert response.status_code == 200
         
-        
+    def test_mistral_agent(self):
+        print("\n\n >>> test_mistral_agent at the API level\n")
+        client = TestClient(app)
+        ctl = ConversationControl()
+        ctl.agent_id="mistral_large_agent"
+        ctl.user_id="test_user"
+        ctl.thread_id="1"
+        ctl.query="What is Athena Owl Agent?"
+        response=client.post(get_config().api_route + "/c/generic_chat", json= ctl.model_dump())
+        print(f"\n---> {response.content}")
+        if "500" in response.content.decode():
+            self.fail("Error in backend")
+      
+
 if __name__ == '__main__':
     unittest.main()

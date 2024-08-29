@@ -2,7 +2,7 @@
 
 ## Versions
 
-* Created March 2024 - Updated 7/18/2024
+* Created March 2024 - Updated 8/27/2024
 
 ## High Level requirement for OwlAgent Framework
 
@@ -28,7 +28,7 @@ In this diagram we have the following external actors:
 1. Any business solution application needs to integrate with data-sources, and the goal is to expose those endpoint as tool calling capability so LLM can decide to make a call to those service. Those end points are REST and json based but could be SOAP web services too. Those business services include CRM, ERP, on-premises business applications, BPM workflow, etc.
 1. Structured data in SQL database may be directly used, and SQL queries may be integrated as function to be callable by tool calling.
 1. Unstructured data, in the form of key-value pair are persisted in Document Database and accessible via tool calling.
-1. An assistant integrates with rule based systems - typically there will be a domain specific next-best action ruleset per deployed solution but the system integrates with existing decision services.
+1. An agent integrates with rule based systems - typically there will be a domain specific next-best action ruleset per deployed solution but the system integrates with existing decision services.
 1. A vector store to keep embeddings of domain-specific documentation and knowledge.
 
 ## Component View
@@ -41,11 +41,10 @@ To zoom into the OwlAgent Framework backend server, we can highlight the followi
 1. This SPA is served by a **backend for front end** or BFF, that can be deployed in different regions, worldwide or on-premises.
 1. OwlAgent exposes **REST APIs** to serve the SPA, with a different route for each different microservice.
 1. **End-user** management component, manages user group and user type to help controlling access to administration panels versus end user ones. It is a dedicated deployment unit. A microservice.
-1. **Assistant manager** component creates and manages assistants, which map to a use case specific to a business application or a business process that assists humans making decisions or taking actions. An assistant defines agents. This component persists metadata about the assistant. It is also a microservice, with CRUD operations on Assistant. The code to support the integration of the assistant is a dedicated class in the controller. Instantiation of this class is done via inversion of control and configuration.
-1. **Agent manager** component creates and manages agents. It persists metadata about the agent. An agent includes a prompt, a set of tools, tool mapping to Python functions, a vector store reference or collection within a vector store, a LLM API reference, and a LLM model reference. It is also a microservice, with CRUD operation on Agent. The code to support the integration of the agent is a dedicated class in the controller. Instantiation of this class is done via inversion of control and configuration.
+1. **Agent manager** component creates and manages agents, which map to a use case specific to a business application or a business process that assists humans making decisions or taking actions. It persists metadata about the agent. An agent includes a prompt, a set of tools, tool mapping to Python functions, a vector store reference or collection within a vector store, a LLM API reference, and a LLM model reference. The agent is also a microservice, with CRUD operation on Agent. The code to support the integration of the agent is a dedicated class in the controller. Instantiation of this class is done via inversion of control and configuration.
 1. **Prompt manager**, manage the different prompts with its metadata. Prompt instances are linked to the agent and use case to implement. THey may be localized.
 1. **Locale manager** manages localization for English, French, Spanish and potentially other languages for user interface text.
-1. **Conversation Manager** manages conversations between the end user and the back-end server (mediated via a front-end server).  This component has a base implementation to serve Q&A interaction and chat based conversation. It may be unique per deployed solution as it defines tool and assistant-specific configuration.
+1. **Conversation Manager** manages conversations between the end user and the back-end server (mediated via a front-end server).  This component has a base implementation to serve Q&A interaction and chat based conversation. It may be unique per deployed solution as it defines tool and agent-specific configuration.
 1. **Tool manager** manages tool definitions and code references that are instantiated during agent creation and use.
 1. **Document management** exposes document upload management, cloud storage access, metadata management, and trigger embeddings.  Document processing can be adapted for each solution deployment. This component should map the documents to domain vector store mapping.
 1. **Vector Store manager**: For good RAG, we need to have dedicated, domain specific vector stores or collections within a vector store. This component is responsible for the management of the metadata of the vector stores.
@@ -79,10 +78,10 @@ owl-backend:
     - ../../ibu_backend/src/ibu:/app/ibu
 ```
 
-Configuration and tool code is mounted inside the docker container. The configuration defines the classes to instantiate in the different components that are linked to a specific assistant.
+Configuration and tool code is mounted inside the docker container. The configuration defines the classes to instantiate in the different components that are linked to a specific agent.
 
-* [x] Default server configurations for a specific assistant are defined in an external [config.yaml](https://github.com/AthenaDecisionSystems/athena-owl-demos/blob/main/IBU-insurance-demo/ibu_backend/config/config.yaml)
-* [x] A server can have different assistants running in parallel in the context of user conversations. So a conversation is the glue to the assistant.
+* [x] Default server configurations for a specific agent are defined in an external [config.yaml](https://github.com/AthenaDecisionSystems/athena-owl-demos/blob/main/IBU-insurance-demo/ibu_backend/config/config.yaml)
+* [x] A server can have different agent runners running in parallel in the context of user conversations.
 * [ ] Server supports multiple end user conversations.
 
 ### Architecture Approach
@@ -95,7 +94,7 @@ Each router api defines the HTTP verb and resource path and then delegates to an
 
 ### Conversation orchestration
 
-The conversation is what links the assistant to a user. The user starts a conversation using a chatbot graphical user interface (aka a front-end server). The context of the conversation should include the `assistant_id`, the `user_id`, and a `thread_id` to keep track of the conversation. As a conversation has history the `chat_history` is also kept.
+The conversation is what links the agent to a user. The user starts a conversation using a chatbot graphical user interface (aka a front-end server). The context of the conversation should include the `agent_id`, the `user_id`, and a `thread_id` to keep track of the conversation. As a conversation has history the `chat_history` is also kept.
 
 #### Requirements
 
@@ -103,7 +102,7 @@ The conversation is what links the assistant to a user. The user starts a conver
 * [ ] The conversation supports asynchronous/ streaming chat API
 * [x] Need to identify a unique user to keep conversation states, and history
 * [ ] Conversation states are persisted in remote database
-* [x] Conversation uses the assistant_id to get an instance of the assistant executor, to pass the conversation context.
+* [x] Conversation uses the agent_id to get an instance of the agent executor, to pass the conversation context.
 
 #### Approach
 
@@ -111,34 +110,21 @@ The conversation REST resource expose synchronous or async API and delegates to 
 
 ![Conversation Manager](./diagrams/design/conversation_mgr.drawio.png)
 
-The conversation parameter includes the `user_id`, so the server manages multiple users in parallel, the `assistant_id` as a conversation is linked to a use case thus to an assistant. To get the assistant executor the assistant manager creates one instance according to the `AssistantEntity` definition.
+The conversation parameter includes the `user_id`, so the server manages multiple users in parallel, the `agent_id` as a conversation is linked to a use case thus to an agent. To get the agent executor the agent manager creates one instance according to the `OwlAgent` definition.
 
 ![Conversation API](./images/conv_api.PNG)
 
-The assistant instance exposes `invoke` or `stream` methods to send queries to the underlying LLM and provide the response back either as a single block or asynchronously via streaming.
+The agent runner instance exposes `invoke` or `stream` methods to send queries to the underlying LLM and provide the response back either as a single block or asynchronously via streaming.
 
-### Assistant Manager
-
-A specific business use case implementation is supported by one Assistant. It is not exactly the same concept as the [OpenAI assistant](https://platform.openai.com/docs/assistants/overview) which is rather monolithic; rather, it is closer to a crew of agents like in [Crew.ai](https://docs.crewai.com/). An assistant uses one or more agents, and if orchestration is needed between the agents, a dedicated class needs to be implemented.
-
-An assistant uses a LangGraph graph when it needs to be stateful, or a LangChain chain when stateless. LangGraph brings the persistence of the conversation with the `thread_id` and the ability to play back the conversation, therefore it will be the preferred implementation choice.
-
-#### Assistant Requirements
-
-* [x] Assistant can be defined by configuration, but also via CRUD APIs as REST resources. An assistant is defined by a unique id, a name, a description, some metadata, a class to support the implementation, and a list of agents.
-* [x] Assistant defines a set of agents, and tools an agent can use. Agent is linked to a LLM model. So an assistant can be a group of agents using different LLMs.
-* [x] Agent can be a LangGraph graph class with a contract to support invoke and stream. The class is instantiated at runtime from configuration.
-* [x] Support loading configuration for at least one assistants and cached in memory.
-
-[>>> See detail design section](design.md/#assistants)
 
 ### Agent Manager
 
-An agent groups an LLM reference, a system prompt, and tool declarations. The agent manager manages this metadata in the OwlAgentEntity object. The application uses an agent executor instance.
+A specific business use case implementation is supported by one agent. An agent groups an LLM reference, a system prompt, and tool declarations. The agent manager manages this metadata in the OwlAgent object. The application uses an agent executor instance.  An agent may use multiple LLM/prompt so can be implemented with LangGraph. LangGraph brings the persistence of the conversation with the `thread_id` and the ability to play back the conversation, therefore it will be the preferred implementation choice.
 
 #### Agent Requirements
 
 * [x] Define agents via a config file in yaml format, loaded and cached in the agent manager.
+* [x] An agent is defined by a unique id, a name, a description, some metadata, a class to support the implementation, and a list of tools.
 * [x] Agent manager manages CRUD operations of the AgentEntity.
 * [x] AgentEntity references the prompt to use and the model parameters like model name, temperature, top K, top P, etc.
 

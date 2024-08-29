@@ -6,15 +6,15 @@ The framework's code is in the GitHub repository [athena-owl-core/owl-agent-back
 
 ## The core concepts
 
-The core concepts the framework manages are assistants, agents, tools, and prompts.   An _assistant_ is a deployable application built up by choreographing one or more _agents_, each with its own workflow that can leverage external _tools_, guided by _prompts_.
+The core concepts the framework manages are agents, tools, and prompts.   An _agent_ is a deployable application built up by choreographing one or more _llm_, each with its own workflow that can leverage external _tools_, guided by _prompts_.
 
 Here is a how they are related:
 
 ![Core OwlAgent Framework Concepts](./diagrams/design/owl_entities.drawio.png){ width=900 }
 
-An _Assistant_ is an interactive application or solution that supports a specific business use case, like helping a worker perform a specific task of a business process.  The execution of the assistant involves the coordination of one or more agents.  Assistants may be stateful to preserve the state of a conversation with the user using snapshot capabilities.
+An _agent_ is an interactive application or solution that supports a specific business use case, like helping a worker perform a specific task of a business process.  The execution of the agent involves the coordination of one or more LLMs.  agents may be stateful to preserve the state of a conversation with the user using snapshot capabilities.
 
-An _Agent_ manages a co-ordinated set of calls to a Large Language Model or fine tuned smaller Language Models, each with a prompt and tools, to accomplish a subtask of the assistant. A _retriever_ is a tool that can access a document or collection of documents in a vector store. So implementing RAG in the OwlAgent Framework means using a retriever tool inside an agent.
+An _Agent_ manages a co-ordinated set of calls to a Large Language Model or fine tuned smaller Language Models, each with a prompt and tools, to accomplish a subtask. A _retriever_ is a tool that can access a document or collection of documents in a vector store. So implementing RAG in the OwlAgent Framework means using a retriever tool inside an agent.
 
 ## Code organization
 
@@ -32,14 +32,14 @@ Then look in the `athena-owl-core/owl-agent-backend` directory:
 
 The code for the backend is in the `src` folder, while unit tests and integration tests are under `tests/ut/` and `tests/it`.
 
-The backend runs as a server that can support multiple assistants and agents simultaneously.   The backend is typically run in a Docker container and then accessed as a set of REST API's, and is implemented using [FastAPI](https://fastapi.tiangolo.com/).   It is implemented in Python; we recommend using Python 3.12 for development.
+The backend runs as a server that can support multiple agents simultaneously.   The backend is typically run in a Docker container and then accessed as a set of REST API's, and is implemented using [FastAPI](https://fastapi.tiangolo.com/).   It is implemented in Python; we recommend using Python 3.12 for development.
 
 The main entry point for the owl-backend is found in the Python file [athena.main.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/main.py) which is the core of the FastAPI server.   Other files implement different endpoints and APIs that the backend server exposes; each one is considered a different component implementing a different set of related features of the backend.
 
 The backend can run in the uvicorn or ugnicorn server (the defaults for FastAPI). It exposes two set of APIs:
 
 * `/api/v1/c/` for managing conversations with the user, typically exposed in a chatbot user interface.  (The OwlAgent Framework frontend server is the default user interface but others can be developed by calling these API's directly.)
-* `/api/v1/a/` for administration tasks, such as managing the different OWL entities of the frameworks: assistants, agents, prompts, tools, vector stores, and so on.
+* `/api/v1/a/` for administration tasks, such as managing the different OWL entities of the frameworks: agents, prompts, tools, vector stores, and so on.
 
 The `src` folder includes the Dockerfile to build the image, the `requirements.txt` for specifying Python module dependencies and a `start_backend.sh` script to enable local development tests. Unit and integration test are done using `pytest` and unittest modules. Code testing can be debugged in the VSCode IDE.
 
@@ -64,22 +64,22 @@ An OwlAgent conversation is very similar to a _thread_ in the [OpenAI Assistant 
 
 ![Conversation Overview](./diagrams/design/conversation_mgr.drawio.png)
 
-The conversation manager [conversation_mgr.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/llm/conversations/conversation_mgr.py) in the `llm/conversations` folder exposes a factory method to create, or get from the cache, the assistant supporting the conversation.
+The conversation manager [conversation_mgr.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/llm/conversations/conversation_mgr.py) in the `llm/conversations` folder exposes a factory method to create, or get from the cache, the agent supporting the conversation.
 
-When an assistant is not in memory, the factory delegates the creation of the assistant to the assistant manager.  (It sounds like middle management work, doesn't it?)
+When an agent is not in memory, the factory delegates the creation of the agent to the agent manager.  (It sounds like middle management work, doesn't it?)
 
 `Conversation` uses a `ConversationControl` bean class to describe its state and parameters. The definitions of these classes are in a DTO (Data Transfer Object) model so it can be easily shared with other apps.
 
-If in the user interface the end user selects another assistant for their interactions, a new conversation should be started. When an assistant has a stateful implementation, such as LangGraph, then the conversation will be saved as part of the memory management of LangGraph using the thread's unique identifier.
+If in the user interface the end user selects another agent for their interactions, a new conversation should be started. When an agent has a stateful implementation, such as LangGraph, then the conversation will be saved as part of the memory management of LangGraph using the thread's unique identifier.
 
-Here is an example of a simple query to the Anthropic Claude LLM using an assistant that has Tavily search tool. The payload to the POST url is
+Here is an example of a simple query to the Anthropic Claude LLM using an agent that has Tavily search tool. The payload to the POST url is
 
 ```json
 {
  
   "query": "What does the Athena Decision Systems company do?",
   "user_id": "jerome",
-  "assistant_id": "base_tool_assistant",
+  "agent_id": "base_tool_agent",
   "thread_id": "1"
 }
 ```
@@ -88,7 +88,7 @@ From a conversation interaction the sequence flow looks like in the following se
 
 ![Conversation Sequence](./diagrams/design/conv_seq_flow.drawio.png)
 
-The Assistant and Agent are instances created by factory classes using the parameters read in the appropriate assistant or agent definition.  These definitions are stored in yaml files as described below.
+The Agent Runners are instances created by factory classes using the parameters read in the appropriate agent definition.  These definitions are stored in yaml files as described below.
 
 ### Assistants
 

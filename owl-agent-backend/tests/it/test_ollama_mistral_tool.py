@@ -4,13 +4,14 @@ import unittest
 IBU_BASE_URL="http://localhost:8000/api/v1"
 class TestMistralToolOllama(unittest.TestCase):
     
+
     
     def test_call_using_web_search(self):
         print("\n--> Call Mistral on Ollama with information its was not train on\n")
         data='{ "locale": "en",\
             "query": "what is the company Athena Decision Systems.",\
             "type": "chat",\
-            "assistant_id":"mistral_tool_assistant",  \
+            "agent_id":"ollama_mistral",  \
             "user_id" : "it_tester", \
             "thread_id": "1" \
         }'

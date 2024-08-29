@@ -9,6 +9,8 @@ from athena.itg.store.content_mgr import get_content_mgr, FileDescription
 
 from athena.routers.dto_models import ConversationControl
 from athena.llm.conversations.conversation_mgr import get_or_start_conversation
+
+
 class TestRagConversation(unittest.TestCase):
     
     
@@ -21,17 +23,18 @@ class TestRagConversation(unittest.TestCase):
         fd.file_base_uri="https://athenadecisions.com/"
         service = get_content_mgr()
         rep=service.process_doc(fd,None)
-        print(repr)
+        print(rep)
+        assert rep
         
         cc = ConversationControl()
         cc.locale="en"
-        cc.assistant_id="base_graph_assistant"
+        cc.agent_id="openai_graph_agent"
         cc.thread_id="1"
         cc.query="what is athena decision systems?"
         rep = get_or_start_conversation(cc)
         assert rep
-        assert rep.message
-        print(rep)
+        assert rep.messages
+        print(rep.messages[0].content)
         
 if __name__ == '__main__':
     unittest.main()

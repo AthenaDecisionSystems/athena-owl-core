@@ -4,7 +4,7 @@ owl_env_path: ../.env
 app_index_path: /app/athena/routers/index.html
 owl_glossary_path: /app/athena/config/glossary.json
 owl_prompts_path: /app/athena/config/prompts.yaml
-owl_assistants_path: /app/athena/config/assistants.yaml
+
 owl_agents_path: /app/athena/config/agents.yaml
 owl_tools_path: /app/athena/config/tools.yaml
 
@@ -15,7 +15,7 @@ owl_agent_vs_path: /app/chromadb
 owl_agent_vs_embedding_fct: OpenAIEmbeddings
 owl_agent_llm_history_length: 5
 owl_agent_tool_factory_class:  athena.llm.tools.tool_mgr.BaseToolInstanceFactory
-owl_agent_default_assistant: base_openai_assistant
+owl_agent_default_agent: openai_chain_agent
 
 owl_agent_decision_service_fct_name: athena.itg.decisions.nba_ds_dummy.callDecisionService
 
