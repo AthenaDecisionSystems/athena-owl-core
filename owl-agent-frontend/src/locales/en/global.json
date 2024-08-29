@@ -3,6 +3,22 @@
         "@copyright": "Copyright 2024, Athena Decision Systems",
         "@author": "Joel Milgram"
     },
+    "agent": {
+        "msg.agentConfiguredToUseODM": "The agent is configured to use business rules (IBM ODM).",
+        "msg.agentConfiguredNotToUseODM": "The agent is configured **NOT** to use business rules (IBM ODM).",
+        "msg.readyToUse": "The agent is ready for use.",
+        "msg.youCanEdit": "You can edit the instructions and adapt your own agent.",
+        "msg.defaultValuesReinitialized": "The default instructions have been reloaded. You can modify them and update the agent, or create a new one to become the default agent.",
+        "msg.defaultInstructionsultReinitialized": "The default instructions have been reloaded. You can modify them and update the agent, or create a new one to become the default agent.",
+        "lbl.title": "Agent",
+        "lbl.instructions": "Instructions",
+        "lbl.manageDocuments": "Manage documents",
+        "btn.reinitDefaultValues": "Cancel changes",
+        "btn.updateAgent": "Update the agent",
+        "chk.useBusinessRules": "Use business rules (IBM ODM)?",
+        "chk.useFileSearch": "Use file search?",
+        "btn.reinitConversation": "New conversation"
+    },
     "app": {
         "lbl.brand": "Claims Management Agent",
         "msg.welcome": "## Hello,\n ### Welcome to the OwlAgent that combines Generative AI and IBM business rules.",
@@ -21,22 +37,6 @@
         "msg.languageChanged": "You have chosen to change the language to {{language}}.",
         "msg.newThreadCreated": "A new thread has been created. The chatbot has forgotten everything that was discussed previously.\nClick here to clear this panel.",
         "btn.restartConversation": "Restart the conversation"
-    },
-    "assistant": {
-        "msg.agentConfiguredToUseODM": "The agent is configured to use business rules (IBM ODM).",
-        "msg.agentConfiguredNotToUseODM": "The agent is configured **NOT** to use business rules (IBM ODM).",
-        "msg.readyToUse": "The agent is ready for use.",
-        "msg.youCanEdit": "You can edit the instructions and adapt your own agent.",
-        "msg.defaultValuesReinitialized": "The default instructions have been reloaded. You can modify them and update the agent, or create a new one to become the default agent.",
-        "msg.defaultInstructionsultReinitialized": "The default instructions have been reloaded. You can modify them and update the agent, or create a new one to become the default agent.",
-        "lbl.title": "Agent",
-        "lbl.instructions": "Instructions",
-        "lbl.manageDocuments": "Manage documents",
-        "btn.reinitDefaultValues": "Cancel changes",
-        "btn.updateAssistant": "Update the agent",
-        "chk.useBusinessRules": "Use business rules (IBM ODM)?",
-        "chk.useFileSearch": "Use file search?",
-        "btn.reinitConversation": "New conversation"
     },
     "attachments": {
         "msg.documentUploaded": "Document uploaded: *{{fileName}}*",

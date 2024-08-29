@@ -18,7 +18,7 @@ import ReactMarkdown from 'react-markdown';
 import { useSelector, useDispatch } from 'react-redux';
 import { setError } from './reducer/error.action';
 import Configuration from './Configuration';
-import Assistant from './Assistant';
+import Agent from './Agent';
 import { useTranslation } from 'react-i18next';
 import ClosedQuestions from './ClosedQuestions';
 
@@ -138,14 +138,14 @@ function App() {
   const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true },]);
   const [chatHistory, setChatHistory] = useState([]);
 
-  const [assistantId, setAssistantId] = useState(window._env_.REACT_APP_ASSISTANT_ID_WITH_RULES);
-  const [assistantIdWithoutRules, setAssistantIdWithoutRules] = useState(window._env_.REACT_APP_ASSISTANT_ID_WITHOUT_RULES);
+  const [agentId, setAgentId] = useState(window._env_.REACT_APP_AGENT_ID_WITH_RULES);
+  const [agentIdWithoutRules, setAgentIdWithoutRules] = useState(window._env_.REACT_APP_AGENT_ID_WITHOUT_RULES);
   const [threadId, setThreadId] = useState(null);
   const [userId, setUserId] = useState("");
 
-  // Ref to component Assistant
-  // When the language changes, the Assistant component must update its instructions
-  const assistantRef = useRef();
+  // Ref to component Agent
+  // When the language changes, the Agent component must update its instructions
+  const agentRef = useRef();
 
   useEffect(() => {
     // Random user id
@@ -178,13 +178,13 @@ function App() {
   }, [messages]); // eslint-disable-line
 
   useEffect(() => {
-    console.log("App.js: assistantId=", assistantId, " assistantIdWithoutRules=", assistantIdWithoutRules)
-  }, [assistantId, assistantIdWithoutRules]);
+    console.log("App.js: agentId=", agentId, " agentIdWithoutRules=", agentIdWithoutRules)
+  }, [agentId, agentIdWithoutRules]);
 
   const changeLanguage = () => {
     // This is a called by the Configuration component.
-    if (assistantRef && assistantRef.current) {
-      assistantRef.current.localizeAssistant(i18n.language);
+    if (agentRef && agentRef.current) {
+      agentRef.current.localizeAgent(i18n.language);
     }
   }
 
@@ -223,9 +223,11 @@ function App() {
     const body = {
       "locale": i18n.language,
       "query": text,
+      "reenter_into": "",
       "reset": resetHistory,
+      "callWithVectorStore": false,
       "user_id": userId,
-      "assistant_id": (useODM ? assistantId : assistantIdWithoutRules),
+      "agent_id": (useODM ? agentId : agentIdWithoutRules),
       "thread_id": threadId,
       "chat_history": (resetHistory ? [] : chatHistory)
     }
@@ -246,7 +248,7 @@ function App() {
           ],
           "reset": resetHistory,
           "user_id": userId,
-          "assistant_id": (useODM ? assistantId : assistantIdWithoutRules),
+          "agent_id": (useODM ? agentId : agentIdWithoutRules),
           "thread_id": threadId,
           "chat_history": (resetHistory ? [] : chatHistory)
         }
@@ -268,30 +270,25 @@ function App() {
         console.log("submitMessage: " + JSON.stringify(data));
         let answer = ""
         if (data.status === 200) {
-          answer = data.message  //TODO JM-JCJ: or data.closed_questions (in data, )  <============================
+          answer = data.messages  //TODO JM-JCJ: or data.closed_questions (in data, )  <============================
 
-          // setChatHistory([...chatHistory, { "role": "human", "content": text }, { "role": "assistant", "content": answer }]);
+          // setChatHistory([...chatHistory, { "role": "human", "content": text }, { "role": "AI", "content": answer }]);
           setThreadId(data.thread_id)
           setChatHistory(data.chat_history)
           setResetHistory(false);
         } else {
           // Error 500 or other
-          answer = "Status http " + data.status + ": " + data.message + "\n" + data.error
+          answer = [{ content: "Status http " + data.status + ": " + data.message + "\n" + data.error }]
         }
         setTimeout(() => {
-          setMessages([
-            ...messages,
-            { text, isBot: false },
-            { text: answer, time: undefined, isBot: true }
-          ])
+          const transformedAnswer = answer.map((a) => ({ text: a.content, className: a.style_class, time: undefined, isBot: true, }));
+          setMessages([...messages, { text, isBot: false }, ...transformedAnswer])
         }, 500);
       })
       .catch(error => {
         console.error('error', error)
         setTimeout(() => {
-          setMessages([...messages, { text, isBot: false }, {
-            text: t("app.err.handlingYourRequest"), isBot: true
-          }])
+          setMessages([...messages, { text, isBot: false }, { text: t("app.err.handlingYourRequest"), isBot: true }])
         }, 2500)
       })
   };
@@ -349,11 +346,11 @@ function App() {
         <div className="configuration"><img src={configIcon} onClick={handleConfiguration} alt={t("app.alt.configuration")} /></div>
         <div className={displayConfigurationPanel ? "visible" : "hidden"}>
           <Configuration onDismiss={handleConfiguration}
-            assistantId={assistantId}
-            assistantIdWithoutRules={assistantIdWithoutRules}
+            agentId={agentId}
+            agentIdWithoutRules={agentIdWithoutRules}
             onChangeLanguage={changeLanguage}
-            setAssistantId={setAssistantId}
-            setAssistantIdWithoutRules={setAssistantIdWithoutRules} /></div>
+            setAgentId={setAgentId}
+            setAgentIdWithoutRules={setAgentIdWithoutRules} /></div>
         <div>
           {t("app.msg.loading")}
           <div className="loader"><img src={loadingImage} alt={t("app.msg.loading")} /></div>
@@ -369,11 +366,11 @@ function App() {
           <div className="configuration"><img src={configIcon} onClick={handleConfiguration} alt={t("app.alt.configuration")} /></div>
           <div className={displayConfigurationPanel ? "visible" : "hidden"}>
             <Configuration onDismiss={handleConfiguration}
-              assistantId={assistantId}
-              assistantIdWithoutRules={assistantIdWithoutRules}
+              agentId={agentId}
+              agentIdWithoutRules={agentIdWithoutRules}
               onChangeLanguage={changeLanguage}
-              setAssistantId={setAssistantId}
-              setAssistantIdWithoutRules={setAssistantIdWithoutRules} /></div>
+              setAgentId={setAgentId}
+              setAgentIdWithoutRules={setAgentIdWithoutRules} /></div>
 
           <div className="upperSide">
             {/* Change the logo, the className, and the brand text */}
@@ -385,8 +382,8 @@ function App() {
               </span>
             </div>
 
-            <Assistant ref={assistantRef}
-              assistantId={(useODM ? assistantId : assistantIdWithoutRules)}
+            <Agent ref={agentRef}
+              agentId={(useODM ? agentId : agentIdWithoutRules)}
               informUser={informUser}
               changeUseODMStatus={changeUseODMStatus}
               changeUseFileSearchStatus={changeUseFileSearchStatus} />

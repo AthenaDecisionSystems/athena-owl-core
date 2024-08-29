@@ -1,7 +1,7 @@
 /* Copyright 2024, Athena Decision Systems */
 /* @author Joel Milgram */
 
-.assistant {
+.agent {
     padding: 1rem;
     margin: 1rem auto;
     margin-top: 1.5rem;
@@ -10,13 +10,13 @@
     background: rgba(28, 30, 58, 1);
 }
 
-.assistant-title {
+.agent-title {
     font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
 }
 
-.assistant-button {
+.agent-button {
     font-size: 1.2rem;
     font-weight: bold;
     text-align: center;
@@ -28,7 +28,7 @@
     cursor: pointer;
 }
 
-.assistant-small-button {
+.agent-small-button {
     font-size: 1rem;
     text-align: left;
     padding: 0.4rem;
@@ -39,53 +39,53 @@
     cursor: pointer;
 }
 
-.assistant-button-block {
+.agent-button-block {
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     align-content: flex-start;
 }
 
-.assistant-button-in-block {
+.agent-button-in-block {
     margin: 0 auto;
     width: 48%;
 }
 
-.assistant-button:hover {
+.agent-button:hover {
     background-color: rgb(50, 54, 105);
 }
 
-.assistant-button:active {
+.agent-button:active {
     background-color: rgb(100, 107, 205);
 }
 
-.assistant-label {
+.agent-label {
     font-size: 1.5rem;
     font-weight: bold;
 }
 
-.assistant-separator {
+.agent-separator {
     margin-top: 1rem;
 }
 
-.assistant-label-block {
+.agent-label-block {
     margin-top: 1rem;
 }
 
-.assistant-label-block-hidden {
+.agent-label-block-hidden {
     display: none;
 
 }
 
-.assistant-label-no-margin-top {
+.agent-label-no-margin-top {
     margin-top: 0rem;
 }
 
-.assistant-input-zone {
+.agent-input-zone {
     margin-bottom: 1rem;
 }
 
-.assistant-input-zone-half-size input {
+.agent-input-zone-half-size input {
     padding: 0.5rem;
     border-radius: 0.5rem;
     font-family: 'Poppins', sans-serif;
@@ -93,13 +93,13 @@
     background-color: gainsboro;
 }
 
-.assistant-one-line {
+.agent-one-line {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.assistant-input-zone textarea {
+.agent-input-zone textarea {
     padding: 0.5rem;
     border-radius: 0.5rem;
     font-family: 'Poppins', sans-serif;
@@ -107,7 +107,7 @@
     background-color: gainsboro;
 }
 
-.assistant-input-zone select {
+.agent-input-zone select {
     padding: 0.5rem;
     border-radius: 0.5rem;
     font-family: 'Poppins', sans-serif;
@@ -115,14 +115,14 @@
     background-color: gainsboro;
 }
 
-.assistant-object-visible {
+.agent-object-visible {
     display: block;
 }
 
-.assistant-object-hidden {
+.agent-object-hidden {
     display: none;
 }
 
-.assistant-space-around {
+.agent-space-around {
     margin: 2rem auto;
 }

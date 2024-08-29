@@ -3,9 +3,25 @@
         "@copyright": "Copyright 2024, Athena Decision Systems",
         "@author": "Joel Milgram"
     },
+    "agent": {
+        "msg.agentConfiguredToUseODM": "L'agent est configuré pour utiliser les règles métier (IBM ODM).",
+        "msg.agentConfiguredNotToUseODM": "L'agent est configuré pour **NE PAS** utiliser les règles métier (IBM ODM).",
+        "msg.readyToUse": "L'agent est prêt à être utilisé.",
+        "msg.youCanEdit": "Vous pouvez modifier les instructions et adapter votre propre agent.",
+        "msg.defaultValuesReinitialized": "Les instructions par défaut ont été rechargées. Vous pouvez les modifier et mettre à jour l'agent ou en créer un nouveau qui deviendra l'agent par défaut.",
+        "msg.defaultInstructionsultReinitialized": "Les instructions par défaut ont été rechargées. Vous pouvez les modifier et mettre à jour l'agent ou en créer un nouveau qui deviendra l'agent par défaut.",
+        "lbl.title": "Agent",
+        "lbl.instructions": "Instructions",
+        "lbl.manageDocuments": "Gérer les documents",
+        "btn.reinitDefaultValues": "Annuler les modifications",
+        "btn.updateAgent": "Mettre à jour l'agent",
+        "chk.useBusinessRules": "Utiliser les règles métier (IBM ODM) ?",
+        "chk.useFileSearch": "Utiliser la recherche dans les fichiers ?",
+        "btn.reinitConversation": "Relancer la conversation"
+    },
     "app": {
         "lbl.brand": "Réclamations sur les sinistres",
-        "msg.welcome": "## Bonjour,\n ### Bienvenue sur l'assistant conversationnel OwlAgent qui combine l'IA générative et les règles métier (IBM ODM).",
+        "msg.welcome": "## Bonjour,\n ### Bienvenue sur l'agent conversationnel OwlAgent qui combine l'IA générative et les règles métier (IBM ODM).",
         "err.handlingYourRequest": "_Une erreur s'est produite lors du traitement de votre requête._",
         "msg.restartNeeded": "La conversation doit être relancée.",
         "alt.configuration": "Configuration",
@@ -18,25 +34,9 @@
         "msg.enterYourMessage": "Saisissez votre message....",
         "alt.send": "Envoyer",
         "msg.chatGPTCanMakeMistakes": "ChatGPT peut se tromper sur les personnes, les lieux et les faits.",
-        "msg.languageChanged": "Vous avez choisi d'utiliser l'assistant en {{language}}.",
+        "msg.languageChanged": "Vous avez choisi d'utiliser l'agent en {{language}}.",
         "msg.newThreadCreated": "Une nouvelle conversation démarre. Le chatbot a oublié tous les échanges précédents.\nCliquez ici pour réinitialiser cet affichage.",
         "btn.restartConversation": "Relancer la conversation"
-    },
-    "assistant": {
-        "msg.agentConfiguredToUseODM": "L'agent est configuré pour utiliser les règles métier (IBM ODM).",
-        "msg.agentConfiguredNotToUseODM": "L'agent est configuré pour **NE PAS** utiliser les règles métier (IBM ODM).",
-        "msg.readyToUse": "L'agent est prêt à être utilisé.",
-        "msg.youCanEdit": "Vous pouvez modifier les instructions et adapter votre propre agent.",
-        "msg.defaultValuesReinitialized": "Les instructions par défaut ont été rechargées. Vous pouvez les modifier et mettre à jour l'agent ou en créer un nouveau qui deviendra l'agent par défaut.",
-        "msg.defaultInstructionsultReinitialized": "Les instructions par défaut ont été rechargées. Vous pouvez les modifier et mettre à jour l'agent ou en créer un nouveau qui deviendra l'agent par défaut.",
-        "lbl.title": "Agent",
-        "lbl.instructions": "Instructions",
-        "lbl.manageDocuments": "Gérer les documents",
-        "btn.reinitDefaultValues": "Annuler les modifications",
-        "btn.updateAssistant": "Mettre à jour l'agent",
-        "chk.useBusinessRules": "Utiliser les règles métier (IBM ODM) ?",
-        "chk.useFileSearch": "Utiliser la recherche dans les fichiers ?",
-        "btn.reinitConversation": "Relancer la conversation"
     },
     "attachments": {
         "msg.documentUploaded": "Document chargé : {{fileName}}",

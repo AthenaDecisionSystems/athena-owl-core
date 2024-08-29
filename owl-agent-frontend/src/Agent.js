@@ -1,7 +1,7 @@
 // Copyright 2024, Athena Decision Systems
 // @author Joel Milgram
 
-import "./Assistant.css";
+import "./Agent.css";
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import Attachments from './Attachments';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +9,7 @@ import { setError } from './reducer/error.action';
 import Switch from './Switch'
 import { useTranslation } from 'react-i18next';
 
-const Assistant = forwardRef(({ assistantId, informUser, changeUseODMStatus, changeUseFileSearchStatus }, ref) => {
+const Agent = forwardRef(({ agentId, informUser, changeUseODMStatus, changeUseFileSearchStatus }, ref) => {
     const [promptRef, setPromptRef] = useState("")
     const [instructions, setInstructions] = useState("")
     const [defaultInstructions, setDefaultInstructions] = useState("")
@@ -26,31 +26,22 @@ const Assistant = forwardRef(({ assistantId, informUser, changeUseODMStatus, cha
 
     useEffect(() => {
         const fetchPromptRefAndGetPrompt = async () => {
-            fetch(serverUrl + "a/assistants/" + assistantId)
+            fetch(serverUrl + "a/agents/" + agentId)
                 .then(response => response.json())
                 .then(data => {
-                    const agentId = data.agent_id || data.agents[0];
-                    console.log("Agent id: " + agentId, data);
-                    fetch(serverUrl + "a/agents/" + agentId)
-                        .then(response => response.json())
-                        .then(data => {
-                            console.log("Prompt ref: " + data.prompt_ref);
-                            getPrompt(data.prompt_ref, language);
-                            setPromptRef(data.prompt_ref);
-                        })
-                        .catch(error => {
-                            console.error('Error:', error)
-                        })
+                    console.log("Prompt ref: " + data.prompt_ref);
+                    getPrompt(data.prompt_ref, language);
+                    setPromptRef(data.prompt_ref);
                 })
                 .catch(error => {
                     console.error('Error:', error)
-                });
-        }
+                })
+        };
 
-        if (assistantId && assistantId !== "") {
+        if (agentId && agentId !== "") {
             fetchPromptRefAndGetPrompt();
         }
-    }, [assistantId]); // eslint-disable-line
+    }, [agentId]); // eslint-disable-line
 
     useEffect(() => {
         setInstructions(defaultInstructions);
@@ -58,7 +49,7 @@ const Assistant = forwardRef(({ assistantId, informUser, changeUseODMStatus, cha
 
     useEffect(() => {
         changeUseODMStatus(useODM);
-        informUser(useODM ? t("assistant.msg.agentConfiguredToUseODM") : t("assistant.msg.agentConfiguredNotToUseODM"))
+        informUser(useODM ? t("agent.msg.agentConfiguredToUseODM") : t("agent.msg.agentConfiguredNotToUseODM"))
     }, [useODM]); // eslint-disable-line
 
     useEffect(() => {
@@ -92,7 +83,7 @@ const Assistant = forwardRef(({ assistantId, informUser, changeUseODMStatus, cha
     }
 
     useImperativeHandle(ref, () => ({
-        localizeAssistant: (lang) => {
+        localizeAgent: (lang) => {
             getPrompt(promptRef, lang)
             informUser(t("app.msg.welcome"))
             setDirty(false)
@@ -113,7 +104,7 @@ const Assistant = forwardRef(({ assistantId, informUser, changeUseODMStatus, cha
         setDirty(false);
     }
 
-    const updateAssistant = async () => {
+    const updateAgent = async () => {
         const inst = instructions.trim();
         if (inst === defaultInstructions) {
             informUser("No change.")
@@ -160,44 +151,44 @@ const Assistant = forwardRef(({ assistantId, informUser, changeUseODMStatus, cha
     }
 
     return (
-        <div className="assistant">
-            <div className="assistant-title">{t("assistant.lbl.title")}</div>
-            <div className="assistant-label">{t("assistant.lbl.instructions")}</div>
-            <div className="assistant-input-zone">
+        <div className="agent">
+            <div className="agent-title">{t("agent.lbl.title")}</div>
+            <div className="agent-label">{t("agent.lbl.instructions")}</div>
+            <div className="agent-input-zone">
                 <textarea name="instructions" rows="15" value={instructions}
                     onChange={(e) => { setInstructions(e.target.value) }}
                     onKeyUp={(e) => { setInstructions(e.target.value); dirtyFlag() }}></textarea>
             </div>
 
-            <div className="assistant-input-zone">
-                {dirty && <div className="assistant-button-block">
-                    <div className="assistant-button assistant-button-in-block" onClick={reinitDefaultValues}>{t("assistant.btn.reinitDefaultValues")}</div>
-                    <div className="assistant-button assistant-button-in-block" onClick={updateAssistant}>{t("assistant.btn.updateAssistant")}</div>
+            <div className="agent-input-zone">
+                {dirty && <div className="agent-button-block">
+                    <div className="agent-button agent-button-in-block" onClick={reinitDefaultValues}>{t("agent.btn.reinitDefaultValues")}</div>
+                    <div className="agent-button agent-button-in-block" onClick={updateAgent}>{t("agent.btn.updateAgent")}</div>
                 </div>}
             </div>
 
-            <div className="assistant-input-zone">
-                <div className="assistant-one-line">
-                    <div className="assistant-label">{t("assistant.chk.useFileSearch")}</div>
+            <div className="agent-input-zone">
+                <div className="agent-one-line">
+                    <div className="agent-label">{t("agent.chk.useFileSearch")}</div>
                     <Switch value={useFileSearch} onClick={setUseFileSearch} />
                 </div>
-                <div className={useFileSearch ? "assistant-object-visible" : "assistant-object-hidden"}>
+                <div className={useFileSearch ? "agent-object-visible" : "agent-object-hidden"}>
                     <Attachments informUser={informUser} />
                 </div>
             </div>
 
-            <div className="assistant-label-block">
-                <div className="assistant-one-line">
-                    <div className="assistant-label">{t("assistant.chk.useBusinessRules")}</div>
+            <div className="agent-label-block">
+                <div className="agent-one-line">
+                    <div className="agent-label">{t("agent.chk.useBusinessRules")}</div>
                     <Switch value={useODM} onClick={setUseODM} />
                 </div>
             </div>
-            <hr className="assistant-space-around" />
-            <div className="assistant-button-block">
-                <div className="assistant-small-button " onClick={reinitConversation}>{t("assistant.btn.reinitConversation")}</div>
+            <hr className="agent-space-around" />
+            <div className="agent-button-block">
+                <div className="agent-small-button " onClick={reinitConversation}>{t("agent.btn.reinitConversation")}</div>
             </div>
         </div>
     );
 });
 
-export default Assistant;
+export default Agent;

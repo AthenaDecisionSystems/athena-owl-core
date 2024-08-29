@@ -3,6 +3,22 @@
         "@copyright": "Copyright 2024, Athena Decision Systems",
         "@author": "Joel Milgram"
     },
+    "agent": {
+        "msg.agentConfiguredToUseODM": "El agente está configurado para usar reglas de negocio (IBM ODM).",
+        "msg.agentConfiguredNotToUseODM": "El agente está configurado para **NO** usar reglas de negocio (IBM ODM).",
+        "msg.readyToUse": "El agente está listo para ser utilizado.",
+        "msg.youCanEdit": "Puedes modificar las instrucciones y adaptar tu propio agente.",
+        "msg.defaultValuesReinitialized": "Las instrucciones por defecto han sido recargadas. Puede modificarlas y actualizar el agente, o crear uno nuevo para que se convierta en el agente predeterminado.",
+        "msg.defaultInstructionsultReinitialized": "Las instrucciones por defecto han sido recargadas. Puede modificarlas y actualizar el agente, o crear uno nuevo para que se convierta en el agente predeterminado.",
+        "lbl.title": "Agente",
+        "lbl.instructions": "Instrucciones",
+        "lbl.manageDocuments": "Gestión de documentos",
+        "btn.reinitDefaultValues": "Cancelar cambios",
+        "btn.updateAgent": "Actualizar agente",
+        "chk.useBusinessRules": "¿Usar reglas de negocio (IBM ODM)?",
+        "chk.useFileSearch": "¿Usar búsqueda de archivos?",
+        "btn.reinitConversation": "Reiniciar conversación"
+    },
     "app": {
         "lbl.brand": "Reclamaciones sobre siniestros",
         "msg.welcome": "## Hola,\n ### Bienvenido al asistente conversacional OwlAgent que combina la IA generativa y las reglas de negocio (IBM ODM).",
@@ -21,22 +37,6 @@
         "msg.languageChanged": "Has elegido usar el asistente en {{language}}.",
         "msg.newThreadCreated": "Se ha creado un nuevo hilo. El chatbot ha olvidado todo lo que se discutió anteriormente.\nHaga clic aquí para borrar este panel.",
         "btn.restartConversation": "Reiniciar conversación"
-    },
-    "assistant": {
-        "msg.agentConfiguredToUseODM": "El agente está configurado para usar reglas de negocio (IBM ODM).",
-        "msg.agentConfiguredNotToUseODM": "El agente está configurado para **NO** usar reglas de negocio (IBM ODM).",
-        "msg.readyToUse": "El agente está listo para ser utilizado.",
-        "msg.youCanEdit": "Puedes modificar las instrucciones y adaptar tu propio agente.",
-        "msg.defaultValuesReinitialized": "Las instrucciones por defecto han sido recargadas. Puede modificarlas y actualizar el agente, o crear uno nuevo para que se convierta en el agente predeterminado.",
-        "msg.defaultInstructionsultReinitialized": "Las instrucciones por defecto han sido recargadas. Puede modificarlas y actualizar el agente, o crear uno nuevo para que se convierta en el agente predeterminado.",
-        "lbl.title": "Agente",
-        "lbl.instructions": "Instrucciones",
-        "lbl.manageDocuments": "Gestión de documentos",
-        "btn.reinitDefaultValues": "Cancelar cambios",
-        "btn.updateAssistant": "Actualizar agente",
-        "chk.useBusinessRules": "¿Usar reglas de negocio (IBM ODM)?",
-        "chk.useFileSearch": "¿Usar búsqueda de archivos?",
-        "btn.reinitConversation": "Reiniciar conversación"
     },
     "attachments": {
         "msg.documentUploaded": "Documento cargado: {{fileName}}",

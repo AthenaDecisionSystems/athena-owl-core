@@ -65,8 +65,8 @@ When you build your own custom solution, you can customize this Frontend with th
 |-----------|-------------|
 |REACT_APP_OWL_AGENT_NAME|Name of your OWL Agent that will be displayed just aside the IBU logo. Example: `Miniloan Management Agent`.|
 |REACT_APP_BACKEND_URL|By default, this is `http://localhost:8000/api/v1/`. Adapt according to your configuration.|
-|REACT_APP_ASSISTANT_ID_WITH_RULES|You should have defined several assistants in the `ibu_backend/config/assistants.yaml` file. This parameter is the name of your assistant that includes ODM calling. For Miniloan, this is `ibu_assistant`.|
-|REACT_APP_ASSISTANT_ID_WITHOUT_RULES|That one is the name of your assistant that **DOES NOT** include ODM calling. For Miniloan, this is `ibu_assistant_limited`.|
+|REACT_APP_AGENT_ID_WITH_RULES|You should have defined several agents in the `ibu_backend/config/agents.yaml` file. This parameter is the name of your agent that includes ODM calling. For Miniloan, this is `ibu_agent`.|
+|REACT_APP_AGENT_ID_WITHOUT_RULES|That one is the name of your agent that **DOES NOT** include ODM calling. For Miniloan, this is `ibu_agent_limited`.|
 |REACT_APP_DEMO_TEXT|To simplify your demo, you can simply enter `demo`in the chat and the content of this parameter will be automatically inserted. Example for Miniloan: `One of our client Robert Smith wants a loan for \$500,000 for a duration of 60 months do we approve it?`|
 
 ---
@@ -78,7 +78,7 @@ When you build your own custom solution, you can customize this Frontend with th
 ```
 export REACT_APP_OWL_AGENT_NAME='Miniloan Management Agent'
 export REACT_APP_BACKEND_URL='http://localhost:8000/api/v1/'
-export REACT_APP_ASSISTANT_ID_WITH_RULES='ibu_assistant'
-export REACT_APP_ASSISTANT_ID_WITHOUT_RULES='ibu_assistant_limited'
+export REACT_APP_AGENT_ID_WITH_RULES='ibu_agent'
+export REACT_APP_AGENT_ID_WITHOUT_RULES='ibu_agent_limited'
 export REACT_APP_DEMO_TEXT="One of our client Robert Smith wants a loan for \$500,000 for a duration of 60 months do we approve it?"
 ```

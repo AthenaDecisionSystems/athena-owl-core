@@ -21,64 +21,6 @@ const Attachments = ({ informUser }) => {
 
     const { t } = useTranslation();
 
-    /*useEffect(() => {
-        getAssistantFileList()
-    }, []);*/
-
-    // Not used for the moment
-    // eslint-disable-next-line
-    const getAssistantFileList = async () => {
-        let atts = [];
-        console.log("getAssistantFileList");
-        //dispatch(setError(null));
-
-        const getTypeFromExtension = (filename) => {
-            const extension = filename.split('.').pop();
-            switch (extension) {
-                case "pdf":
-                    return "application/pdf";
-                case "txt":
-                    return "text/plain";
-                case "html":
-                case "htm":
-                    return "text/html";
-                case "md":
-                    return "text/markdown";
-                default:
-                    return "text/plain";
-            }
-        }
-        fetch(serverUrl + "get_assistant_files")
-            .then(response => response.json())
-            .then(data => {
-                console.log("Assistant files: ", data);
-                if (data.message === "Got Files") {
-                    return data.files;
-                } else {
-                    throw new Error(data.message);
-                }
-            })
-            .then(files => {
-                let uniqueFiles = files.reduce((acc, current) => {
-                    if (!acc.find(file => file.filename === current.filename)) {
-                        acc.push(current);
-                    }
-                    return acc;
-                }, []);
-
-                uniqueFiles.map((file) => {
-                    atts.push({ filename: file.filename, id: file.id, type: getTypeFromExtension(file.filename), visible: false });
-                    return file; // ignored
-                });
-                setAttachments(atts);
-                console.log("Assistant files: ", atts);
-            })
-            .catch(error => {
-                console.error(error)
-                // dispatch(setError(error.message))
-            });
-    }
-
     const handleClick = () => {
         hiddenFileInput.current.click();
     };
