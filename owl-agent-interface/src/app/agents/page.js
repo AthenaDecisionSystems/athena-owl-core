@@ -1,6 +1,6 @@
 'use client';
 
-import { Breadcrumb, BreadcrumbItem, Button, Column, Grid, SkeletonText, ToastNotification } from '@carbon/react';
+import { Button, Column, Grid, SkeletonText, ToastNotification } from '@carbon/react';
 
 import React, { useEffect, useState } from 'react';
 import { Octokit } from '@octokit/core';
@@ -22,17 +22,14 @@ function AgentsPage() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!env.backendBaseAPI) {
-      getEnv().then((e) => {
-        env = e;
-        getAgents();
-      })
-    } else {
-      getAgents();
-    }
+    getAgents();
   }, []);
 
   const getAgents = async () => {
+    if (!env.backendBaseAPI) {
+      env = await getEnv();
+    }
+
     try {
       const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/agents`);
       if (res.status === 200) {
@@ -42,7 +39,7 @@ function AgentsPage() {
       }
     } catch (error) {
       setError('Error obtaining agent data:' + error.message);
-      console.error('Error obtaining agent data:' + error.message);
+      console.error('Error obtaining agent data:', error);
     }
     setLoading(false);
   }
@@ -55,16 +52,11 @@ function AgentsPage() {
   return (
     <Grid>
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
-        <Breadcrumb noTrailingSlash aria-label="Page navigation">
-          <BreadcrumbItem>
-            <a href="/">Manage intelligent decision with Hybrid AI</a>
-          </BreadcrumbItem>
-        </Breadcrumb>
         <h1 className="landing-page__heading">Agents</h1>
       </Column>
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
         <Button renderIcon={Add} iconDescription="Add Agent" onClick={() => setOpen(true)}>Add Agent</Button>
-        <Agent mode="create" agents={rows} agent={null} openState={open} setOpenState={setOpen} onSuccess={reloadAgents} setError={setError} />
+        <Agent backendBaseAPI={env.backendBaseAPI} mode="create" agents={rows} agent={null} openState={open} setOpenState={setOpen} onSuccess={reloadAgents} setError={setError} />
       </Column>
 
       {loading && (
@@ -73,7 +65,7 @@ function AgentsPage() {
         </Column>
       )}
 
-      {!loading && (<AgentMap rows={rows} setRows={setRows} setError={setError} reloadAgents={reloadAgents} />)}
+      {!loading && (<AgentMap backendBaseAPI={env.backendBaseAPI} rows={rows} setRows={setRows} setError={setError} reloadAgents={reloadAgents} />)}
 
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
         {error && (<ToastNotification role="alert" caption={error} timeout={5000} title="Error" subtitle="" />)}

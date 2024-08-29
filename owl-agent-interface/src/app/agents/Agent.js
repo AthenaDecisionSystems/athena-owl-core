@@ -3,23 +3,19 @@ import React, { useEffect, useState } from 'react';
 import { AiGovernancePrompt, WatsonxData } from '@carbon/pictograms-react';
 import { Octokit } from '@octokit/core';
 import { View } from '@carbon/react/icons';
-import { useEnv } from "../providers";
-import { getEnv } from '../env';
 
 const octokitClient = new Octokit({});
 
-const Agent = ({ mode, agent, agents, openState, setOpenState, onSuccess, setError }) => {
-    let env = useEnv();
-
+const Agent = ({ backendBaseAPI, mode, agent, agents, openState, setOpenState, onSuccess, setError }) => {
     // mode = 'create' or 'edit'
     const [loading, setLoading] = useState(true);
     const [empty, setEmpty] = useState(false);
     const [agentId, setAgentId] = useState("");
     const [agentName, setAgentName] = useState("");
     const [agentDescription, setAgentDescription] = useState("");
-    const [agentModelName, setAgentModelName] = useState("gpt-3.5-turbo-0125");
-    const [agentModelClassName, setAgentModelClassName] = useState("");
-    const [agentClassName, setAgentClassName] = useState("athena.llm.agents.base_chain_agent.OwlAgent");
+    const [agentModelName, setAgentModelName] = useState("gpt-3.5-turbo");
+    const [agentModelClassName, setAgentModelClassName] = useState("langchain_openai.ChatOpenAI");
+    const [agentRunnerClassName, setAgentRunnerClassName] = useState("athena.llm.agents.agent_mgr.OwlAgentAbstractRunner");
     const [currentItemPromptRef, setCurrentItemPromptRef] = useState();
     const [agentTemperature, setAgentTemperature] = useState(0);
     const [agentTopK, setAgentTopK] = useState(1);
@@ -28,7 +24,6 @@ const Agent = ({ mode, agent, agents, openState, setOpenState, onSuccess, setErr
 
     const [dropdownItemsPromptRef, setDropdownItemsPromptRef] = useState([]);
     const [dropdownItemsTools, setDropdownItemsTools] = useState([]);
-
     const [promptList, setPromptList] = useState([]);
 
     const [open, setOpen] = useState(false);
@@ -40,7 +35,7 @@ const Agent = ({ mode, agent, agents, openState, setOpenState, onSuccess, setErr
             setAgentDescription(agent.description);
             setAgentModelName(agent.modelName);
             setAgentModelClassName(agent.modelClassName);
-            setAgentClassName(agent.class_name);
+            setAgentRunnerClassName(agent.runner_class_name);
             setCurrentItemPromptRef({ "selectedItem": agent.prompt_ref });
             setAgentTemperature(agent.temperature);
             setAgentTopK(agent.top_k);
@@ -57,7 +52,7 @@ const Agent = ({ mode, agent, agents, openState, setOpenState, onSuccess, setErr
         // Preload tools & prompts
         async function getTools() {
             try {
-                const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/tools`);
+                const res = await octokitClient.request(`GET ${backendBaseAPI}a/tools`);
                 if (res.status === 200) {
                     const items = res.data.map(tool => (tool.tool_id));
                     setDropdownItemsTools(items);
@@ -67,14 +62,14 @@ const Agent = ({ mode, agent, agents, openState, setOpenState, onSuccess, setErr
                 }
             } catch (error) {
                 setError('Error obtaining tool data:' + error.message);
-                console.error('Error obtaining tool data:' + error.message);
+                console.error('Error obtaining tool data:' + error);
             }
             setLoading(false);
         }
 
         async function getPrompts() {
             try {
-                const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/prompts`);
+                const res = await octokitClient.request(`GET ${backendBaseAPI}a/prompts`);
                 if (res.status === 200) {
                     const items = res.data.map(prompt => (prompt.name));
                     setDropdownItemsPromptRef(["", ...items]);
@@ -85,24 +80,13 @@ const Agent = ({ mode, agent, agents, openState, setOpenState, onSuccess, setErr
                 }
             } catch (error) {
                 setError('Error obtaining prompt data:' + error.message);
-                console.error('Error obtaining prompt data:' + error.message);
+                console.error('Error obtaining prompt data:' + error);
             }
             setLoading(false);
         }
 
-        if (!env.backendBaseAPI) {
-            console.error('Agent.js: No env');
-            getEnv().then((e) => {
-                env = e;
-                console.error('Agent.js: Env loaded', env);
-                getTools();
-                getPrompts();
-            })
-        } else {
-            console.error('Agent.js: Env', env);
-            getTools();
-            getPrompts();
-        }
+        getTools();
+        getPrompts();
     }, []);
 
     const upsertAgent = async (mode) => {
@@ -111,13 +95,13 @@ const Agent = ({ mode, agent, agents, openState, setOpenState, onSuccess, setErr
 
         try {
             const res = await octokitClient.request(
-                (mode === "create" ? "POST " : "PUT ") + env.backendBaseAPI + "a/agents" + (mode === "edit" ? "/" + agentId : ""), {
+                (mode === "create" ? "POST " : "PUT ") + backendBaseAPI + "a/agents" + (mode === "edit" ? "/" + agentId : ""), {
                 agent_id: agentId,
                 name: agentName,
                 description: agentDescription,
                 modelName: agentModelName,
                 modelClassName: agentModelClassName,
-                class_name: agentClassName,
+                runner_class_name: agentRunnerClassName,
                 prompt_ref: currentItemPromptRef.selectedItem || (mode === "create" ? "" : agent.prompt_ref),
                 temperature: parseInt(agentTemperature),
                 top_k: parseInt(agentTopK),
@@ -148,9 +132,9 @@ const Agent = ({ mode, agent, agents, openState, setOpenState, onSuccess, setErr
             setAgentId("");
             setAgentName("");
             setAgentDescription("");
-            setAgentModelName("gpt-3.5-turbo-0125");
+            setAgentModelName("gpt-3.5-turbo");
             setAgentModelClassName("");
-            setAgentClassName("athena.llm.agents.base_chain_agent.OwlAgent");
+            setAgentRunnerClassName("athena.llm.agents.agent_mgr.OwlAgentAbstractRunner");
             setCurrentItemPromptRef("");
             setAgentTemperature(0);
             setAgentTopK(1);
@@ -219,13 +203,13 @@ const Agent = ({ mode, agent, agents, openState, setOpenState, onSuccess, setErr
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
 
             <Select id="select-class-name"
-                defaultValue={agentClassName}
-                labelText="Class Name"
-                onChange={(e) => setAgentClassName(e.target.value)}>
+                defaultValue={agentRunnerClassName}
+                labelText="Runner Class Name"
+                onChange={(e) => setAgentRunnerClassName(e.target.value)}>
                 <SelectItem value="" text="" />
                 <SelectItem
-                    value="athena.llm.agents.base_chain_agent.OwlAgent"
-                    text="athena.llm.agents.base_chain_agent.OwlAgent" />
+                    value="athena.llm.agents.agent_mgr.OwlAgentAbstractRunner"
+                    text="athena.llm.agents.agent_mgr.OwlAgentAbstractRunner" />
             </Select>
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
 
@@ -235,8 +219,8 @@ const Agent = ({ mode, agent, agents, openState, setOpenState, onSuccess, setErr
                 onChange={(e) => setAgentModelName(e.target.value)}>
                 <SelectItem value="" text="" />
                 <SelectItem
-                    value="gpt-3.5-turbo-0125"
-                    text="GPT-3.5-turbo-0125" />
+                    value="gpt-3.5-turbo"
+                    text="GPT-3.5-turbo" />
                 <SelectItem
                     value="gpt-4-turbo"
                     text="GPT-4-turbo" />

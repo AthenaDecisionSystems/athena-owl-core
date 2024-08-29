@@ -4,13 +4,10 @@ import { WatsonxData } from '@carbon/pictograms-react';
 import { Close } from '@carbon/react/icons';
 import { Octokit } from '@octokit/core';
 import Agent from './Agent';
-import { useEnv } from '../providers';
 
 const octokitClient = new Octokit({});
 
-export const AgentMap = ({ rows, setRows, setError, reloadAgents }) => {
-    const env = useEnv();
-
+export const AgentMap = ({ backendBaseAPI, rows, setRows, setError, reloadAgents }) => {
     const [openPopoverLLMTable, setOpenPopoverLLMTable] = useState([]);
     const [openPopoverToolsTable, setOpenPopoverToolsTable] = useState([]);
     const [openPopoverPromptTable, setOpenPopoverPromptTable] = useState([]);
@@ -51,7 +48,7 @@ export const AgentMap = ({ rows, setRows, setError, reloadAgents }) => {
     const deleteAgent = async (index) => {
         try {
             const res = await octokitClient.request(
-                `DELETE ${env.backendBaseAPI}a/agents/${rows[index].agent_id}`
+                `DELETE ${backendBaseAPI}a/agents/${rows[index].agent_id}`
             );
             if (res.status === 200) {
                 console.log('Agent deleted', res.data);
@@ -83,7 +80,7 @@ export const AgentMap = ({ rows, setRows, setError, reloadAgents }) => {
     return (
         <>
             {(editAgent !== -1) && (
-                <Agent mode="edit" agent={rows[editAgent]} agents={rows} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />
+                <Agent backendBaseAPI={backendBaseAPI} mode="edit" agent={rows[editAgent]} agents={rows} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />
             )}
             {rows.map((row, i) => (<Column key={i} lg={3} md={2} sm={2} >
                 <AspectRatio className="card" ratio="4x3" onDoubleClick={() => startEdition(i)}>
@@ -97,7 +94,9 @@ export const AgentMap = ({ rows, setRows, setError, reloadAgents }) => {
                     <div className="card-name">{row.name}</div>
                     <div className="card-item-id">{row.agent_id}</div>
                     <div className="card-description">{row.description}</div>
-                    <div className="card-class-name" title="Agent's class name">{row.class_name}</div>
+                    <div className="card-class-name" title="Model name">{row.modelName}</div>
+                    <div className="card-class-name" title="Model class name">{row.modelClassName}</div>
+                    <div className="card-class-name" title="Runner class name">{row.runner_class_name}</div>
 
                     <div className="card-item-id">
                         <Popover title="Display LLM parameters" align="bottom-left" open={openPopoverLLMTable[i]} >
@@ -106,6 +105,7 @@ export const AgentMap = ({ rows, setRows, setError, reloadAgents }) => {
                                 <IconButton label="Close" renderIcon={Close} align="top-right" kind="ghost" onClick={() => displayPopoverLLMTable(i, false)} />
                                 <div className="card-detail-large">
                                     <div className="card-popover-content-block">
+                                        <div className="card-detail">Class name: {row.modelClassName}</div>
                                         <div className="card-detail">Model: {row.modelName}</div>
                                         <div className="card-detail">Temperature: {row.temperature}</div>
                                         <div className="card-detail">Top K: {row.top_k}</div>

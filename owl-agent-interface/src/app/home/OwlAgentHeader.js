@@ -27,11 +27,6 @@ const OwlAgentHeader = () => (
         <Link href="/" passHref legacyBehavior>
           <HeaderName prefix="Athena">Owl Agent</HeaderName>
         </Link>
-        <HeaderNavigation aria-label="Assistants">
-          <Link href="/assistants" passHref legacyBehavior>
-            <HeaderMenuItem>Assistants</HeaderMenuItem>
-          </Link>
-        </HeaderNavigation>
         <HeaderNavigation aria-label="Agents">
           <Link href="/agents" passHref legacyBehavior>
             <HeaderMenuItem>Agents</HeaderMenuItem>
@@ -55,9 +50,6 @@ const OwlAgentHeader = () => (
         <SideNav aria-label="Side navigation" expanded={isSideNavExpanded} isPersistent={false} >
           <SideNavItems>
             <HeaderSideNavItems>
-              <Link href="/assistants" passHref legacyBehavior>
-                <HeaderMenuItem>Assistants</HeaderMenuItem>
-              </Link>
               <Link href="/agents" passHref legacyBehavior>
                 <HeaderMenuItem>Agents</HeaderMenuItem>
               </Link>

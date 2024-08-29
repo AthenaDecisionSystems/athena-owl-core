@@ -1,0 +1,1 @@
+export NEXT_PUBLIC_BACKEND_BASE_API=http://localhost:8000/api/v1/

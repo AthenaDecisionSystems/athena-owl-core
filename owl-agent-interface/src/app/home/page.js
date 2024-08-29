@@ -1,9 +1,6 @@
 'use client';
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  Button,
   Tabs,
   Tab,
   TabList,
@@ -19,11 +16,6 @@ export default function LandingPage() {
   return (
     <Grid className="landing-page" fullWidth>
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
-        <Breadcrumb noTrailingSlash aria-label="Page navigation">
-          <BreadcrumbItem>
-            <a href="/">Manage intelligent decision with Hybrid AI</a>
-          </BreadcrumbItem>
-        </Breadcrumb>
         <h1 className="landing-page__heading">Owl Agent</h1>
       </Column>
       <Column lg={16} md={8} sm={4} className="landing-page__r2">
