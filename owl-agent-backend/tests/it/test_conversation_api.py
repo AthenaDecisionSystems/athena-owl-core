@@ -59,7 +59,7 @@ class TestAssistantsAPIs(unittest.TestCase):
     def test_basic_tool_assistant(self):
         print(">>> test_basic_tool_assistant \n ")
         ctl = self.build_ConversationControl()
-        ctl.agent_id="openai_tool_chains"
+        ctl.agent_id="openai_tool_chain"
         ctl.thread_id="3"
         ctl.query="You are an expert in AI, can you answer this question: What is Athena Decision Systems?"
         response=self.client.post(get_config().api_route + "/c/generic_chat", json= ctl.model_dump())

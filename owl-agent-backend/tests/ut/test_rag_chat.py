@@ -33,8 +33,8 @@ class TestRagConversation(unittest.TestCase):
         cc.query="what is athena decision systems?"
         rep = get_or_start_conversation(cc)
         assert rep
-        assert rep.message
-        print(rep)
+        assert rep.messages
+        print(rep.messages[0].content)
         
 if __name__ == '__main__':
     unittest.main()

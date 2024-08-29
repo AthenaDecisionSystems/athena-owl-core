@@ -23,7 +23,7 @@ class TestConversationWithTool(unittest.TestCase):
         rep = get_or_start_conversation(cc)
         assert rep
         assert rep.chat_history
-        assert rep.message
+        assert rep.messages
         print(f"agent --> {rep}")        
     
     def _test_conversation_with_tool_graph_agent(self):
@@ -36,7 +36,7 @@ class TestConversationWithTool(unittest.TestCase):
         rep = get_or_start_conversation(cc)
         assert rep
         assert rep.chat_history
-        assert rep.message
+        assert rep.messages
         print(f"agent --> {rep}")
         
 if __name__ == '__main__':

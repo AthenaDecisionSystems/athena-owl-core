@@ -26,7 +26,7 @@ class TestAgentsManager(unittest.TestCase):
         # Default assistant has one LLM and one tool to search the web
         cc = ConversationControl(query="what is langgraph?", thread_id="thread_test")
         rep = base_assistant.send_conversation(cc)
-        assert rep
+        assert rep.messages
         print(rep)
 
 if __name__ == '__main__':

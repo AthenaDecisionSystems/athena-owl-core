@@ -3,6 +3,7 @@ fastapi
 langchain-openai
 langchain-anthropic
 langchain-mistralai
+langchain-chroma
 langchain_ibm
 langchain_community 
 langchain

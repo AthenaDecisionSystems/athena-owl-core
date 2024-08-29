@@ -14,7 +14,7 @@ class TestConversation(unittest.TestCase):
     def _validate_history(self, cc : ConversationControl):
         rep = get_or_start_conversation(cc)
         assert rep
-        assert rep.message
+        assert rep.messages
         
         print(f"\n\nagent --> {rep}") 
         
@@ -23,7 +23,7 @@ class TestConversation(unittest.TestCase):
         print(f"Continue the conversation with  --> {cc}") 
         rep = get_or_start_conversation(cc)
         print(f"\n\nagent --> {rep}") 
-        assert "last name is TheBuilder" in rep.message
+        assert "last name is TheBuilder" in rep.messages[0].content
         
         
     def test_base_agent_openai_chain_with_chat_history(self):
@@ -68,7 +68,7 @@ class TestConversation(unittest.TestCase):
         cc.query="Hi, I'm Bob and my last name is TheBuilder."
         rep = get_or_start_conversation(cc)
         assert rep
-        assert rep.message
+        assert rep.messages
         assert rep.thread_id
         
         print(f"\n\nagent --> {rep}") 

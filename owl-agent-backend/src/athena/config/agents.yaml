@@ -18,7 +18,7 @@ openai_tool_chain:
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
   modelName: gpt-3.5-turbo
   modelClassName: langchain_openai.ChatOpenAI
-  prompt_ref: openai-functions-agent
+  prompt_ref: openai_functions_prompt
   temperature: 0
   top_k: 1
   top_p: 1
@@ -44,7 +44,7 @@ base_tool_graph_agent:
   modelClassName: langchain_openai.ChatOpenAI
   description: A default agent that uses LLM and search tool to do web search
   modelName: gpt-3.5-turbo
-  prompt_ref: openai-functions-agent
+  prompt_ref: openai_functions_prompt
   temperature: 0
   top_k: 1
   top_p: 1
@@ -80,7 +80,7 @@ mistral_large_agent:
   name: "mistral_large_agent"
   description: Mistral large model via Mistral API 
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
-  modelName: mistral
+  modelName: mistral-large-latest
   modelClassName: langchain_mistralai.chat_models.ChatMistralAI
   prompt_ref: mistral_rag_prompt
   temperature: 0

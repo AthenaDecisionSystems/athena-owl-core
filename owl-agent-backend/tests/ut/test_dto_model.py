@@ -27,8 +27,7 @@ class TestDtoModel(unittest.TestCase):
     def test_default_resp_creation(self):
         try:
             cc = dto_models.ResponseControl()
-            self.assertIsNotNone(cc)
-            self.assertEqual("OpenQuestion", cc.type)
+            assert cc.chat_history == []
             print(cc)
         except ValidationError as exc:
             print(repr(exc.errors()[0]))

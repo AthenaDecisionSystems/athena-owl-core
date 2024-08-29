@@ -34,9 +34,9 @@ mistral_rag_prompt:
 
         Question: {input}"
       
-openai-functions-agent:
-  name: openai-functions-agent
-  prompt_id: openai-functions-agent
+openai_functions_prompt:
+  name: openai_functions_prompt
+  prompt_id: openai_functions_prompt
   locales:
   - locale: en
     text: |

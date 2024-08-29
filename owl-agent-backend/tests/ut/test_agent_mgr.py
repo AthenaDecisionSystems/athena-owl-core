@@ -104,7 +104,7 @@ class TestAgentsManager(unittest.TestCase):
     def test_calling_base_agent(self):
         print("\n\n test_calling_base_agent\n")
         mgr = get_agent_manager()
-        oae: Optional[OwlAgent] = mgr.get_agent_by_id("openai_chain_agent")
+        oae: Optional[OwlAgent] = mgr.get_agent_by_id("openai_tool_chain")
         if oae is None:
             raise ValueError("Base agent not found")
         base_agent =  mgr.build_agent_runner(oae.agent_id,"en")
@@ -113,7 +113,8 @@ class TestAgentsManager(unittest.TestCase):
         cc = ConversationControl(query="what is langgraph?", thread_id="thread_test")
         rep = base_agent.send_conversation(cc)
         assert rep
-        print(rep)
+        print(rep.messages[0].content)
+        assert "LangGraph is a framework" in rep.messages[0].content
 
     def test_calling_base_graph_agent(self):
         print("\n\n test_calling_base_graph_agent\n")
@@ -127,7 +128,8 @@ class TestAgentsManager(unittest.TestCase):
         cc = ConversationControl(query="what is langgraph?", thread_id="thread_test")
         rep = base_agent.send_conversation(cc)
         assert rep
-        print(rep)
+        print(rep.messages[0].content)  # should give wrong answer
+        assert " language learning platform" in rep.messages[0].content
 
     def _test_long_conv_openai_base_graph_agent(self):
         # TO DO fix this test, it does not take the chat history well into account

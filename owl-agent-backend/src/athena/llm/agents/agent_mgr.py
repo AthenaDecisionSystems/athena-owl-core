@@ -14,13 +14,13 @@ from typing import Optional, Any
 from functools import lru_cache
 from athena.app_settings import get_config
 from importlib import import_module
-from athena.routers.dto_models import ConversationControl, ResponseControl, ChatMessage
+from athena.routers.dto_models import ConversationControl, ResponseControl, ChatMessage, StyledMessage
 from athena.llm.prompts.prompt_mgr import get_prompt_manager
 from athena.llm.tools.tool_mgr import get_tool_entity_manager
 from athena.llm.tools.tool_mgr import OwlToolEntity
 from langchain_core.prompts import BasePromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain.agents import create_tool_calling_agent, AgentExecutor
+from langchain.agents import create_tool_calling_agent, AgentExecutor, create_json_chat_agent, create_structured_chat_agent
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import AIMessage, HumanMessage
 
@@ -72,6 +72,8 @@ class OwlAgentAbstractRunner(object):
         if tool_instances:
             self.tools = tool_instances
             agent = create_tool_calling_agent(self.model, self.tools, self.prompt)
+            #agent = create_json_chat_agent(self.model, self.tools, self.prompt)
+            #agent = create_structured_chat_agent(self.model, self.tools, self.prompt)
             self.llm = AgentExecutor(agent= agent, tools=self.tools, verbose=True)
             
         else:
@@ -110,13 +112,13 @@ class OwlAgentAbstractRunner(object):
         resp = self._build_response(controller)
         if isinstance(agent_resp,dict):
             if agent_resp.get("output"):
-                resp.message= agent_resp.get("output")
+                resp.messages= [StyledMessage(content=agent_resp.get("output"))]
                 resp.chat_history.extend([
                         ChatMessage(role="human", content= controller.query),
                         ChatMessage(role="AI", content=str(agent_resp.get("output"))),
                         ])
         else: # str
-            resp.message=agent_resp
+            resp.messages=[StyledMessage(content=agent_resp)]
             resp.chat_history.extend([
                         ChatMessage(role="human", content= controller.query),
                         ChatMessage(role="AI", content=agent_resp)
@@ -136,7 +138,7 @@ class OwlAgentAbstractRunner(object):
         return self.prompt
     
     def invoke(self, request, thread_id: Optional[str], **kwargs) -> dict[str, Any] | Any:
-        return self.get_runnable().invoke(request, thread_id)
+        return self.get_runnable().invoke(request)
     
     def _instantiate_model(self,modelName, modelClass, temperature):
         module_path, class_name = modelClass.rsplit('.',1)

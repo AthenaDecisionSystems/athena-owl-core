@@ -10,14 +10,14 @@ This manager may instantiate an agent if not already created.
 It persists state of the conversation (not yet implemented)
 """
 from athena.routers.dto_models import ConversationControl, ResponseControl
-from athena.llm.agents.agent_mgr import OwlAgent, get_agent_manager
+from athena.llm.agents.agent_mgr import OwlAgent, get_agent_manager, OwlAgentAbstractRunner
 import logging
 import uuid
 
 LOGGER = logging.getLogger(__name__)
 
 # manage a list of active conversations
-_ACTIVE_CONV: dict[str, OwlAgent] = dict()
+_ACTIVE_CONV: dict[str, OwlAgentAbstractRunner] = dict()
 
 def _get_new_owl_agent(agent_id, locale):
     agent_mgr = get_agent_manager()
@@ -28,7 +28,7 @@ def get_or_start_conversation(cc: ConversationControl) -> ResponseControl | None
     """
     Start a conversation or continue an existing one based on the thread id.  
     """
-    owl_agent: OwlAgent = None
+    owl_agent: OwlAgentAbstractRunner = None
     if cc.thread_id is None or cc.thread_id == "":
         cc.thread_id = str(uuid.uuid4())
     if not _ACTIVE_CONV or cc.thread_id not in _ACTIVE_CONV or  _ACTIVE_CONV[cc.thread_id] is None:

@@ -64,8 +64,9 @@ class TestMistral(unittest.TestCase):
         assert rep
 
     def test_crm_argument(self):
+        print("\n\n >>> test_crm_argument\n")
         crm_arg = CrmArgument(user_id="U01", customer_class=CustomerClassEnum.media, customer_id="C01", query="MediaIncTheGroup")
-        json_arg: str = crm_arg.model_dump_json()
+        json_arg: str = crm_arg.json()
         assert "U01" in json_arg
         
         
@@ -81,6 +82,37 @@ class TestMistral(unittest.TestCase):
         prompt= ChatPromptTemplate.from_messages([
                         ("system", """
                         You are helpful assistant for customer management and query. 
+                         Assistant can ask the user to use tools to look up information that may be helpful in \
+            answering the users original question. The tools the human can use are:
+
+            {tools}
+
+            RESPONSE FORMAT INSTRUCTIONS
+            ----------------------------
+
+            When responding to me, please output a response in one of two formats:
+
+            **Option 1:**
+            Use this if you want the human to use a tool.
+            Markdown code snippet formatted in the following schema:
+
+            ```json
+            {{
+                "action": string, \\ The action to take. Must be one of {tool_names}
+                "action_input": string \\ The input to the action
+            }}
+            ```
+
+            **Option #2:**
+            Use this if you want to respond directly to the human. Markdown code snippet formatted \
+            in the following schema:
+
+            ```json
+            {{
+                "action": "Final Answer",
+                "action_input": string \\ You should put what you want to return to use here
+            }}
+            ```
                         Using the given tool definitions select the appropriate tools to answer user query
                         """),
                         MessagesPlaceholder(variable_name="chat_history", optional=True),
