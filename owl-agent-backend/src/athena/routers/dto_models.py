@@ -101,7 +101,7 @@ class ResponseControl(BaseModel):
     #type: ConversationModeEnum = ConversationModeEnum.open_question
 
     status: int = 200
-   
+  
     error: Optional[str] = ''
     chat_history: List[ChatMessage] = []
     user_id: Optional[str] = ""

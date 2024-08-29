@@ -2,6 +2,7 @@ openai_chain_agent:
   agent_id: openai_chain_agent
   name: open_ai_gpt35
   description: openai based agent with simple prompt 
+  #class_name: athena.llm.agents.agent_openai.OpenAIAgent
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentAbstractRunner
   modelClassName: langchain_openai.ChatOpenAI
   modelName: gpt-3.5-turbo
