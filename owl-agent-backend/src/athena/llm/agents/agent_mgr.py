@@ -96,7 +96,7 @@ class OwlAgentDefaultRunner(object):
                 l.append(AIMessage(content=m.content))
         return l
     
-    def processCloseAnswer(self, controller: ConversationControl):
+    def process_close_answer(self, controller: ConversationControl):
         pass
 
     def build_response(self, controller: ConversationControl, agent_resp):
@@ -124,7 +124,7 @@ class OwlAgentDefaultRunner(object):
         LOGGER.debug(f"\n@@@> query assistant {controller.query}")
         lg_chat_history = self._transform_chat_history(controller.chat_history)
         if controller.query is None or len(controller.query) == 0:
-            resp=self.processCloseAnswer(controller)
+            resp=self.process_close_answer(controller)
             # TO DO assess what to do next
         else:
             request = { "input": [controller.query], "chat_history" : lg_chat_history }
