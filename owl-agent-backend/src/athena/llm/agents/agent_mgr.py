@@ -49,7 +49,7 @@ class OwlAgent(BaseModel):
 
 
 
-class OwlAgentAbstractRunner(object):
+class OwlAgentDefaultRunner(object):
     agent_id: str  # keep the reference to the owl agent id, in case user change of model
 
     """
@@ -96,33 +96,41 @@ class OwlAgentAbstractRunner(object):
                 l.append(AIMessage(content=m.content))
         return l
     
-    def _build_response(self, controller: ConversationControl):
+    def process_close_answer(self, controller: ConversationControl):
+        pass
+
+    def build_response(self, controller: ConversationControl, agent_resp):
         resp = ResponseControl()
         resp.chat_history = controller.chat_history
         resp.agent_id = controller.agent_id
         resp.thread_id = controller.thread_id
         resp.user_id = controller.user_id
-        return resp
-    
-    def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
-        LOGGER.debug(f"\n@@@> query assistant {controller.query}")
-        lg_chat_history = self._transform_chat_history(controller.chat_history)
-        request = { "input": [controller.query], "chat_history" : lg_chat_history }
-        agent_resp= self.invoke(request, controller.thread_id)   # AIMessage
-        resp = self._build_response(controller)
         if isinstance(agent_resp,dict):
             if agent_resp.get("output"):
-                resp.messages= [StyledMessage(content=agent_resp.get("output"))]
-                resp.chat_history.extend([
-                        ChatMessage(role="human", content= controller.query),
-                        ChatMessage(role="AI", content=str(agent_resp.get("output"))),
-                        ])
+                    resp.messages= [StyledMessage(content=agent_resp.get("output"))]
+                    resp.chat_history.extend([
+                            ChatMessage(role="human", content= controller.query),
+                            ChatMessage(role="AI", content=str(agent_resp.get("output"))),
+                            ])
         else: # str
             resp.messages=[StyledMessage(content=agent_resp)]
             resp.chat_history.extend([
                         ChatMessage(role="human", content= controller.query),
                         ChatMessage(role="AI", content=agent_resp)
                         ])
+        return resp
+    
+    def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
+        LOGGER.debug(f"\n@@@> query assistant {controller.query}")
+        lg_chat_history = self._transform_chat_history(controller.chat_history)
+        if controller.query is None or len(controller.query) == 0:
+            resp=self.process_close_answer(controller)
+            # TO DO assess what to do next
+        else:
+            request = { "input": [controller.query], "chat_history" : lg_chat_history }
+            agent_resp= self.invoke(request, controller.thread_id)   # AIMessage
+            resp= self.build_response(controller, agent_resp)
+            
         return resp
     
     def get_runnable(self):
@@ -185,7 +193,7 @@ class AgentManager(object):
             del self.AGENTS[key]
         return "Done"
     
-    def build_agent_runner(self, agent_id : str, locale: str) -> OwlAgentAbstractRunner | None:
+    def build_agent_runner(self, agent_id : str, locale: str) -> OwlAgentDefaultRunner | None:
         """
         Factory to create agent from its definition. Agent has a class to support the implementation.
         Prompt is the string, tools is a list of unique tool_id to get the definition within the agent class.
@@ -198,7 +206,7 @@ class AgentManager(object):
         agent_entity = self.get_agent_by_id(agent_id)
         return self.build_agent_runner_from_entity(agent_entity,locale)
 
-    def build_agent_runner_from_entity(self, agent_entity: OwlAgent, locale: str = "en") -> OwlAgentAbstractRunner | None:
+    def build_agent_runner_from_entity(self, agent_entity: OwlAgent, locale: str = "en") -> OwlAgentDefaultRunner | None:
         if agent_entity:
             module_path, class_name = agent_entity.runner_class_name.rsplit('.',1)
             mod = import_module(module_path)

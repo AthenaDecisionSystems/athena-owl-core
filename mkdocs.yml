@@ -6,10 +6,14 @@ nav:
   - Architecture: 
     - Introduction: arch.md
     - OwlAgent design: design.md
-  - Demos: https://athenadecisionsystems.github.io/athena-owl-demos/
+  - Demos: 
+    - Introduction: demos/index.md
+    - Environment Setup: tutorials/dev_env.md
+    - IBU Insurance: demos/insurance.md
+    - IBM-ODM LoanApp: demos/miniloan.md
+    - Build your own solution: demos/build_sol.md
   - Gen AI to Hybrid AI: gen_ai_gs.md
   - Tutorials:
-    - Environment Setup: tutorials/dev_env.md
     - Building New Mistral Agent: tutorials/new_mistral_agent.md
     - Build Your Own Solution: https://AthenaDecisionSystems.github.io/athena-owl-demos/build_sol/
 theme: 
