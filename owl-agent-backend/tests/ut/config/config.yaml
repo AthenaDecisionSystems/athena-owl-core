@@ -8,7 +8,6 @@ owl_agents_path: ./src/athena/config/agents.yaml
 owl_tools_path: ./src/athena/config/tools.yaml
 owl_prompts_path: ./tests/ut/config/prompts.yaml
 owl_glossary_path: ./src/athena/config/glossary.json
-owl_agent_default_assistant: base_openai_assistant
 owl_agent_llm_history_length: 5
 owl_agent_content_collection_name: base_collection
 owl_agent_content_file_path: ./tests/ut/file_content

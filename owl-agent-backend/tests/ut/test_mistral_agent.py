@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgent, OwlAgentAbstractRunner
+from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgent, OwlAgentDefaultRunner
 from athena.llm.tools.tool_mgr import OwlToolEntity
 from athena.llm.tools.demo_tools import DemoToolInstanceFactory, CrmArgument, CustomerClassEnum
 from athena.llm.prompts.prompt_mgr import get_prompt_manager
@@ -24,7 +24,7 @@ class TestMistral(unittest.TestCase):
     def setUp(self):
         self.agent_entity = OwlAgent(agent_id="mistral_large",
                                       name="Mistral based agent",
-                                      runner_class_name="athena.llm.agents.agent_mgr.OwlAgentAbstractRunner",
+                                      runner_class_name="athena.llm.agents.agent_mgr.OwlAgentDefaultRunner",
                                       modelName="mistral-large-latest",
                                       prompt_ref="mistral_rag_prompt",
                                       modelClassName="langchain_mistralai.chat_models.ChatMistralAI",
@@ -55,7 +55,7 @@ class TestMistral(unittest.TestCase):
         print("\n\n >>> test_define_agent_entity_create_instance\n")
         print(self.agent_entity)
         mgr=get_agent_manager()
-        agent_executor: OwlAgentAbstractRunner =mgr.build_agent_runner_from_entity(self.agent_entity)
+        agent_executor: OwlAgentDefaultRunner =mgr.build_agent_runner_from_entity(self.agent_entity)
         assert agent_executor
         rep = agent_executor.invoke({ "input": ["What is langgraph?"], 
                                      "chat_history": [], 
@@ -120,7 +120,7 @@ class TestMistral(unittest.TestCase):
                         MessagesPlaceholder(variable_name="agent_scratchpad", optional=True),
                 ])
 
-        agent_executor: OwlAgentAbstractRunner =OwlAgentAbstractRunner(self.agent_entity, prompt, tool_instances)    
+        agent_executor: OwlAgentDefaultRunner =OwlAgentDefaultRunner(self.agent_entity, prompt, tool_instances)    
         assert agent_executor
         rep=agent_executor.invoke({ "input": ["my user_id is j9r, I want to get the last meeting records for the customer: C01, in the retail customer class"], 
                                    "chat_history": [],

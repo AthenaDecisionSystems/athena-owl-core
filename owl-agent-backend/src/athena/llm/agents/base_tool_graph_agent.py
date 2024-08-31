@@ -1,6 +1,6 @@
 import logging
 import json
-from athena.llm.agents.agent_mgr import OwlAgentAbstractRunner, OwlAgent
+from athena.llm.agents.agent_mgr import OwlAgentDefaultRunner, OwlAgent
 from athena.llm.tools.tool_mgr import OwlToolEntity
 from typing import Annotated, Any, Optional, Literal
 from typing_extensions import TypedDict
@@ -47,7 +47,7 @@ class BasicToolNode:
             )
         return {"messages": outputs}
     
-class BaseToolGraphAgent(OwlAgentAbstractRunner):
+class BaseToolGraphAgent(OwlAgentDefaultRunner):
 
     def __init__(self, agentEntity: OwlAgent, prompt: Optional[BasePromptTemplate], tool_instances: Optional[list[OwlToolEntity]]):
         self.agent_id = agentEntity.agent_id
