@@ -1,3 +1,7 @@
+"""
+Copyright 2024 Athena Decision Systems
+@author Jerome Boyer
+"""
 import logging
 import json
 from athena.llm.agents.agent_mgr import OwlAgentDefaultRunner, OwlAgent
@@ -6,13 +10,12 @@ from typing import Annotated, Any, Optional, Literal
 from typing_extensions import TypedDict
 
 from langchain_core.prompts import BasePromptTemplate
-from langchain_core.runnables.config import RunnableConfig
 from langchain_core.messages import AnyMessage, ToolMessage, HumanMessage
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.pregel.types import StateSnapshot
-from langgraph.graph import StateGraph
+
 
 LOGGER = logging.getLogger(__name__)
 

@@ -1,3 +1,7 @@
+"""
+Copyright 2024 Athena Decision Systems
+@author Jerome Boyer
+"""
 import logging
 from athena.llm.agents.agent_mgr import OwlAgentDefaultRunner, OwlAgent
 from athena.llm.tools.tool_mgr import OwlToolEntity
