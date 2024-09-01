@@ -1,6 +1,6 @@
 # Owl Agent Framework Documentation
 
-* Version 0.1: Created March 2024 - Updated 7/18/2024
+* Version 0.1: Created on 2024/03/01 - Updated on 2024/09/01
 
 ## Introduction
 
