@@ -18,18 +18,23 @@ function AgentsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
   const [rows, setRows] = useState([]);
+  const [prompts, setPrompts] = useState([]);
 
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    getAgents();
+    try {
+      if (!env.backendBaseAPI) {
+        env = getEnv();
+      }
+      getAgents();
+      getPrompts();
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const getAgents = async () => {
-    if (!env.backendBaseAPI) {
-      env = await getEnv();
-    }
-
     try {
       const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/agents`);
       if (res.status === 200) {
@@ -41,12 +46,31 @@ function AgentsPage() {
       setError('Error obtaining agent data:' + error.message);
       console.error('Error obtaining agent data:', error);
     }
-    setLoading(false);
+  }
+
+  const getPrompts = async () => {
+    try {
+      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/prompts`);
+      if (res.status === 200) {
+        setPrompts(res.data);
+      } else {
+        setError('Error obtaining prompt data (' + res.status + ')');
+        console.error('Error obtaining prompt data ', res);
+      }
+    } catch (error) {
+      setError('Error obtaining prompt data:' + error.message);
+      console.error('Error obtaining prompt data:' + error);
+    }
   }
 
   const reloadAgents = () => {
     setLoading(true);
-    getAgents();
+    try {
+      getAgents();
+      getPrompts();
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -56,16 +80,15 @@ function AgentsPage() {
       </Column>
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
         <Button renderIcon={Add} iconDescription="Add Agent" onClick={() => setOpen(true)}>Add Agent</Button>
-        <Agent backendBaseAPI={env.backendBaseAPI} mode="create" agents={rows} agent={null} openState={open} setOpenState={setOpen} onSuccess={reloadAgents} setError={setError} />
+        {!loading && (<Agent backendBaseAPI={env.backendBaseAPI} mode="create" agents={rows} agent={null} prompts={prompts} openState={open} setOpenState={setOpen} onSuccess={reloadAgents} setError={setError} />)}
       </Column>
-
       {loading && (
         <Column lg={3} md={2} sm={2}>
           <SkeletonText className="card" paragraph={true} lineCount={2} />
         </Column>
       )}
 
-      {!loading && (<AgentMap backendBaseAPI={env.backendBaseAPI} rows={rows} setRows={setRows} setError={setError} reloadAgents={reloadAgents} />)}
+      {!loading && (<AgentMap backendBaseAPI={env.backendBaseAPI} rows={rows} setRows={setRows} prompts={prompts} setError={setError} reloadAgents={reloadAgents} />)}
 
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
         {error && (<ToastNotification role="alert" caption={error} timeout={5000} title="Error" subtitle="" />)}

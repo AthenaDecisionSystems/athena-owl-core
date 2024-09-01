@@ -6,7 +6,7 @@ import { View } from '@carbon/react/icons';
 
 const octokitClient = new Octokit({});
 
-const Agent = ({ backendBaseAPI, mode, agent, agents, openState, setOpenState, onSuccess, setError }) => {
+const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, openState, setOpenState, onSuccess, setError }) => {
     // mode = 'create' or 'edit'
     const [loading, setLoading] = useState(true);
     const [empty, setEmpty] = useState(false);
@@ -24,7 +24,6 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, openState, setOpenState, o
 
     const [dropdownItemsPromptRef, setDropdownItemsPromptRef] = useState([]);
     const [dropdownItemsTools, setDropdownItemsTools] = useState([]);
-    const [promptList, setPromptList] = useState([]);
 
     const [open, setOpen] = useState(false);
 
@@ -49,7 +48,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, openState, setOpenState, o
     }, [agent]);
 
     useEffect(() => {
-        // Preload tools & prompts
+        // Preload tools
         async function getTools() {
             try {
                 const res = await octokitClient.request(`GET ${backendBaseAPI}a/tools`);
@@ -64,30 +63,25 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, openState, setOpenState, o
                 setError('Error obtaining tool data:' + error.message);
                 console.error('Error obtaining tool data:' + error);
             }
-            setLoading(false);
         }
 
-        async function getPrompts() {
-            try {
-                const res = await octokitClient.request(`GET ${backendBaseAPI}a/prompts`);
-                if (res.status === 200) {
-                    const items = res.data.map(prompt => (prompt.name));
-                    setDropdownItemsPromptRef(["", ...items]);
-                    setPromptList(res.data);
-                } else {
-                    setError('Error obtaining prompt data (' + res.status + ')');
-                    console.error('Error obtaining prompt data ', res);
-                }
-            } catch (error) {
-                setError('Error obtaining prompt data:' + error.message);
-                console.error('Error obtaining prompt data:' + error);
-            }
+        setLoading(true);
+        try {
+            getTools();
+        } finally {
             setLoading(false);
         }
-
-        getTools();
-        getPrompts();
     }, []);
+
+    useEffect(() => {
+        setLoading(true);
+        try {
+            const items = prompts.map(prompt => (prompt.prompt_id));
+            setDropdownItemsPromptRef(["", ...items]);
+        } finally {
+            setLoading(false);
+        }
+    }, [prompts]);
 
     const upsertAgent = async (mode) => {
         let ed = (mode === "create" ? "created" : "updated");
@@ -288,8 +282,9 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, openState, setOpenState, o
                         <Button renderIcon={View} iconDescription="View prompt" hasIconOnly kind="ghost" onClick={() => setOpen(!open)} />
                         <PopoverContent className="card-popover-content card-popover-dark-background">
                             <AiGovernancePrompt style={{ padding: "0.5rem" }} />
-                            {promptList.filter(prompt => prompt.name === currentItemPromptRef.selectedItem).map((prompt, i) => (
+                            {prompts.filter(prompt => prompt.prompt_id === currentItemPromptRef.selectedItem).map((prompt, i) => (
                                 <div key={i} className="card-detail-large">
+                                    <div className="card-detail">Prompt Name: {prompt.name}</div>
                                     {prompt.locales.map((locale, j) => (
                                         <div className="card-popover-content-block">
                                             <div className="card-name">{locale.locale}</div>

@@ -7,7 +7,7 @@ import Agent from './Agent';
 
 const octokitClient = new Octokit({});
 
-export const AgentMap = ({ backendBaseAPI, rows, setRows, setError, reloadAgents }) => {
+export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, setError, reloadAgents }) => {
     const [openPopoverLLMTable, setOpenPopoverLLMTable] = useState([]);
     const [openPopoverToolsTable, setOpenPopoverToolsTable] = useState([]);
     const [openPopoverPromptTable, setOpenPopoverPromptTable] = useState([]);
@@ -80,7 +80,7 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, setError, reloadAgents
     return (
         <>
             {(editAgent !== -1) && (
-                <Agent backendBaseAPI={backendBaseAPI} mode="edit" agent={rows[editAgent]} agents={rows} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />
+                <Agent backendBaseAPI={backendBaseAPI} mode="edit" agent={rows[editAgent]} agents={rows} prompts={prompts} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />
             )}
             {rows.map((row, i) => (<Column key={i} lg={3} md={2} sm={2} >
                 <AspectRatio className="card" ratio="4x3" onDoubleClick={() => startEdition(i)}>
@@ -123,10 +123,20 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, setError, reloadAgents
                                 <IconButton label="Close" renderIcon={Close} align="top-right" kind="ghost" onClick={() => displayPopoverPromptTable(i, false)} />
                                 <div className="card-detail-large">
                                     <div className="card-popover-content-block">
-                                        <div className="card-detail">Prompt ref.:</div>
-                                        <div className="card-class-name">{row.prompt_ref}</div>
-                                        <div className="card-detail">Prompt:</div>
-                                        <div className="card-description">Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem nobis voluptatibus veritatis!</div>
+                                        <div className="card-detail">Prompt ref.: {row.prompt_ref}</div>
+                                        {(prompts && prompts.length > 0) && (<>
+                                            {prompts.filter(prompt => prompt.prompt_id === row.prompt_ref).map((prompt, i) => (<>
+                                                <div className="card-detail">Prompt Name: {prompt.name}</div>
+                                                <div className="card-detail-large">
+                                                    {prompt.locales.map((locale, j) => (
+                                                        <div key={j} className="card-popover-content-block">
+                                                            <div className="card-name">{locale.locale}</div>
+                                                            <div className="card-description" dangerouslySetInnerHTML={{ __html: locale.text.replace(/\n/g, "<br/>") }} />
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </>))}
+                                        </>)}
                                     </div>
                                 </div>
                             </PopoverContent>
