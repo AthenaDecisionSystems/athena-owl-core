@@ -130,18 +130,21 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [displayConfigurationPanel, setDisplayConfigurationPanel] = useState(false);
   const [useODM, setUseODM] = useState(false);
-  const [useFileSearch, setUseFileSearch] = useState(true); // eslint-disable-line
-  const [resetHistory, setResetHistory] = useState(false);
 
   const [input, setInput] = useState("");
+  const [useFileSearch, setUseFileSearch] = useState(true); // eslint-disable-line
+  const [resetHistory, setResetHistory] = useState(false);
+  const [reenterInto, setReenterInto] = useState("");
+  const [threadId, setThreadId] = useState(null);
+  const [userId, setUserId] = useState("");
+
   const [lastMessage, setLastMessage] = useState("");
   const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true },]);
   const [chatHistory, setChatHistory] = useState([]);
+  const [closedQuestionAnswers, setClosedQuestionAnswers] = useState([]);
 
   const [agentId, setAgentId] = useState(window._env_.REACT_APP_AGENT_ID_WITH_RULES);
   const [agentIdWithoutRules, setAgentIdWithoutRules] = useState(window._env_.REACT_APP_AGENT_ID_WITHOUT_RULES);
-  const [threadId, setThreadId] = useState(null);
-  const [userId, setUserId] = useState("");
 
   // Ref to component Agent
   // When the language changes, the Agent component must update its instructions
@@ -222,41 +225,15 @@ function App() {
 
     const body = {
       "locale": i18n.language,
-      "query": text,
-      "reenter_into": "",
+      "query": text ? text : closedQuestionAnswers,
+      "reenter_into": reenterInto,
       "reset": resetHistory,
-      "callWithVectorStore": false,
+      "callWithVectorStore": useFileSearch,
       "user_id": userId,
       "agent_id": (useODM ? agentId : agentIdWithoutRules),
       "thread_id": threadId,
       "chat_history": (resetHistory ? [] : chatHistory)
     }
-
-    /* 
-    
-        const closed_answers_body = {
-          "locale": i18n.language,
-          "closed_answers": [
-            {
-              "key_name": "the vehicle.engine.power",
-              "input": "120.0"
-            },
-            {
-              "key_name": "the vehicle.registration_date",
-              "input": "2021-10-26"
-            }
-          ],
-          "reset": resetHistory,
-          "user_id": userId,
-          "agent_id": (useODM ? agentId : agentIdWithoutRules),
-          "thread_id": threadId,
-          "chat_history": (resetHistory ? [] : chatHistory)
-        }
-    
-        fetch(serverUrl + "c/closed_answers", requestOptions)
-    
-    
-    */
 
     const requestOptions = {
       method: 'POST',
@@ -270,20 +247,25 @@ function App() {
         console.log("submitMessage: " + JSON.stringify(data));
         let answer = ""
         if (data.status === 200) {
-          answer = data.messages  //TODO JM-JCJ: or data.closed_questions (in data, )  <============================
+          answer = data.messages;
 
           // setChatHistory([...chatHistory, { "role": "human", "content": text }, { "role": "AI", "content": answer }]);
-          setThreadId(data.thread_id)
-          setChatHistory(data.chat_history)
+          setThreadId(data.thread_id);
+          setChatHistory(data.chat_history);
+          setReenterInto(data.reenter_into);
           setResetHistory(false);
+          setClosedQuestionAnswers([]);
         } else {
           // Error 500 or other
           answer = [{ content: "Status http " + data.status + ": " + data.message + "\n" + data.error }]
         }
-        setTimeout(() => {
-          const transformedAnswer = answer.map((a) => ({ text: a.content, className: a.style_class, time: undefined, isBot: true, }));
-          setMessages([...messages, { text, isBot: false }, ...transformedAnswer])
-        }, 500);
+        if (text) {
+          setTimeout(() => {
+            const transformedAnswer = answer.map((a) => ({ text: a.content, className: a.style_class, time: undefined, isBot: true, }));
+            setMessages([...messages, { text, isBot: false }, ...transformedAnswer]);
+
+          }, 500);
+        }
       })
       .catch(error => {
         console.error('error', error)
@@ -293,10 +275,16 @@ function App() {
       })
   };
 
-  const sendClosedAnswers = async (answers) => {
-    // Send closed answers to the server
+  const sendClosedAnswers = (answers) => {
+    let list = answers.map((answer) => {
+      return {
+        "key_name": answer.key_name,
+        "input": answer.input
+      }
+    });
+    setClosedQuestionAnswers(list);
 
-    informUser("**Answers to closed questions :** \n" + JSON.stringify(answers, null, 2));
+    informUser("**Your answers have been submitted** \n" + JSON.stringify(answers, null, 2));
   }
 
   const handleSend = async () => {
@@ -335,10 +323,6 @@ function App() {
       setDisplayConfigurationPanel(false);
     }
   };
-
-  const validateClosedAnswers = (i) => {
-
-  }
 
   if (isLoading) {
     return (
