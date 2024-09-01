@@ -5,6 +5,8 @@ from langchain.tools import StructuredTool
 
 
 class OwlToolEntity(BaseModel):
+    """
+    Delaration of a tool entity, read from yaml definition"""
     tool_id: str = str(uuid.uuid4())
     tool_name: Optional[str] = ""
     tool_description: Optional[str] = ""
@@ -14,10 +16,13 @@ class OwlToolEntity(BaseModel):
     
 class ToolInstanceFactoryInterface(object):
     """
-    The extension of this factory needs to implement how to create tool instance.
-    The methods is a dict with method_name and method. Example:
+    The extension of this factory needs to implement how to create tool instance,
+    defines the methods dictionary with method_name and method reference,
+    and the method aruments. arg_schemas is also a dict with the arguments, mostly has instance of a BaseModel
+   
+    
+    Example:
     methods = { "query_crm_backend": query_crm_backend}
-    arg_schemas is also a dict with the arguments, mostly has instance of a BaseModel
     arg_schemas = {"CrmArgument": CrmArgument}
     
     A OwlToolEntity should specify the key of the function and the key of the args when the function uses complex type.coroutine=

@@ -1,5 +1,9 @@
+"""
+Copyright 2024 Athena Decision Systems
+@author Jerome Boyer
+"""
 import logging
-from athena.llm.agents.agent_mgr import OwlAgentAbstractRunner, OwlAgent
+from athena.llm.agents.agent_mgr import OwlAgentDefaultRunner, OwlAgent
 from athena.llm.tools.tool_mgr import OwlToolEntity
 from typing import Annotated, Any, Optional
 from typing_extensions import TypedDict
@@ -21,7 +25,7 @@ class State(TypedDict):
     input: str
     chat_history:  Annotated[list[AnyMessage], add_messages]
 
-class BaseGraphAgent(OwlAgentAbstractRunner):
+class BaseGraphAgent(OwlAgentDefaultRunner):
 
     def __init__(self, agentEntity: OwlAgent, prompt: Optional[BasePromptTemplate], tool_instances: Optional[list[OwlToolEntity]]):
         #self.memory = SqliteSaver.from_conn_string(":memory:")
