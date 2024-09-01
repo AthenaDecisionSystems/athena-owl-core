@@ -146,7 +146,7 @@ class OwlAgentDefaultRunner(object):
         return self.prompt
     
     def invoke(self, request, thread_id: Optional[str], **kwargs) -> dict[str, Any] | Any:
-        return self.get_runnable().invoke(request)
+        return self.get_runnable().invoke(request)  # by default a chain agent does not use thread_id
     
     def _instantiate_model(self,modelName, modelClass, temperature):
         module_path, class_name = modelClass.rsplit('.',1)
