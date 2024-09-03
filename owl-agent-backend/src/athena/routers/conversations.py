@@ -45,7 +45,7 @@ router = APIRouter( prefix=get_config().api_route + "/c",
 
 
 
-@router.post("/generic_chat")
+@router.post("/generic_chat", tags=["Interact"])
 def synchronous_chat_with_owl(conversationControl: ConversationControl) -> ResponseControl:
     global owl_agent
     LOGGER.debug(f"\n@@@> Input from chat UI= {conversationControl}")
@@ -67,7 +67,7 @@ def synchronous_chat_with_owl(conversationControl: ConversationControl) -> Respo
     return resp
 
 
-@router.post("/chat")
+@router.post("/chat", tags=["Interact"])
 async def async_chat_with_owl(conversationControl: ConversationControl) -> Response:
     global owl_agent
     LOGGER.debug(f"\n@@@> Stream input from chat UI= {conversationControl}")
@@ -103,7 +103,7 @@ with open(get_config().app_index_path) as f:
     html = f.read()
 
 
-@router.get("/")
+@router.get("/", tags=["Test Only"])
 async def web_app() -> HTMLResponse:
     """
     Web App
