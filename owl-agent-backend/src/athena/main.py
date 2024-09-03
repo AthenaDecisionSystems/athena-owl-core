@@ -37,10 +37,10 @@ app.include_router(prompts.router)
 app.include_router(agents.router)
 app.include_router(tools.router)
 
-@app.get(get_config().api_route + "/health")
+@app.get(get_config().api_route + "/health", tags=["Server Info"])
 def alive() -> dict[str,str]:
     return {"Status": "Alive"}
 
-@app.get(get_config().api_route + "/version")
+@app.get(get_config().api_route + "/version", tags=["Server Info"])
 def version():
     return {"Version": get_config().version}

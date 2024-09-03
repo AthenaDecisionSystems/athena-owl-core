@@ -12,7 +12,7 @@ router = APIRouter( prefix=get_config().api_route + "/a")
 
 
 
-@router.post("/documents/")
+@router.post("/documents/", tags=["Manage documents"])
 async def post_document_for_rag( file_description: FileDescription = Depends(), myFile: UploadFile = File(...)):
     """
     given the file description and the uploaded file content, process it by the content manager.
@@ -28,6 +28,6 @@ async def post_document_for_rag( file_description: FileDescription = Depends(), 
     except Exception as e:
          return {"status": 500, "message": "Backend exception", "error" : str(e)}
 
-@router.get("/documents/{query}")
+@router.get("/documents/{query}", tags=["Manage documents"])
 def get_documents_from_query(query: str):
     return get_content_mgr().search(query)
