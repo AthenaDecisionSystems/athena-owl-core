@@ -96,7 +96,7 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
             {rows.map((row, i) => (<Column key={i} lg={3} md={2} sm={2} >
                 <AspectRatio className="card" ratio="4x3" onDoubleClick={() => startEdition(i)}>
                     <div className="card-header" >
-                        <WatsonxData style={{ padding: "0.5rem" }} onClick={() => startOwlAgent(i)} style={{ cursor: "pointer" }} />
+                        <WatsonxData style={{ padding: "0.5rem", cursor: "pointer" }} onClick={() => startOwlAgent(i)} />
                         <OverflowMenu className="card-menu">
                             <OverflowMenuItem itemText="Edit" onClick={() => startEdition(i)} />
                             <OverflowMenuItem itemText="Launch" onClick={() => startOwlAgent(i)} />

@@ -298,7 +298,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                 console.log("submitMessage: " + JSON.stringify(data));
                 let answer = ""
                 if (data.status === 200) {
-                    answer = data.message;
+                    answer = data.messages;
 
                     // setChatHistory([...chatHistory, { "role": "human", "content": text }, { "role": "AI", "content": answer }]);
                     setThreadId(data.thread_id)
@@ -308,7 +308,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                     setClosedQuestionAnswers([]);
                 } else {
                     // Error 500 or other
-                    answer = "Status http " + data.status + ": " + data.message + "\n" + data.error
+                    answer = [{ content: "Status http " + data.status + ": " + data.message + "\n" + data.error }]
                 }
                 if (text) {
                     setTimeout(() => {
@@ -321,9 +321,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
             .catch(error => {
                 console.error('error', error)
                 setTimeout(() => {
-                    setMessages([...messages, { text, isBot: false }, {
-                        text: "Error handling your request", isBot: true
-                    }])
+                    setMessages([...messages, { text, isBot: false }, { text: t("app.err.handlingYourRequest"), isBot: true }])
                 }, 2500)
             })
     };
