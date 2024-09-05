@@ -9,6 +9,7 @@ import { Add } from '@carbon/react/icons';
 import Agent from './Agent';
 import { useEnv } from '../providers';
 import { getEnv } from '../env';
+import { useTranslation } from 'react-i18next';
 
 const octokitClient = new Octokit({});
 
@@ -19,8 +20,11 @@ function AgentsPage() {
   const [error, setError] = useState();
   const [rows, setRows] = useState([]);
   const [prompts, setPrompts] = useState([]);
+  const [runnerClassNames, setRunnerClassNames] = useState([]);
 
   const [open, setOpen] = useState(false);
+
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     try {
@@ -39,6 +43,18 @@ function AgentsPage() {
       const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/agents`);
       if (res.status === 200) {
         setRows(res.data);
+
+        // Get Runner class names list
+        const listFromAgents = res.data.map(agent => agent.runner_class_name);
+        const uniqueValues = new Set();
+        const deduplicated = listFromAgents.filter(item => {
+          if (!uniqueValues.has(item)) {
+            uniqueValues.add(item);
+            return true;
+          }
+          return false;
+        });
+        setRunnerClassNames(deduplicated.map(item => ({ name: (item === "athena.llm.agents.agent_mgr.OwlAgentDefaultRunner" ? "Owl Agent Default Runner" : item), value: item })));
       } else {
         setError('Error obtaining agent data (' + res.status + ')');
       }
@@ -80,7 +96,7 @@ function AgentsPage() {
       </Column>
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
         <Button renderIcon={Add} iconDescription="Add Agent" onClick={() => setOpen(true)}>Add Agent</Button>
-        {!loading && (<Agent backendBaseAPI={env.backendBaseAPI} mode="create" agents={rows} agent={null} prompts={prompts} openState={open} setOpenState={setOpen} onSuccess={reloadAgents} setError={setError} />)}
+        {!loading && (<Agent backendBaseAPI={env.backendBaseAPI} mode="create" agents={rows} agent={null} prompts={prompts} runnerClassNames={runnerClassNames} openState={open} setOpenState={setOpen} onSuccess={reloadAgents} setError={setError} />)}
       </Column>
       {loading && (
         <Column lg={3} md={2} sm={2}>
@@ -88,7 +104,7 @@ function AgentsPage() {
         </Column>
       )}
 
-      {!loading && (<AgentMap backendBaseAPI={env.backendBaseAPI} rows={rows} setRows={setRows} prompts={prompts} setError={setError} reloadAgents={reloadAgents} />)}
+      {!loading && (<AgentMap backendBaseAPI={env.backendBaseAPI} rows={rows} setRows={setRows} prompts={prompts} runnerClassNames={runnerClassNames} setError={setError} reloadAgents={reloadAgents} />)}
 
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
         {error && (<ToastNotification role="alert" caption={error} timeout={5000} title="Error" subtitle="" />)}

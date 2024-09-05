@@ -4,13 +4,10 @@ import { AiGovernancePrompt } from '@carbon/pictograms-react';
 import { Close } from '@carbon/react/icons';
 import { Octokit } from '@octokit/core';
 import Prompt from './Prompt';
-import { useEnv } from '../providers';
 
 const octokitClient = new Octokit({});
 
-export const PromptMap = ({ rows, setRows, setError, reloadPrompts }) => {
-    const env = useEnv();
-
+export const PromptMap = ({ backendBaseAPI, rows, setRows, setError, reloadPrompts }) => {
     const [openPopoverTable, setOpenPopoverTable] = useState([]);
     const [editPrompt, setEditPrompt] = useState(-1);
     const [open, setOpen] = useState(false);
@@ -26,9 +23,7 @@ export const PromptMap = ({ rows, setRows, setError, reloadPrompts }) => {
 
     const deletePrompt = async (index) => {
         try {
-            const res = await octokitClient.request(
-                `DELETE ${env.backendBaseAPI}a/prompts/${rows[index].name}`
-            );
+            const res = await octokitClient.request(`DELETE ${backendBaseAPI}a/prompts/${rows[index].name}`);
             if (res.status === 200) {
                 console.log('Prompt deleted', res.data);
                 setRows((rows) => {
@@ -59,7 +54,7 @@ export const PromptMap = ({ rows, setRows, setError, reloadPrompts }) => {
     return (
         <>
             {(editPrompt !== -1) && (
-                <Prompt mode="edit" prompt={rows[editPrompt]} prompts={rows} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />
+                <Prompt backendBaseAPI={backendBaseAPI} mode="edit" prompt={rows[editPrompt]} prompts={rows} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />
             )}
             {rows.map((row, i) => (<Column key={i} lg={3} md={2} sm={2} >
                 <AspectRatio className="card" ratio="4x3" onDoubleClick={() => startEdition(i)}>
@@ -70,6 +65,7 @@ export const PromptMap = ({ rows, setRows, setError, reloadPrompts }) => {
                             <OverflowMenuItem hasDivider isDelete itemText="Delete" onClick={() => deletePrompt(i)} />
                         </OverflowMenu>
                     </div>
+                    <div className="card-description">{row.prompt_id}</div>
                     <div className="card-name">{row.name}</div>
                     {(row.locales && row.locales.length > 0) && (
                         <>

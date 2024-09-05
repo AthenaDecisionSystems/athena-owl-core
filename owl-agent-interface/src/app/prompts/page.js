@@ -1,11 +1,11 @@
 'use client';
 
-import { Breadcrumb, BreadcrumbItem, Button, Column, Grid, SkeletonText, ToastNotification } from '@carbon/react';
+import { Button, Column, Grid, SkeletonText, ToastNotification } from '@carbon/react';
 
 import React, { useEffect, useState } from 'react';
 import { Octokit } from '@octokit/core';
 import PromptMap from './PromptMap';
-import { Add } from '@carbon/react/icons';
+import { Add, TextStrikethrough } from '@carbon/react/icons';
 import Prompt from './Prompt';
 import { useEnv } from '../providers';
 import { getEnv } from '../env';
@@ -22,13 +22,13 @@ function PromptsPage() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!env.backendBaseAPI) {
-      getEnv().then((e) => {
-        env = e;
-        getPrompts();
-      })
-    } else {
+    try {
+      if (!env.backendBaseAPI) {
+        env = getEnv();
+      }
       getPrompts();
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -44,9 +44,8 @@ function PromptsPage() {
       }
     } catch (error) {
       setError('Error obtaining prompt data:' + error.message);
-      console.error('Error obtaining prompt data:' + error.message);
+      console.error('Error obtaining prompt data:', error);
     }
-    setLoading(false);
   }
 
   const reloadPrompts = () => {
@@ -57,16 +56,11 @@ function PromptsPage() {
   return (
     <Grid>
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
-        <Breadcrumb noTrailingSlash aria-label="Page navigation">
-          <BreadcrumbItem>
-            <a href="/">Manage intelligent decision with Hybrid AI</a>
-          </BreadcrumbItem>
-        </Breadcrumb>
         <h1 className="landing-page__heading">Prompts</h1>
       </Column>
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
         <Button renderIcon={Add} iconDescription="Add Prompt" onClick={() => setOpen(true)}>Add Prompt</Button>
-        <Prompt mode="create" prompt={null} prompts={rows} openState={open} setOpenState={setOpen} onSuccess={reloadPrompts} setError={setError} />
+        <Prompt backendBaseAPI={env.backendBaseAPI} mode="create" prompt={null} prompts={rows} openState={open} setOpenState={setOpen} onSuccess={reloadPrompts} setError={setError} />
       </Column>
 
       {loading && (
@@ -75,7 +69,7 @@ function PromptsPage() {
         </Column>
       )}
 
-      {!loading && (<PromptMap rows={rows} setRows={setRows} setError={setError} reloadPrompts={reloadPrompts} />)}
+      {!loading && (<PromptMap backendBaseAPI={env.backendBaseAPI} rows={rows} setRows={setRows} setError={setError} reloadPrompts={reloadPrompts} />)}
 
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
         {error && (<ToastNotification role="alert" caption={error} timeout={3000} title="Error" subtitle="" />)}

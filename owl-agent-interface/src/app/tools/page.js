@@ -1,6 +1,6 @@
 'use client';
 
-import { Breadcrumb, BreadcrumbItem, Button, Column, Grid, SkeletonText, ToastNotification } from '@carbon/react';
+import { Button, Column, Grid, SkeletonText, ToastNotification } from '@carbon/react';
 
 import React, { useEffect, useState } from 'react';
 import { Octokit } from '@octokit/core';
@@ -55,11 +55,6 @@ function ToolsPage() {
   return (
     <Grid>
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
-        <Breadcrumb noTrailingSlash aria-label="Page navigation">
-          <BreadcrumbItem>
-            <a href="/">Manage intelligent decision with Hybrid AI</a>
-          </BreadcrumbItem>
-        </Breadcrumb>
         <h1 className="landing-page__heading">Tools</h1>
       </Column>
       <Column lg={16} md={8} sm={4} className="landing-page__banner">

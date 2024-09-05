@@ -4,15 +4,18 @@ import { WatsonxData } from '@carbon/pictograms-react';
 import { Close } from '@carbon/react/icons';
 import { Octokit } from '@octokit/core';
 import Agent from './Agent';
+import OwlAgent from './OwlAgent';
 
 const octokitClient = new Octokit({});
 
-export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, setError, reloadAgents }) => {
+export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNames, setError, reloadAgents }) => {
     const [openPopoverLLMTable, setOpenPopoverLLMTable] = useState([]);
     const [openPopoverToolsTable, setOpenPopoverToolsTable] = useState([]);
     const [openPopoverPromptTable, setOpenPopoverPromptTable] = useState([]);
     const [editAgent, setEditAgent] = useState(-1);
     const [open, setOpen] = useState(false);
+    const [owlAgent, setOwlAgent] = useState(-1);
+    const [openOwlAgent, setOpenOwlAgent] = useState(false);
 
     useEffect(() => {
         setOpenPopoverLLMTable(new Array(rows.length).fill(false));
@@ -77,26 +80,35 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, setError, rel
         reloadAgents();
     }
 
+    const startOwlAgent = (index) => {
+        setOwlAgent(index);
+        setOpenOwlAgent(true);
+    }
+
     return (
         <>
+            {(owlAgent !== -1) && (
+                <OwlAgent backendBaseAPI={backendBaseAPI} agent={rows[owlAgent]} openState={openOwlAgent} setOpenState={setOpenOwlAgent} randomNumber={Math.random()} />
+            )}
             {(editAgent !== -1) && (
-                <Agent backendBaseAPI={backendBaseAPI} mode="edit" agent={rows[editAgent]} agents={rows} prompts={prompts} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />
+                <Agent backendBaseAPI={backendBaseAPI} mode="edit" agent={rows[editAgent]} agents={rows} prompts={prompts} runnerClassNames={runnerClassNames} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />
             )}
             {rows.map((row, i) => (<Column key={i} lg={3} md={2} sm={2} >
                 <AspectRatio className="card" ratio="4x3" onDoubleClick={() => startEdition(i)}>
                     <div className="card-header" >
-                        <WatsonxData style={{ padding: "0.5rem" }} />
+                        <WatsonxData style={{ padding: "0.5rem" }} onClick={() => startOwlAgent(i)} style={{ cursor: "pointer" }} />
                         <OverflowMenu className="card-menu">
                             <OverflowMenuItem itemText="Edit" onClick={() => startEdition(i)} />
+                            <OverflowMenuItem itemText="Launch" onClick={() => startOwlAgent(i)} />
                             <OverflowMenuItem hasDivider isDelete itemText="Delete" onClick={() => deleteAgent(i)} />
                         </OverflowMenu>
                     </div>
                     <div className="card-name">{row.name}</div>
                     <div className="card-item-id">{row.agent_id}</div>
                     <div className="card-description">{row.description}</div>
-                    <div className="card-class-name" title="Model name">{row.modelName}</div>
-                    <div className="card-class-name" title="Model class name">{row.modelClassName}</div>
                     <div className="card-class-name" title="Runner class name">{row.runner_class_name}</div>
+                    <div className="card-class-name" title="Model class name">{row.modelClassName}</div>
+                    <div className="card-class-name" title="Model name">{row.modelName}</div>
 
                     <div className="card-item-id">
                         <Popover title="Display LLM parameters" align="bottom-left" open={openPopoverLLMTable[i]} >
@@ -125,7 +137,7 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, setError, rel
                                     <div className="card-popover-content-block">
                                         <div className="card-detail">Prompt ref.: {row.prompt_ref}</div>
                                         {(prompts && prompts.length > 0) && (<>
-                                            {prompts.filter(prompt => prompt.prompt_id === row.prompt_ref).map((prompt, i) => (<>
+                                            {prompts.filter(prompt => prompt.prompt_id === row.prompt_ref).map((prompt, i) => (<div key={i}>
                                                 <div className="card-detail">Prompt Name: {prompt.name}</div>
                                                 <div className="card-detail-large">
                                                     {prompt.locales.map((locale, j) => (
@@ -135,7 +147,7 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, setError, rel
                                                         </div>
                                                     ))}
                                                 </div>
-                                            </>))}
+                                            </div>))}
                                         </>)}
                                     </div>
                                 </div>

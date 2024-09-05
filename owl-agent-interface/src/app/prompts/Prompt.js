@@ -2,18 +2,16 @@ import { Modal, TextArea, TextInput } from '@carbon/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { AiGovernancePrompt } from '@carbon/pictograms-react';
 import { Octokit } from '@octokit/core';
-import { useEnv } from '../providers';
 
 const octokitClient = new Octokit({});
 
 const locales = ["en", "fr", "es"];
 
-const Prompt = ({ mode, prompt, prompts, openState, setOpenState, onSuccess, setError }) => {
-    let env = useEnv();
-
+const Prompt = ({ backendBaseAPI, mode, prompt, prompts, openState, setOpenState, onSuccess, setError }) => {
     // mode = 'create' or 'edit'
-    const [invalid, setInvalid] = useState(false);
-    const [promptKey, setPromptKey] = useState("");
+    const [empty, setEmpty] = useState(false);
+    const [promptId, setPromptId] = useState("");
+    const [promptName, setPromptName] = useState("");
     const [promptContent, setPromptContent] = useState({ en: "", fr: "", es: "" })
     const [modeLocales, setModeLocales] = useState({ en: "create", fr: "create", es: "create" });
 
@@ -21,7 +19,8 @@ const Prompt = ({ mode, prompt, prompts, openState, setOpenState, onSuccess, set
 
     useEffect(() => {
         if (mode === 'edit') {
-            setPromptKey(prompt.name);
+            setPromptId(prompt.prompt_id);
+            setPromptName(prompt.name);
 
             let content = {};
             let modes = {};
@@ -34,7 +33,7 @@ const Prompt = ({ mode, prompt, prompts, openState, setOpenState, onSuccess, set
             setPromptContent(content);
             setModeLocales(modes);
         }
-        setInvalid(false);
+        setEmpty(false)
     }, [prompt]);
 
     const upsertPrompt = async (mode, locale) => {
@@ -43,14 +42,9 @@ const Prompt = ({ mode, prompt, prompts, openState, setOpenState, onSuccess, set
 
         try {
             const res = await octokitClient.request(
-                (mode === "create" ? "POST " : "PUT ") + env.backendBaseAPI + "a/prompts", {
-                "prompt_key": promptKey.replace(/[^a-zA-Z0-9_À-ÿ]/g, '_').toLowerCase(),
-                "prompt_locale": locale,
-                "prompt_content": promptContent[locale]
-            });
-
-            console.log("Upserting prompt", mode, {
-                "prompt_key": promptKey,
+                (mode === "create" ? "POST " : "PUT ") + backendBaseAPI + "a/prompts", {
+                "prompt_key": promptId, // should be prompt_id
+                "name": promptName, // not saved
                 "prompt_locale": locale,
                 "prompt_content": promptContent[locale]
             });
@@ -70,45 +64,59 @@ const Prompt = ({ mode, prompt, prompts, openState, setOpenState, onSuccess, set
     }
 
     const onRequestSubmit = () => {
-        if (mode === "create" && (!promptKey || prompts.filter(p => p.name === promptKey).length !== 0)) {
-            setInvalid(true)
-            return;
-        }
-
-        const nonEmptyPrompts = Object.keys(promptContent).filter(locale => promptContent[locale] && promptContent[locale].trim().length > 0);
-        if (mode === "create") {
-            if (nonEmptyPrompts.length === 0) {
-                // Create prompt with empty English content
-                upsertPrompt(mode, "en");
-            } else {
-                // Create prompt with first non-empty content and iterate over the rest in edit mode
-                upsertPrompt(mode, nonEmptyPrompts[0]);
-                for (let i = 1; i < nonEmptyPrompts.length; i++) {
-                    upsertPrompt("edit", nonEmptyPrompts[i]);
-                }
-            }
+        if (!promptName) {
+            setEmpty(true);
         } else {
-            console.log(nonEmptyPrompts)
-            nonEmptyPrompts.forEach(locale => {
-                upsertPrompt(modeLocales[locale], locale);
-            });
+            const nonEmptyPrompts = Object.keys(promptContent).filter(locale => promptContent[locale] && promptContent[locale].trim().length > 0);
+            if (mode === "create") {
+                if (nonEmptyPrompts.length === 0) {
+                    // Create prompt with empty English content
+                    upsertPrompt(mode, "en");
+                } else {
+                    // Create prompt with first non-empty content and iterate over the rest in edit mode
+                    upsertPrompt(mode, nonEmptyPrompts[0]);
+                    for (let i = 1; i < nonEmptyPrompts.length; i++) {
+                        upsertPrompt("edit", nonEmptyPrompts[i]);
+                    }
+                }
+            } else {
+                console.log(nonEmptyPrompts)
+                nonEmptyPrompts.forEach(locale => {
+                    upsertPrompt(modeLocales[locale], locale);
+                });
+            }
+
+            setPromptId("");
+            setPromptContent({ en: "", fr: "", es: "" });
+            setModeLocales({ en: "create", fr: "create", es: "create" });
+
+            setOpenState(false);
         }
-
-        setPromptKey("");
-        setPromptContent({ en: "", fr: "", es: "" });
-        setModeLocales({ en: "create", fr: "create", es: "create" });
-
-        setOpenState(false);
     }
 
-    const checkValidity = (e) => {
-        setInvalid(!promptKey || prompts.filter(p => p.name === e.target.value).length !== 0);
+    const checkAndBuildId = (e) => {
+        setEmpty(!e.target.value);
+        setPromptName(e.target.value);
+        if (mode === "create") {
+            let value = e.target.value.replace(/[^a-zA-Z0-9_À-ÿ]/g, '_').toLowerCase();
+            let unique = true;
+            do {
+                unique = prompts.filter((t) => t.prompt_id === value).length === 0;
+
+                if (unique) {
+                    setPromptId(value);
+                    break;
+                }
+                value += "_";
+            }
+            while (!unique)
+        }
     }
 
     return (
         <Modal open={openState}
             onRequestClose={() => setOpenState(false)}
-            modalHeading={(mode == "create" ? "Create a new prompt" : "Update prompt " + promptKey)}
+            modalHeading={(mode == "create" ? "Create a new prompt" : "Update prompt " + promptId)}
             modalLabel="Prompts"
             primaryButtonText={(mode == "create" ? "Add" : "Update")}
             secondaryButtonText="Cancel"
@@ -123,13 +131,10 @@ const Prompt = ({ mode, prompt, prompts, openState, setOpenState, onSuccess, set
             <TextInput data-modal-primary-focus id="text-input-1"
                 labelText="Prompt name"
                 placeholder="e.g. Analyze email from client and make a decision about..."
-                readOnly={mode === "edit"}
-                invalid={invalid}
-                invalidText="This field cannot be empty and must be unique among the tools."
-                value={promptKey}
-                ref={ref}
-                onKeyUp={checkValidity}
-                onChange={(e) => setPromptKey(e.target.value)} />
+                invalid={empty}
+                invalidText="This field cannot be empty"
+                value={promptName}
+                onChange={checkAndBuildId} />
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
 
             <TextArea id="text-area-1"

@@ -62,7 +62,7 @@ export const ToolMap = ({ rows, setRows, setError, reloadTools }) => {
                     <div className="card-name">{row.tool_name}</div>
                     <div className="card-id">{row.tool_id}</div>
                     <div className="card-label">Function name:</div>
-                    <div className="card-name">{row.tool_fct_name}</div>
+                    <div className="card-id">{row.tool_fct_name}</div>
 
                     <div className="card-label">Class name:</div>
                     <div className="card-class-name">{row.tool_class_name}</div>

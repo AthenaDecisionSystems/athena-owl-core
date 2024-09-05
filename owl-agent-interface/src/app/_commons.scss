@@ -1,3 +1,6 @@
+/* Copyright 2024, Athena Decision Systems */
+/* @author Joel Milgram */
+
 @use '@carbon/react/scss/spacing' as *;
 @use '@carbon/react/scss/theme' as *;
 @use '@carbon/react/scss/colors' as *;
@@ -125,6 +128,14 @@
 }
 
 
+.owl-agent-modal>div>div:nth-of-type(2) {
+    position: static;
+    overflow-y: hidden;
+    overflow-y: hidden;
+    padding-block-end: 0rem;
+    height: 105%;
+}
+
 .owl-agent-chats {
     background: $cool-gray-10;
     overflow: hidden;
@@ -205,6 +216,9 @@
 
 .owl-agent-input>input,
 .owl-agent-input>textarea {
+    position: fixed;
+    bottom: 0;
+    left: 0;
     width: calc(100% - 3rem);
     outline: none;
     padding-left: 1rem;
@@ -217,4 +231,11 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+}
+
+.header-panel-content {
+    background-color: $layer-02;
+    padding: $spacing-03;
+    margin: $spacing-01;
+    transition: background-color 10s;
 }

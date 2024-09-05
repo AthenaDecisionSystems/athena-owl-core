@@ -2,7 +2,7 @@
 
 ### Prerequisites
 - Install Node.js, npm and yarn
-- Set the following environment variable: `NEXT_PUBLIC_BACKEND_BASE_API=http://localhost:8000/api/v1`
+- Set the following environment variable: `NEXT_PUBLIC_BACKEND_BASE_API=http://localhost:8000/api/v1/`
 
 ### Environment variable
 ```

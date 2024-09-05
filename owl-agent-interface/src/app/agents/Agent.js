@@ -3,10 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { AiGovernancePrompt, WatsonxData } from '@carbon/pictograms-react';
 import { Octokit } from '@octokit/core';
 import { View } from '@carbon/react/icons';
+import { useTranslation } from 'react-i18next';
 
 const octokitClient = new Octokit({});
 
-const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, openState, setOpenState, onSuccess, setError }) => {
+const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames, openState, setOpenState, onSuccess, setError }) => {
     // mode = 'create' or 'edit'
     const [loading, setLoading] = useState(true);
     const [empty, setEmpty] = useState(false);
@@ -15,7 +16,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, openState, setOpe
     const [agentDescription, setAgentDescription] = useState("");
     const [agentModelName, setAgentModelName] = useState("gpt-3.5-turbo");
     const [agentModelClassName, setAgentModelClassName] = useState("langchain_openai.ChatOpenAI");
-    const [agentRunnerClassName, setAgentRunnerClassName] = useState("athena.llm.agents.agent_mgr.OwlAgentAbstractRunner");
+    const [agentRunnerClassName, setAgentRunnerClassName] = useState("athena.llm.agents.agent_mgr.OwlAgentDefaultRunner");
     const [currentItemPromptRef, setCurrentItemPromptRef] = useState();
     const [agentTemperature, setAgentTemperature] = useState(0);
     const [agentTopK, setAgentTopK] = useState(1);
@@ -25,16 +26,25 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, openState, setOpe
     const [dropdownItemsPromptRef, setDropdownItemsPromptRef] = useState([]);
     const [dropdownItemsTools, setDropdownItemsTools] = useState([]);
 
+    const modelClassNames = [
+        { name: "Anthropic", value: "langchain_anthropic.ChatAnthropic", modelNames: ["claude-3-opus-20240229"] },
+        { name: "Mistral AI", value: "langchain_mistralai.chat_models.ChatMistralAI", modelNames: ["open-mixtral-8x7b", "mistral-large-latest"] },
+        { name: "Ollama", value: "langchain_community.chat_models.ChatOllama", modelNames: [] },
+        { name: "Open AI", value: "langchain_openai.ChatOpenAI", modelNames: ["gpt-3.5-turbo", "gpt-4-turbo", "gpt-4o"] },
+    ];
+
     const [open, setOpen] = useState(false);
+
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         if (mode === 'edit') {
             setAgentId(agent.agent_id);
             setAgentName(agent.name);
             setAgentDescription(agent.description);
-            setAgentModelName(agent.modelName);
-            setAgentModelClassName(agent.modelClassName);
             setAgentRunnerClassName(agent.runner_class_name);
+            setAgentModelClassName(agent.modelClassName);
+            setAgentModelName(agent.modelName);
             setCurrentItemPromptRef({ "selectedItem": agent.prompt_ref });
             setAgentTemperature(agent.temperature);
             setAgentTopK(agent.top_k);
@@ -126,9 +136,9 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, openState, setOpe
             setAgentId("");
             setAgentName("");
             setAgentDescription("");
-            setAgentModelName("gpt-3.5-turbo");
-            setAgentModelClassName("");
             setAgentRunnerClassName("athena.llm.agents.agent_mgr.OwlAgentAbstractRunner");
+            setAgentModelClassName("langchain_openai.ChatOpenAI");
+            setAgentModelName("gpt-3.5-turbo");
             setCurrentItemPromptRef("");
             setAgentTemperature(0);
             setAgentTopK(1);
@@ -189,38 +199,30 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, openState, setOpe
                 placeholder="e.g. This is the new IBU agent that uses LLM and Business Rules to make intelligent decisions..." />
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
 
-            <TextInput id="text-model-class-name"
-                value={agentModelClassName}
-                labelText="Model Class Name"
-                onChange={(e) => setAgentModelClassName(e.target.value)}>
-            </TextInput>
-            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
-
-            <Select id="select-class-name"
-                defaultValue={agentRunnerClassName}
+            <Select id="select-runner-class-name"
+                value={agentRunnerClassName}
                 labelText="Runner Class Name"
                 onChange={(e) => setAgentRunnerClassName(e.target.value)}>
                 <SelectItem value="" text="" />
-                <SelectItem
-                    value="athena.llm.agents.agent_mgr.OwlAgentAbstractRunner"
-                    text="athena.llm.agents.agent_mgr.OwlAgentAbstractRunner" />
+                {runnerClassNames.map((runnerClassName, i) => (<SelectItem key={i} value={runnerClassName.value} text={runnerClassName.name} />))}
+            </Select>
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
+
+            <Select id="select-model-class-name"
+                value={agentModelClassName}
+                labelText="Model Class Name"
+                onChange={(e) => setAgentModelClassName(e.target.value)}>
+                <SelectItem value="" text="" />
+                {modelClassNames.map((modelClassName, i) => (<SelectItem key={i} value={modelClassName.value} text={modelClassName.name} />))}
             </Select>
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
 
             <Select id="select-model-name"
-                defaultValue={agentModelName}
+                value={agentModelName}
                 labelText="Model Name"
                 onChange={(e) => setAgentModelName(e.target.value)}>
                 <SelectItem value="" text="" />
-                <SelectItem
-                    value="gpt-3.5-turbo"
-                    text="GPT-3.5-turbo" />
-                <SelectItem
-                    value="gpt-4-turbo"
-                    text="GPT-4-turbo" />
-                <SelectItem
-                    value="gpt-4o"
-                    text="GPT-4o" />
+                {modelClassNames.find((modelClassName) => (modelClassName.value === agentModelClassName)).modelNames.map((modelName, i) => (<SelectItem key={i} value={modelName} text={modelName} />))}
             </Select>
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
 

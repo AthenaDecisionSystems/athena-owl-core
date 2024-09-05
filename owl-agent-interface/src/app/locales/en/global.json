@@ -5,7 +5,7 @@
     },
     "app": {
         "lbl.brand": "Claims Management Agent",
-        "msg.welcome": "## Hello,\n ### Welcome to the OwlAgent that combines Generative AI and IBM business rules.",
+        "msg.welcome": "Welcome to the OwlAgent that combines Generative AI and IBM business rules.",
         "err.handlingYourRequest": "_There was an error handling your request._",
         "msg.restartNeeded": "The conversation needs to be restarted.",
         "alt.configuration": "Configuration",

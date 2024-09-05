@@ -5,7 +5,7 @@
     },
     "app": {
         "lbl.brand": "Reclamaciones sobre siniestros",
-        "msg.welcome": "## Hola,\n ### Bienvenido al asistente conversacional OwlAgent que combina la IA generativa y las reglas de negocio (IBM ODM).",
+        "msg.welcome": "Bienvenido al asistente conversacional OwlAgent que combina la IA generativa y las reglas de negocio (IBM ODM).",
         "err.handlingYourRequest": "_Se ha producido un error al procesar su solicitud._",
         "msg.restartNeeded": "La conversación debe reiniciarse.",
         "alt.configuration": "Configuración",
