@@ -102,9 +102,9 @@ async def websocket_endpoint(websocket: WebSocket) -> NoReturn:
 with open(get_config().app_index_path) as f:
     html = f.read()
 
-# @router.get("/", tags=["Test Only"])
-# async def web_app() -> HTMLResponse:
-#     """
-#     Web App
-#     """
-#     return HTMLResponse(html)
+@router.get("/", tags=["Test Only"])
+async def web_app() -> HTMLResponse:
+    """
+    Web App
+    """
+    return HTMLResponse(html)
