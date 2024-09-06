@@ -195,12 +195,15 @@
     list-style-position: inside;
 }
 
-.chat-system-message code {
+.chat-user-message ul {
+    padding-left: 2rem;
+    list-style-type: disc;
+}
+
+.chat-user-message code {
     padding-left: 1rem;
     padding-right: 1rem;
-    color: green;
     font-weight: bold;
-
 }
 
 .waiting-for-response>img {

@@ -260,7 +260,25 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
         }
     }
 
-    const submitMessage = async (type, closedAnswers) => {
+    const localizedLabel = (keyname) => {
+        const questions = messages[messages.length - 1].questions;
+        let text = "";
+        let answer = questions.find(question => question.key_name === keyname);
+        if (answer?.labels?.length > 0) {
+            let label = answer.labels.find(label => label.locale === i18n.language);
+            if (label) {
+                text = label.text;
+            } else {
+                text = answer.labels[0].text;
+            }
+        } else {
+            text = answer.key_name + ":";
+        }
+
+        return text;
+    }
+
+    const submitMessage = async (type, closedQuestionAnswers) => {
         // type=user: Submit user message to the server
         // type=closedAnswers: Submit closed questions answers to the server
         let text = "";
@@ -271,10 +289,10 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
             setLastMessage(text);
             message = { text, isBot: false };
         } else {
-            console.log("submitMessage: closedAnswers=" + JSON.stringify(closedAnswers));
+            console.log("submitMessage: closedAnswers=" + JSON.stringify(closedQuestionAnswers));
             message = {
                 text: "**Here are the answers:**\n" +
-                    closedAnswers.map((answer) => ("- " + answer.key_name + ": `" + answer.input + "`")).join("\n"), isBot: false
+                    closedQuestionAnswers.map((answer) => ("- " + localizedLabel(answer.key_name) + " `" + answer.input + "`")).join("\n"), isBot: false
             };
         }
         setMessages([...messages, message]);
@@ -283,7 +301,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
         const body = {
             "locale": i18n.language,
             "query": (type === "user") ? text : "",
-            "closed_answers": (type === "closedAnswers") ? closedAnswers : [],
+            "closed_answers": (type === "closedAnswers") ? closedQuestionAnswers : [],
             "reenter_into": reenterInto,
             "reset": resetHistory,
             "callWithVectorStore": useFileSearch,
@@ -337,13 +355,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
     };
 
     const sendClosedAnswers = (answers) => {
-        let list = answers.map((answer) => {
-            return {
-                "key_name": answer.key_name,
-                "input": answer.input
-            }
-        });
-        submitMessage("closedAnswers", list);
+        submitMessage("closedAnswers", answers);
     }
 
     const handleSend = async () => {
