@@ -154,11 +154,6 @@ const closedQuestionsDemoNum = {
             { "locale": "fr", "text": "Quelle est la valeur de Pi ?" }
         ],
         "data_type": "Number",
-        "restrictions": {
-            "range": { "min": 3, "max": 4, "step": 0.0001 },
-            "text": null,
-            "enumeration": null
-        },
         "default_value": 3.1
     }],
     isBot: true,
@@ -251,7 +246,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
         setResetHistory(true);
         setThreadId(null);
         setReenterInto("");
-        setMessages([{ text: "Welcome to the Owl Agent. How can I help you today?", isBot: true }]);
+        setMessages([{ text: "Welcome to the " + (agent.name ? agent.name : agent.agent_id) + ". How can I help you today?", isBot: true }]);
     }, [agent]);
 
     const informUser = (message) => {
@@ -296,9 +291,12 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
             .then(response => response.json())
             .then(data => {
                 console.log("submitMessage: " + JSON.stringify(data));
-                let answer = ""
+                let answer = [];
+                let closedQuestions = [];
+
                 if (data.status === 200) {
                     answer = data.messages;
+                    closedQuestions = data.closed_questions;
 
                     // setChatHistory([...chatHistory, { "role": "human", "content": text }, { "role": "AI", "content": answer }]);
                     setThreadId(data.thread_id)
@@ -313,8 +311,11 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                 if (text) {
                     setTimeout(() => {
                         const transformedAnswer = answer.map((a) => ({ text: a.content, className: a.style_class, time: undefined, isBot: true, }));
-                        setMessages([...messages, { text, isBot: false }, ...transformedAnswer]);
-
+                        setMessages([
+                            ...messages,
+                            { text, isBot: false }, ...transformedAnswer,
+                            { questions: closedQuestions, isBot: true, closedQuestions: true }
+                        ]);
                     }, 500);
                 }
             })
@@ -336,15 +337,8 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
         setClosedQuestionAnswers(list);
 
         let i = 0;
-        informUser("**Your answers have been submitted** \n" + JSON.stringify(answers, null, 2)
-            .split('\n')
-            .map(line => line.trim())
-            .filter(line => !"{},[]".includes(line))
-            .join(' ')
-            .replace(/" "/g, '"\n"')
-            .replace(/"key_name"/g, 'key_name')
-            .replace(/"input"/g, 'input')
-        );
+        informUser("**Your answers have been submitted** \n" +
+            answers.map((answer) => ("- " + answer.key_name + ": `" + answer.input + "`")).join("\n"));
     }
 
     const handleSend = async () => {
@@ -402,7 +396,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
     return (
         <Modal open={openState}
             onRequestClose={() => setOpenState(false)}
-            modalHeading={"Owl Agent - " + agent.name + " (" + agent.agent_id + ")"}
+            modalHeading={agent.name ? agent.name : agent.agent_id}
             passiveModal
             size='lg'
             preventCloseOnClickOutside
@@ -425,17 +419,18 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                                     New conversation started
                                     <br />
                                     <br />
-                                    <button className="app-button" onClick={() => setMessages([{ text: "Welcome to the Owl Agent. How can I help you today?", isBot: true }])}>Clear chat</button>
+                                    <button className="app-button" onClick={() => setMessages([{ text: "Welcome to the " + (agent.name ? agent.name : agent.agent_id) + ". How can I help you today?", isBot: true }])}>Clear chat</button>
                                 </div> :
                                 message.text === "..." ?
                                     <div className="waiting-for-response"><img src={loadingImage.src} alt="Loading..." /> </div> :
                                     <div>
-                                        {message.text.split('\n').map((line, j) =>
+                                        <ReactMarkdown>{message.text}</ReactMarkdown>
+                                        {/*message.text.split('\n').map((line, j) =>
                                             line === "" ? <br key={j} /> :
                                                 <div key={j}>
                                                     <ReactMarkdown>{line}</ReactMarkdown>
                                                 </div>
-                                        )}
+                                        )*/}
                                         {message.time && <div>
                                             <br />
                                             <div className="response-time">{"Response in " + message.time + "s"}</div>

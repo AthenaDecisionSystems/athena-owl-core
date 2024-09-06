@@ -195,6 +195,14 @@
     list-style-position: inside;
 }
 
+.chat-system-message code {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    color: green;
+    font-weight: bold;
+
+}
+
 .waiting-for-response>img {
     height: 2rem;
 }

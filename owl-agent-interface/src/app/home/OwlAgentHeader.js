@@ -23,7 +23,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 
-const languages = [{ text: "🇬🇧 English", value: "en" }, { text: "🇪🇸 Español", value: "es" }, { text: "🇫🇷 Français", value: "fr" }];
+const languages = [{ text: "🇬🇧 English", value: "en" }, { text: "🇪🇸 Español", value: "es" }, { text: "🇫🇷 Français", value: "fr" }, { text: "🇳🇱 Nederlands", value: "nl" }];
 
 const OwlAgentHeader = () => {
   const [settingsExpanded, setSettingsExpanded] = useState(false);

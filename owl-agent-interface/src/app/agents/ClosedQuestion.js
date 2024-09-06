@@ -40,26 +40,17 @@ const ClosedQuestion = forwardRef(({ index, question, disabled }, ref) => {
                 setMaxLength(question.restrictions.text.maxLength);
             }
         }
-
-        switch (typeof question.default_value) {
-            case 'string':
-                setInputValue(question.default_value);
-                break;
-            case 'number':
-                setInputValue("" + question.default_value);
-                break;
-            case 'boolean':
-                setInputValue(question.default_value);
-                break;
-            default:
-                setInputValue(null);
-        };
-        if (question.data_type === 'Text' && question.restrictions.enumeration) {
+        if (question.data_type === 'Boolean') {
+            setInputValue(question.default_value || false);
+        } else if (question.data_type === 'Text' && question.restrictions.enumeration) {
             setInputValue(question.default_value || question.restrictions.enumeration.possible_values[0].value);
-        }
-        if (question.data_type === 'DateTime' && question.default_value) {
+        } else if ((question.data_type === 'Integer' || question.data_type === 'Number') && typeof question.default_value == 'number') {
+            setInputValue("" + question.default_value);
+        } else if (question.data_type === 'DateTime' && question.default_value) {
             setDateValue(question.default_value.split('T')[0]);
             setTimeValue(question.default_value.split('T')[1]);
+        } else {
+            setInputValue(question.default_value);
         }
     }, [question]);
 
@@ -243,8 +234,8 @@ const ClosedQuestion = forwardRef(({ index, question, disabled }, ref) => {
         <NumberInput id={keyName} ref={controlRef}
             label={localizedLabel()}
             value={inputValue}
-            min={min}
-            max={max}
+            {...(min && { min })}
+            {...(max && { max })}
             step={step}
             onChange={() => setInputValue(controlRef.current.value)}
             invalid={numericInputError(inputValue) !== ""}
@@ -255,8 +246,8 @@ const ClosedQuestion = forwardRef(({ index, question, disabled }, ref) => {
         <DatePicker
             datePickerType="single"
             dateFormat="Y-m-d"
-            maxDate={max}
-            minDate={min}
+            {...(min && { minDate: min })}
+            {...(max && { maxDate: max })}
             onChange={dates => setInputValue(dates[0])}>
             <DatePickerInput
                 id={keyName}
@@ -269,8 +260,8 @@ const ClosedQuestion = forwardRef(({ index, question, disabled }, ref) => {
         <DatePicker
             datePickerType="single"
             dateFormat="Y-m-d"
-            maxDate={max}
-            minDate={min}
+            {...(min && { minDate: min })}
+            {...(max && { maxDate: max })}
             onChange={dates => setDateValue(dates[0])}>
             <DatePickerInput
                 id={keyName}
