@@ -220,7 +220,6 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
     const [lastMessage, setLastMessage] = useState("");
     const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true },]);
     const [chatHistory, setChatHistory] = useState([]);
-    const [closedQuestionAnswers, setClosedQuestionAnswers] = useState([]);
 
     const inputRef = useRef(null);
 
@@ -261,17 +260,30 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
         }
     }
 
-    const submitMessage = async () => {
-        // Submit user message to the server
-        const text = input.trim();
-        setInput("");
-        setLastMessage(text);
-        setMessages([...messages, { text, isBot: false }]);
-        setTimeout(() => { setMessages([...messages, { text, isBot: false }, { text: "...", isBot: true }]) }, 400);
+    const submitMessage = async (type, closedAnswers) => {
+        // type=user: Submit user message to the server
+        // type=closedAnswers: Submit closed questions answers to the server
+        let text = "";
+        let message = {};
+        if (type === "user") {
+            text = input.trim();
+            setInput("");
+            setLastMessage(text);
+            message = { text, isBot: false };
+        } else {
+            console.log("submitMessage: closedAnswers=" + JSON.stringify(closedAnswers));
+            message = {
+                text: "**Here are the answers:**\n" +
+                    closedAnswers.map((answer) => ("- " + answer.key_name + ": `" + answer.input + "`")).join("\n"), isBot: false
+            };
+        }
+        setMessages([...messages, message]);
+        setTimeout(() => { setMessages([...messages, message, { text: "...", isBot: true }]) }, 400);
 
         const body = {
             "locale": i18n.language,
-            "query": text ? text : closedQuestionAnswers,
+            "query": (type === "user") ? text : "",
+            "closed_answers": (type === "closedAnswers") ? closedAnswers : [],
             "reenter_into": reenterInto,
             "reset": resetHistory,
             "callWithVectorStore": useFileSearch,
@@ -280,7 +292,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
             "thread_id": threadId,
             "chat_history": (resetHistory ? [] : chatHistory)
         }
-
+        console.log("submitMessage: " + JSON.stringify(body));
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
@@ -303,26 +315,23 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                     setChatHistory(data.chat_history)
                     setReenterInto(data.reenter_into);
                     setResetHistory(false);
-                    setClosedQuestionAnswers([]);
                 } else {
                     // Error 500 or other
                     answer = [{ content: "Status http " + data.status + ": " + data.message + "\n" + data.error }]
                 }
-                if (text) {
-                    setTimeout(() => {
-                        const transformedAnswer = answer.map((a) => ({ text: a.content, className: a.style_class, time: undefined, isBot: true, }));
-                        setMessages([
-                            ...messages,
-                            { text, isBot: false }, ...transformedAnswer,
-                            { questions: closedQuestions, isBot: true, closedQuestions: true }
-                        ]);
-                    }, 500);
-                }
+                setTimeout(() => {
+                    const transformedAnswer = answer.map((a) => ({ text: a.content, className: a.style_class, time: undefined, isBot: true, }));
+                    setMessages([
+                        ...messages,
+                        message, ...transformedAnswer,
+                        { questions: closedQuestions, isBot: true, closedQuestions: true }
+                    ]);
+                }, 500);
             })
             .catch(error => {
                 console.error('error', error)
                 setTimeout(() => {
-                    setMessages([...messages, { text, isBot: false }, { text: t("app.err.handlingYourRequest"), isBot: true }])
+                    setMessages([...messages, message, { text: t("app.err.handlingYourRequest"), isBot: true }])
                 }, 2500)
             })
     };
@@ -334,17 +343,13 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                 "input": answer.input
             }
         });
-        setClosedQuestionAnswers(list);
-
-        let i = 0;
-        informUser("**Your answers have been submitted** \n" +
-            answers.map((answer) => ("- " + answer.key_name + ": `" + answer.input + "`")).join("\n"));
+        submitMessage("closedAnswers", list);
     }
 
     const handleSend = async () => {
         // Handle send button click
         if (input) {
-            await submitMessage();
+            await submitMessage("user");
         }
     };
 
