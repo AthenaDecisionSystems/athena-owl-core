@@ -342,7 +342,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                     newMessages.push({ questions: closedQuestions, isBot: true, closedQuestions: true });
                     console.log("submitMessage: closedQuestions=" + JSON.stringify(closedQuestions));
                 }
-                setTimeout(() => { setMessages(newMessages); }, 500);
+                setTimeout(() => { setMessages([...messages, ...newMessages]); }, 500);
             })
             .catch(error => {
                 console.error('error', error)
