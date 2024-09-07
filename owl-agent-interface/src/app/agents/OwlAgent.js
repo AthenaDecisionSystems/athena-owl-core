@@ -237,6 +237,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
 
     useEffect(() => {
         // Scroll to the end of messages when messages change
+        console.log("Scroll to the end of messages", messages);
         msgEnd.current.scrollIntoView();
     }, [messages]);
 
@@ -282,19 +283,16 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
         // type=user: Submit user message to the server
         // type=closedAnswers: Submit closed questions answers to the server
         let text = "";
-        let message = {};
         if (type === "user") {
             text = input.trim();
             setInput("");
             setLastMessage(text);
-            message = { text, isBot: false };
         } else {
             console.log("submitMessage: closedAnswers=" + JSON.stringify(closedQuestionAnswers));
-            message = {
-                text: "**Here are the answers:**\n" +
-                    closedQuestionAnswers.map((answer) => ("- " + localizedLabel(answer.key_name) + " `" + answer.input + "`")).join("\n"), isBot: false
-            };
+            text = "**Here are the answers:**\n" +
+                closedQuestionAnswers.map((answer) => ("- " + localizedLabel(answer.key_name) + " `" + answer.input + "`")).join("\n");
         }
+        const message = { text: text, isBot: false };
         setMessages([...messages, message]);
         setTimeout(() => { setMessages([...messages, message, { text: "...", isBot: true }]) }, 400);
 
@@ -337,14 +335,14 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                     // Error 500 or other
                     answer = [{ content: "Status http " + data.status + ": " + data.message + "\n" + data.error }]
                 }
-                setTimeout(() => {
-                    const transformedAnswer = answer.map((a) => ({ text: a.content, className: a.style_class, time: undefined, isBot: true, }));
-                    setMessages([
-                        ...messages,
-                        message, ...transformedAnswer,
-                        { questions: closedQuestions, isBot: true, closedQuestions: true }
-                    ]);
-                }, 500);
+
+                const transformedAnswer = answer.map((a) => ({ text: a.content, className: a.style_class, time: undefined, isBot: true, }));
+                let newMessages = [message, ...transformedAnswer];
+                if (closedQuestions.length > 0) {
+                    newMessages.push({ questions: closedQuestions, isBot: true, closedQuestions: true });
+                    console.log("submitMessage: closedQuestions=" + JSON.stringify(closedQuestions));
+                }
+                setTimeout(() => { setMessages(newMessages); }, 500);
             })
             .catch(error => {
                 console.error('error', error)
@@ -378,7 +376,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
 
     const handleChangeInput = (e) => {
         //const value = e.target.value;
-        if (e.target.value.trim() === "demo") {
+        if (e.target.value.trim() === "demo" && window?._env_?.REACT_APP_DEMO_TEXT) {
             e.target.value = window._env_.REACT_APP_DEMO_TEXT;
         } else {
             if (e.target.value.trim() === "cqdemo") {
@@ -428,7 +426,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                         {message.isBot ?
                             <ChatBot className="chat-icon" /> :
                             <UserAvatar className="chat-icon" />}
-                        {message.closedQuestions ? <div className="closed-questions">
+                        {(message.closedQuestions && message.questions.length > 0) ? <div className="closed-questions">
                             <ClosedQuestions lastMessage={i === messages.length - 1} questions={message.questions} feedback={sendClosedAnswers} />
                         </div> :
                             message.text === "Clear" ?
@@ -441,13 +439,13 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                                 message.text === "..." ?
                                     <div className="waiting-for-response"><img src={loadingImage.src} alt="Loading..." /> </div> :
                                     <div>
-                                        <ReactMarkdown>{message.text}</ReactMarkdown>
-                                        {/*message.text.split('\n').map((line, j) =>
+                                        {/*<ReactMarkdown>{message.text}</ReactMarkdown>*/}
+                                        {message?.text?.split('\n').map((line, j) =>
                                             line === "" ? <br key={j} /> :
                                                 <div key={j}>
                                                     <ReactMarkdown>{line}</ReactMarkdown>
                                                 </div>
-                                        )*/}
+                                        )}
                                         {message.time && <div>
                                             <br />
                                             <div className="response-time">{"Response in " + message.time + "s"}</div>
@@ -458,7 +456,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                 <div ref={msgEnd} />
             </div>
             <hr className="horizontal-line" onDoubleClick={restoreTextInputHeight} />
-            <div className="owl-agent-input" style={{ visibility: messages[messages.length - 1].closedQuestions === undefined ? "visible" : "hidden" }}>
+            <div className="owl-agent-input" style={{ visibility: messages[messages.length - 1].closedQuestions ? "hidden" : "visible" }}>
                 <TextArea ref={inputRef}
                     placeholder="Enter your message here"
                     value={input}
