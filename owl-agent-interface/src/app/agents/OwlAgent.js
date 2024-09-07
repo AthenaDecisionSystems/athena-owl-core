@@ -326,7 +326,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
 
                 if (data.status === 200) {
                     answer = data.messages;
-                    closedQuestions = data.closed_questions;
+                    closedQuestions = data.closed_questions || [];
 
                     // setChatHistory([...chatHistory, { "role": "human", "content": text }, { "role": "AI", "content": answer }]);
                     setThreadId(data.thread_id)
