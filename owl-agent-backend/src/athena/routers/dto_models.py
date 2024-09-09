@@ -97,8 +97,6 @@ class ResponseControl(BaseModel):
     messages: Optional[List[StyledMessage]] = None
     closed_questions: Optional[List[OwlClosedQuestionEntity]] = None    
     reenter_into: Optional[str] = None
-    #type is not needed anymore
-    #type: ConversationModeEnum = ConversationModeEnum.open_question
 
     status: int = 200
   

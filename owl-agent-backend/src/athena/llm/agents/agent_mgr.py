@@ -125,7 +125,6 @@ class OwlAgentDefaultRunner(object):
         lg_chat_history = self._transform_chat_history(controller.chat_history)
         if controller.query is None or len(controller.query) == 0:
             resp=self.process_close_answer(controller)
-            # TO DO assess what to do next
         else:
             request = { "input": [controller.query], "chat_history" : lg_chat_history }
             agent_resp= self.invoke(request, controller.thread_id)   # AIMessage
