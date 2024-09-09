@@ -218,7 +218,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
     const [userId, setUserId] = useState("");
 
     const [lastMessage, setLastMessage] = useState("");
-    const [messages, setMessages] = useState([{ text: t("app.msg.welcome"), isBot: true },]);
+    const [messages, setMessages] = useState([]);
     const [chatHistory, setChatHistory] = useState([]);
 
     const inputRef = useRef(null);
@@ -333,7 +333,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                     setResetHistory(false);
                 } else {
                     // Error 500 or other
-                    answer = [{ content: "Status http " + data.status + ": " + data.message + "\n" + data.error }]
+                    answer = [{ content: "Status http " + data.status + ": " + data.message + "\n" + data.error, style_class: "chat-msg-error" }];
                 }
 
                 const transformedAnswer = answer.map((a) => ({ text: a.content, className: a.style_class, time: undefined, isBot: true, }));
@@ -347,7 +347,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
             .catch(error => {
                 console.error('error', error)
                 setTimeout(() => {
-                    setMessages([...messages, message, { text: t("app.err.handlingYourRequest"), isBot: true }])
+                    setMessages([...messages, message, { text: t("app.err.handlingYourRequest"), className: "chat-msg-error", isBot: true }])
                 }, 2500)
             })
     };
@@ -438,25 +438,26 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                                 </div> :
                                 message.text === "..." ?
                                     <div className="waiting-for-response"><img src={loadingImage.src} alt="Loading..." /> </div> :
-                                    <div>
-                                        {/*<ReactMarkdown>{message.text}</ReactMarkdown>*/}
-                                        {message?.text?.split('\n').map((line, j) =>
-                                            line === "" ? <br key={j} /> :
-                                                <div key={j}>
-                                                    <ReactMarkdown>{line}</ReactMarkdown>
-                                                </div>
-                                        )}
-                                        {message.time && <div>
-                                            <br />
-                                            <div className="response-time">{"Response in " + message.time + "s"}</div>
+                                    message.className && message.className !== "" ?
+                                        <div className={message.className}>{message.text}</div> :
+                                        <div>
+                                            {message.text.split('\n').map((line, j) =>
+                                                line === "" ? <br key={j} /> :
+                                                    <div key={j}>
+                                                        <ReactMarkdown>{line}</ReactMarkdown>
+                                                    </div>
+                                            )}
+                                            {message.time && <div>
+                                                <br />
+                                                <div className="response-time">{"Response in " + message.time + "s"}</div>
+                                            </div>}
                                         </div>}
-                                    </div>}
                     </div>
                 )}
                 <div ref={msgEnd} />
             </div>
             <hr className="horizontal-line" onDoubleClick={restoreTextInputHeight} />
-            <div className="owl-agent-input" style={{ visibility: messages[messages.length - 1].closedQuestions ? "hidden" : "visible" }}>
+            <div className="owl-agent-input" style={{ visibility: messages[messages.length - 1]?.closedQuestions ? "hidden" : "visible" }}>
                 <TextArea ref={inputRef}
                     placeholder="Enter your message here"
                     value={input}

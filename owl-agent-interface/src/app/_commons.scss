@@ -206,6 +206,50 @@
     font-weight: bold;
 }
 
+.chat-msg-green {
+    background: greenyellow;
+    color: $black;
+    display: flex;
+    align-items: flex-start;
+    text-align: justify;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 0.3rem;
+}
+
+.chat-msg-red {
+    background: orangered;
+    color: $white;
+    display: flex;
+    align-items: flex-start;
+    text-align: justify;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 0.3rem;
+}
+
+.chat-msg-amber {
+    background: orange;
+    color: $white;
+    display: flex;
+    align-items: flex-start;
+    text-align: justify;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 0.3rem;
+}
+
+.chat-msg-error {
+    background: $red-60;
+    color: $white;
+    display: flex;
+    align-items: flex-start;
+    text-align: justify;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    padding: 0.3rem;
+}
+
 .waiting-for-response>img {
     height: 2rem;
 }
