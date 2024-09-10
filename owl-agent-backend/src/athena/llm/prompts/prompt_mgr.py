@@ -2,12 +2,12 @@
 Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
 """
-from athena.glossary.glossary_mgr import CURRENT_LOCALE, DEFAULT_LOCALE
+from athena.glossary.glossary_mgr import CURRENT_LOCALE
 import json, yaml, uuid
 from athena.app_settings import get_config
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from functools import lru_cache
-from pydantic import BaseModel, RootModel
+from pydantic import BaseModel
 from typing import List, Optional
 
 """
@@ -152,7 +152,7 @@ def get_prompt_manager() -> Prompts:
     if _instance is None:
         path = get_config().owl_prompts_path
         if path is None:
-            path="./athena/config/prompts.json"
+            path="./athena/config/prompts.yaml"
         _instance = Prompts()
         _instance.load_prompts(path)
     return _instance
