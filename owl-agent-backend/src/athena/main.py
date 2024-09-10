@@ -42,5 +42,5 @@ def alive() -> dict[str,str]:
     return {"Status": "Alive"}
 
 @app.get(get_config().api_route + "/version", tags=["Server Info"])
-def version():
+def version() -> dict[str,str]:
     return {"Version": get_config().version}

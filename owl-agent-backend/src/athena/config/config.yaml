@@ -1,14 +1,11 @@
 logging_level: DEBUG
-version: v0.0.2
+version: v0.0.5
 owl_env_path: ../.env
 app_index_path: /app/athena/routers/index.html
 owl_glossary_path: /app/athena/config/glossary.json
-owl_prompts_path: /app/athena/config/prompts.yaml
-
 owl_agents_path: /app/athena/config/agents.yaml
 owl_tools_path: /app/athena/config/tools.yaml
-
-owl_prompts_key_name: openai_insurance_with_tool
+owl_prompts_path: /app/athena/config/prompts.yaml
 owl_agent_content_collection_name: base_collection
 owl_agent_content_file_path: /app/file_content
 owl_agent_vs_path: /app/chromadb

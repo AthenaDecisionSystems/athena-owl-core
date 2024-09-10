@@ -99,8 +99,7 @@ async def websocket_endpoint(websocket: WebSocket) -> NoReturn:
 
 
 # Test the core app without external UI
-with open(get_config().app_index_path) as f:
-    html = f.read()
+
 
 @router.get("/", tags=["Test Only"])
 async def web_app() -> HTMLResponse:

@@ -12,49 +12,49 @@ Here is a how they are related:
 
 ![Core OwlAgent Framework Concepts](./diagrams/design/owl_entities.drawio.png){ width=900 }
 
-An _agent_ is an interactive application or solution that supports a specific business use case, like helping a worker perform a specific task of a business process.  The execution of the agent involves the coordination of one or more LLMs.  agents may be stateful to preserve the state of a conversation with the user using snapshot capabilities.
+An _agent_ is an interactive application or solution that supports a specific business use case, like helping a worker performing a specific task of a business process.  The execution of the agent involves the coordination of one or more LLMs.  Agents may be stateful to preserve the state of a conversation using snapshot capabilities.
 
-An _Agent_ manages a co-ordinated set of calls to a Large Language Model or fine tuned smaller Language Models, each with a prompt and tools, to accomplish a subtask. A _retriever_ is a tool that can access a document or collection of documents in a vector store. So implementing RAG in the OwlAgent Framework means using a retriever tool inside an agent.
+An _Agent_ manages a co-ordinated set of calls to a Large Language Model,  with a prompt and tools, to accomplish a subtask. A _retriever_ is a tool that can access a document or collection of documents in a vector store. So implementing RAG in the OwlAgent Framework means using a retriever tool inside an agent.
 
 ## Code organization
 
-To find the code for the back-end, first fork the OwlAgent Framework core repository:
+To find the code for the back-end, first clone the OwlAgent Framework core repository:
 
 ```sh
-> git fork AthenaDecisionSystems/owl-agent-core
+git clone AthenaDecisionSystems/owl-agent-core
 ```
 
 Then look in the `athena-owl-core/owl-agent-backend` directory:
 
 ```sh
-> cd athena-owl-core/owl-agent-backend
+cd athena-owl-core/owl-agent-backend
 ```
 
-The code for the backend is in the `src` folder, while unit tests and integration tests are under `tests/ut/` and `tests/it`.
+The code for the backend is in the `src` folder, while unit tests and integration tests are under `tests/ut/` and `tests/it` respectivily.
 
-The backend runs as a server that can support multiple agents simultaneously.   The backend is typically run in a Docker container and then accessed as a set of REST API's, and is implemented using [FastAPI](https://fastapi.tiangolo.com/).   It is implemented in Python; we recommend using Python 3.12 for development.
+The backend runs as a server that can support multiple agents simultaneously. The backend is typically run in a Docker container and then accessed as a set of REST APIs. It is implemented using [FastAPI](https://fastapi.tiangolo.com/). We recommend using Python 3.12 for development.
 
-The main entry point for the owl-backend is found in the Python file [athena.main.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/main.py) which is the core of the FastAPI server.   Other files implement different endpoints and APIs that the backend server exposes; each one is considered a different component implementing a different set of related features of the backend.
+The main entry point for the owl-backend is found in the Python file [athena.main.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/main.py) which is the core of the FastAPI server.   Other files implement different endpoint APIs that the backend server exposes; each one is considered a different component implementing a different set of related features of the backend.
 
 The backend can run in the uvicorn or ugnicorn server (the defaults for FastAPI). It exposes two set of APIs:
 
 * `/api/v1/c/` for managing conversations with the user, typically exposed in a chatbot user interface.  (The OwlAgent Framework frontend server is the default user interface but others can be developed by calling these API's directly.)
-* `/api/v1/a/` for administration tasks, such as managing the different OWL entities of the frameworks: agents, prompts, tools, vector stores, and so on.
+* `/api/v1/a/` for administration tasks, such as managing the different OWL entities of the frameworks: agents, prompts, or tools.
 
 The `src` folder includes the Dockerfile to build the image, the `requirements.txt` for specifying Python module dependencies and a `start_backend.sh` script to enable local development tests. Unit and integration test are done using `pytest` and unittest modules. Code testing can be debugged in the VSCode IDE.
 
 Before starting work on the backend, it's important to set up your own Python virtual environment.   Make sure you have [Python 3.12](https://www.python.org/downloads/) installed and available as the command `python`, as well as `pip`.
 
 ```sh
-> cd athena-owl-core/owl-agent-backend/src
-> python -m venv venv # you can choose your own name of course
-> source venv/bin/activate # on Windows type 'venv\Scripts\activate'
-> pip install -r requirements.txt
+python -m venv venv # you can choose your own name of course
+source venv/bin/activate # on Windows type 'venv\Scripts\activate'
+cd athena-owl-core/owl-agent-backend/src
+pip install -r requirements.txt
 ```
 
 ## Important components
 
-The [architecture document presents the components](arch.md/#component-view). Each components has its APIs implemented with service /repository code, and then LLM-specific facade code as needed.
+The [architecture document presents the components](arch.md/#component-view). Each component has its APIs implemented with service /repository code, and then LLM-specific facade code as needed.
 
 ### Conversation
 
@@ -70,7 +70,7 @@ When an agent is not in memory, the factory delegates the creation of the agent 
 
 `Conversation` uses a `ConversationControl` bean class to describe its state and parameters. The definitions of these classes are in a DTO (Data Transfer Object) model so it can be easily shared with other apps.
 
-If in the user interface the end user selects another agent for their interactions, a new conversation should be started. When an agent has a stateful implementation, such as LangGraph, then the conversation will be saved as part of the memory management of LangGraph using the thread's unique identifier.
+If in the user interface, the end user selects another agent for their interactions, a new conversation should be started. When an agent has a stateful implementation, such as LangGraph, then the conversation will be saved as part of the memory management of LangGraph using the thread's unique identifier.
 
 Here is an example of a simple query to the Anthropic Claude LLM using an agent that has Tavily search tool. The payload to the POST url is
 
@@ -78,111 +78,21 @@ Here is an example of a simple query to the Anthropic Claude LLM using an agent 
 {
  
   "query": "What does the Athena Decision Systems company do?",
-  "user_id": "jerome",
-  "agent_id": "base_tool_agent",
+  "user_id": "joel",
+  "agent_id": "base_tool_graph_agent",
   "thread_id": "1"
 }
 ```
 
-From a conversation interaction the sequence flow looks like in the following sequence diagram:
+From a conversation interaction, the sequence flow looks like in the following sequence diagram:
 
 ![Conversation Sequence](./diagrams/design/conv_seq_flow.drawio.png)
 
 The Agent Runners are instances created by factory classes using the parameters read in the appropriate agent definition.  These definitions are stored in yaml files as described below.
 
-### Assistants
-
-The assistant manager is in [llm/assistants](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend/src/athena/llm/assistants) folder.
-
-Assistant management has two parts: 1/ the management of the entity definitions with REST resources and a persistence repository, and 2/ the assistant instance which manages conversations:
-
-![Assistant class](./diagrams/assistant_mgr_class.drawio.png)
-
-#### Assistant Entity Management
-
-The assistant REST resource defines the FastAPI router (see code `routers/assistants.py`) and the CRUD verbs.
-
-![Assistant API](./images/assist_api.PNG)
-
-The REST resource and APIs are defined in [assistants.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/routers/assistants.py).
-
-```python
-router = APIRouter(prefix= get_config().api_route +"/a")
-
-@router.get( "/assistants/")
-def get_all_assistants() -> List[OwlAssistantEntity]:
-   all_assistants = get_assistant_manager().get_assistants()
-   ...
-```
-
-The code delegates to a [repository](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/e45d0aa1072b602fd875bb621c3cf1bec8d05a97/owl-agent-backend/src/athena/llm/assistants/assistant_mgr.py#L82). The current implementation uses a local file to persist assistant entity definitions. The entity is `OwlAssistantEntity` which maps the definition of the yaml below to the Python assistant object:
-
-```yaml
-base_openai_tool_assistant:
-  assistant_id: base_openai_tool_assistant
-  class_name: athena.llm.assistants.BaseAssistant.BaseAssistant
-  description: A default assistant that uses LLM using chain with tool calling
-  name: Base OpenAI tool assistant
-  agents: 
-    - openai_tool_chain
-```
-
-There is only one assistant manager per deployed OwlAgent Framework backend, so it implements the Singleton pattern.
-
-To access the an assistant manager, the test code uses the following approach:
-
-```python
-from athena.llm.assistants.assistant_mgr import get_assistant_manager
-mgr = get_assistant_manager()
-```
-
-#### Assistant Executor
-
-The assistant manager exposes a factory method to create an assistant executor using the `OwlAssistantEntity` information.
-
-```python
-def build_assistant(self, assistant_id : str, locale: str) -> OwlAssistant:
-```
-
-As of now a local glossary file is used to select between different versions of the system prompt instruction in different languages. We are assessing if this is needed: we may move to purely English based system prompt and add specific parameters to generate the answer in the user's locale. (Many LLMs are very good at translation for major languages!)
-
-See the validation unit test in [tests/ut/test_assistant_mg.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/tests/ut/test_assistant_mg.py) and the integration tests [tests/it/test_assistants_api.py](ttps://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/tests/it/test_assistants_api.py)
-
-The `llm/assistants` folder includes some pre-defined assistant implementations:
-
-| Assistant | Description |
-| --- | --- |
-| BaseAssistant | A default assistant to do simple LLM calls including tool calling. It uses one agent with a LangChain chain. |
-| Graph Assistant | A LangGraph flow with an agent with a single node to call a LLM |
-| Base Tool Graph Assistant | A LangGraph flow with an agent and tool nodes, like the ReAct pattern. |
-
-The configuration of assistants is found in the [config/assistants.yaml](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/config/assistants.yaml) file. Review the content of this file to see the most recent assistants.
-
-We can have multiple different assistant definitions for the same assistant implementation class. The parameters include the prompt, the tools, and the LLMs used.
-
-The [assistant_mgr](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/llm/assistants/assistant_mgr.py) module defines the [`OwlAssistantEntity`](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/e45d0aa1072b602fd875bb621c3cf1bec8d05a97/owl-agent-backend/src/athena/llm/assistants/assistant_mgr.py#L72-L80) class to keep Assistant declarative metadata and the [`OwlAssistant`](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/e45d0aa1072b602fd875bb621c3cf1bec8d05a97/owl-agent-backend/src/athena/llm/assistants/assistant_mgr.py#L17-L68) abstract class.
-
-![Assistant Class UML](./diagrams/design/assistants_diagram.drawio.png)
-
-The Assistant implementation is handled using either a Langchain chain or a LangGraph graph. Each assistant needs to implement the `invoke()` and streaming functions.
-
-```python
-def invoke(self, request, thread_id: str) -> dict[str, Any] | Any:
-        self.config = {"configurable": {"thread_id": thread_id}}
-        m = HumanMessage(content=request["input"])
-        resp = self.graph.invoke({"messages": [m]}, self.config)
-        return  resp["messages"][-1].content
-```
-
-You can approach new assistant development in a few ways:
-
-1. Use existing assistant code and agent code, but define new tools and prompts.
-1. Use existing agents and combine them in a LangGraph graph with tools and prompts using a new assistant implementation.
-1. Use existing assistant code, with new agent code for a new LLM, with a new prompt.
-
 ### Agents
 
-Following the same pattern as assistant management, agent management has one part to manage the OwlAgentEntity and another to support the conversation.
+Agent management has two parts: 1/ the management of the OwlAgent entity definitions with REST resources and a persistence repository, and 2/ the agent runner instance which manages conversations:
 
 ![Agent Class](./diagrams/agent_mgr_class.drawio.png)
 
@@ -194,10 +104,10 @@ The agent REST resource defines the FastAPI router (see code in `routers/agents.
 
 The REST resource and APIs are defined in [agents.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/routers/agents.py).
 
-The following code extract illustrates simple delegation to the agent manager:
+The following code illustrates simple delegation to the agent manager:
 
 ```python
-from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgentEntity
+from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgent
 
 router = APIRouter( prefix= get_config().api_route +"/a")
 
@@ -207,10 +117,10 @@ def get_agent_entity_by_id(id: str) -> OwlAgentEntity:
 
 ```
 
-The Agent manager is in [llm/agents](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend/src/athena/llm/agents) folder. The current implementation uses a local file to keep [OwlAgentEntity definitions](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/config/agents.yaml) . The agent id needs to be unique among the declaration of all agents.
+The Agent manager is in [llm/agents](https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/owl-agent-backend/src/athena/llm/agents) folder. The current implementation uses a local file to keep [OwlAgent definitions](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/config/agents.yaml) . The agent id needs to be unique among the declaration of all agents.
 
 ```python
-class OwlAgentEntity(BaseModel):
+class OwlAgent(BaseModel):
     agent_id: str 
     name: str 
     description: Optional[str]
@@ -226,16 +136,17 @@ class OwlAgentEntity(BaseModel):
 
 The name is purely for user interface display as is the description. The description should clearly state the intent of the agent for a human end user. An agent includes one system prompt (see the [prompt design below](./design.md/#prompts)). As of now the `modelClassName` must name a class from the LangChain chat API. The `modelName` is the specific LLM name to use. An agent can have 0 to many tools.
 
-Here is an example of an OwlAgentEntity definition:
+Here is an example of an OwlAgent definition:
 
 ```yaml
-open_ai_tool:
-  agent_id: open_ai_tool
+openai_tool_chain:
+  agent_id: openai_tool_chain
   name: open_ai_gpt35
-  description: openai based agent with prompt coming from langchain hub and tool
-  class_name: athena.llm.agents.tool_agent_openai.OpenAIToolAgent
-  modelName: gpt-3.5-turbo-0125
-  prompt_ref: hwchase17/openai-functions-agent
+  description: openai based agent with prompt coming from langchain hub  and tool
+  runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
+  modelName: gpt-3.5-turbo
+  modelClassName: langchain_openai.ChatOpenAI
+  prompt_ref: openai_functions_prompt
   temperature: 0
   top_k: 1
   top_p: 1
@@ -243,9 +154,9 @@ open_ai_tool:
   - tavily
 ```
 
-#### Agent Executor
+#### Agent Runner
 
-The agent manager exposes a factory method to create agent executor using the AgentEntity information.
+The agent manager exposes a factory method to create agent executor using the OwlAgent entity information. The LLM class is also define in the descriptor.
 
 The validation unit tests are in [tests/ut/test_agent_mg.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/tests/ut/test_agent_mg.py) and the integration tests  in [tests/it/test_agents_api.py](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/tests/it)
 
@@ -254,11 +165,19 @@ The `llm/agents` folder includes some pre-defined agents (new ones being added r
 | Agent | Description |
 | --- | --- |
 | fake_agent | To do unit testing without cost |
-| openai_chain |  openai based agent with simple prompt |
-| open_ai_tool | openai based agent with prompt coming from langchain hub  and tool |
-| mistral_large | Mistral Large LLM |
+| OwlAgentDefaultRunner | The default agent runnung using Langchain chain, and dynamic instantiation of the LLM class | 
+| base_graph_agent |   A default agent to do simple LLM calls including tool calling. It uses one agent with a LangChain chain. LLM is pluggable|
+| Base Tool Graph Agent | A LangGraph flow with an agent and tool nodes, like the ReAct pattern. |
 
 The configuration of the agents are in the [config/agents.yaml](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/config/agents.yaml) files
+
+
+You can approach new agent development in a few ways:
+
+1. Use existing agent code and define new tools and prompts.
+1. Use existing agents and combine them in a LangGraph graph with tools and prompts using a new agent implementation.
+1. Develop a new agent code for a new LLM, with a new prompt and tools.
+
 
 ### Tools
 
