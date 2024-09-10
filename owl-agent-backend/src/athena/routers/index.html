@@ -73,7 +73,7 @@
                             onKeyUp={e => {
                                 setLoading(false)
                                 if (e.key === "Enter") {
-                                    setConversation({"locale": "en", "query": question, "assistant_id":"base_openai_assistant", "user_id" : "it_tester", "thread_id": "1"})
+                                    setConversation({"locale": "en", "query": question, "agent_id":"base_openai_assistant", "user_id" : "it_tester", "thread_id": "1"})
                                     setResponse('')
                                     setLoading(true)
                                     WS.send(convControl);

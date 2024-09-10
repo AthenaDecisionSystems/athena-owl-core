@@ -20,7 +20,7 @@ class AppSettings(BaseSettings):
     owl_env_path: str = "../.env"
     owl_agent_decision_service_fct_name: str = "athena.itg.decisions.nba_ds_dummy.callDecisionService"
     owl_glossary_path: str = "/app/athena/config/glossary.json"
-    owl_prompts_path: str = "/app/athena/config/prompts.json"
+    owl_prompts_path: str = "/app/athena/config/prompts.yaml"
     owl_prompts_key_name: str = "default_prompt"
     owl_agents_path: str = "/app/athena/config/agents.yaml"
     owl_tools_path: str = "/app/athena/config/tools.yaml"

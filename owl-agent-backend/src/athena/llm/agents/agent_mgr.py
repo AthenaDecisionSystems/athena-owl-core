@@ -231,7 +231,7 @@ def get_agent_manager() -> AgentManager:
     if _instance is None:
         path = get_config().owl_agents_path
         if path is None:
-            path="./athena/config/agents.json"
+            path="./athena/config/agents.yaml"
         _instance = AgentManager()
         _instance.load_agents(path)
     return _instance
