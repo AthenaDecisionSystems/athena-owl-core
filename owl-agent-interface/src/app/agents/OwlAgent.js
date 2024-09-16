@@ -336,8 +336,21 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                     answer = [{ content: "Status http " + data.status + ": " + data.message + "\n" + data.error, style_class: "chat-msg-error" }];
                 }
 
-                const transformedAnswer = answer.map((a) => ({ text: a.content, className: a.style_class, time: undefined, isBot: true, }));
-                let newMessages = [message, ...transformedAnswer];
+                let newMessages = [];
+                if (answer.length > 1) {
+                    let content = "<div>";
+                    answer.forEach((a) => {
+                        if (a?.style_class !== "") {
+                            content += "<div class='" + a.style_class + "'>" + a.content + "</div>";
+                        } else {
+                            content += "<div>" + a.content + "</div>";
+                        }
+                    });
+                    content += "</div>";
+                    newMessages = [message, { text: content, type: "html", className: "", time: undefined, isBot: true }];
+                } else {
+                    newMessages = [message, { text: answer[0].content, className: answer[0].style_class, time: undefined, isBot: true, }];
+                }
                 if (closedQuestions.length > 0) {
                     newMessages.push({ questions: closedQuestions, isBot: true, closedQuestions: true });
                     console.log("submitMessage: closedQuestions=" + JSON.stringify(closedQuestions));
@@ -438,20 +451,22 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                                 </div> :
                                 message.text === "..." ?
                                     <div className="waiting-for-response"><img src={loadingImage.src} alt="Loading..." /> </div> :
-                                    message.className && message.className !== "" ?
-                                        <div className={message.className}>{message.text}</div> :
-                                        <div>
-                                            {message.text.split('\n').map((line, j) =>
-                                                line === "" ? <br key={j} /> :
-                                                    <div key={j}>
-                                                        <ReactMarkdown>{line}</ReactMarkdown>
-                                                    </div>
-                                            )}
-                                            {message.time && <div>
-                                                <br />
-                                                <div className="response-time">{"Response in " + message.time + "s"}</div>
+                                    message.type === "html" ?
+                                        <div dangerouslySetInnerHTML={{ __html: message.text }} /> :
+                                        message.className && message.className !== "" ?
+                                            <div className={message.className}>{message.text}</div> :
+                                            <div>
+                                                {message.text.split('\n').map((line, j) =>
+                                                    line === "" ? <br key={j} /> :
+                                                        <div key={j}>
+                                                            <ReactMarkdown>{line}</ReactMarkdown>
+                                                        </div>
+                                                )}
+                                                {message.time && <div>
+                                                    <br />
+                                                    <div className="response-time">{"Response in " + message.time + "s"}</div>
+                                                </div>}
                                             </div>}
-                                        </div>}
                     </div>
                 )}
                 <div ref={msgEnd} />
