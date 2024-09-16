@@ -23,3 +23,17 @@ create_ns:
 
 create_secret_from_env:
 	@kubectl create  secret generic env  --from-env-file=../local/.env -n $(DEV_NS)
+
+deploy_owl_backend:
+	@helm install -name owl-backend owl-backend -n $(DEV_NS)
+
+deploy_decision_svc:
+	@helm install -name decision-svc decision-svc -n $(DEV_NS)
+
+deploy_owl_frontend:
+	@helm install -name owl-frontend owl-frontend -n $(DEV_NS)
+
+clean:
+	@helm delete owl-frontend 
+	@helm delete owl-backend 
+	@helm delete decision-svc 

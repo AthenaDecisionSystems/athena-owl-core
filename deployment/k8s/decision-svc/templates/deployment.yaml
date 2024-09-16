@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "owl-frontend.fullname" . }}
+  name: {{ include "decision-svc.fullname" . }}
   labels:
-    {{- include "owl-frontend.labels" . | nindent 4 }}
+    {{- include "decision-svc.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "owl-frontend.selectorLabels" . | nindent 6 }}
+      {{- include "decision-svc.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "owl-frontend.labels" . | nindent 8 }}
+        {{- include "decision-svc.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -27,25 +27,26 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "owl-frontend.serviceAccountName" . }}
+      serviceAccountName: {{ include "decision-svc.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          env:
+          - name: LICENSE
+            value: accept
+          - name: SAMPLE
+            value: "true"
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          env:
-            - name: NEXT_PUBLIC_BACKEND_BASE_API
-              value: http://localhost:8000/api/v1/
-            - name: REACT_APP_DEMO_TEXT
-              value: '"My name is Sonya Smith, I have problem with my claim 2 for my water damage, my carpet is expensive, I m surprise of the current coverage, very disappointing?"'
-            - name: REACT_APP_OWL_AGENT_NAME
-              value: '"IBU Insurance Management Agent"'
           ports:
+            - name: https
+              containerPort: {{ .Values.service.https.port }}
+              protocol: TCP
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.service.http.port }}
               protocol: TCP
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}

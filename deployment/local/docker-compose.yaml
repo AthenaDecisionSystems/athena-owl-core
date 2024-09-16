@@ -12,12 +12,7 @@ services:
       #OPENAI_API_KEY: $OPENAI_API_KEY
     env_file:
       - .env
-    volumes:
-      - ../../ibu_backend/src/config:/app/config
-      - ../../.env:/app/.env
-      - ./data/file_content:/app/file_content
-      - ./data/chromadb:/app/chromadb
-      - ../../ibu_backend/src/ibu:/app/ibu
+ 
   owl-frontend:
     hostname: owl-frontend
     image: localhost:5002/athena-owl-frontend:1.0.0
