@@ -134,6 +134,7 @@
     overflow-y: hidden;
     padding-block-end: 0rem;
     height: 105%;
+    outline: none;
 }
 
 .owl-agent-chats {
@@ -214,7 +215,8 @@
     text-align: justify;
     margin-bottom: 0.5rem;
     border-radius: 0.5rem;
-    padding: 0.3rem;
+    padding: 0.4rem;
+    font-size: 1rem;
 }
 
 .chat-msg-red {
@@ -225,7 +227,8 @@
     text-align: justify;
     margin-bottom: 0.5rem;
     border-radius: 0.5rem;
-    padding: 0.3rem;
+    padding: 0.4rem;
+    font-size: 1rem;
 }
 
 .chat-msg-amber {
@@ -236,7 +239,8 @@
     text-align: justify;
     margin-bottom: 0.5rem;
     border-radius: 0.5rem;
-    padding: 0.3rem;
+    padding: 0.4rem;
+    font-size: 1rem;
 }
 
 .chat-msg-error {
@@ -248,6 +252,7 @@
     margin-bottom: 0.5rem;
     border-radius: 0.5rem;
     padding: 0.3rem;
+    font-size: 1rem;
 }
 
 .waiting-for-response>img {
