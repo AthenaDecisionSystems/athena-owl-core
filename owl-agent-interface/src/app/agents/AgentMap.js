@@ -88,7 +88,7 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
     return (
         <>
             {(owlAgent !== -1) && (
-                <OwlAgent backendBaseAPI={backendBaseAPI} agent={rows[owlAgent]} openState={openOwlAgent} setOpenState={setOpenOwlAgent} randomNumber={Math.random()} />
+                <OwlAgent backendBaseAPI={backendBaseAPI} agent={rows[owlAgent]} openState={openOwlAgent} setOpenState={setOpenOwlAgent} randomNumber={Math.random()} setError={setError} />
             )}
             {(editAgent !== -1) && (
                 <Agent backendBaseAPI={backendBaseAPI} mode="edit" agent={rows[editAgent]} agents={rows} prompts={prompts} runnerClassNames={runnerClassNames} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />

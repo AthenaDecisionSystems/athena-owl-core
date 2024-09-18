@@ -3,6 +3,13 @@
         "@copyright": "Copyright 2024, Athena Decision Systems",
         "@author": "Joel Milgram"
     },
+    "header": {
+        "lbl.configuration": "Configuration",
+        "alt.settings": "Settings",
+        "alt.user": "User",
+        "alt.notifications": "Notifications",
+        "lbl.language": "Language"
+    },
     "app": {
         "lbl.brand": "Claims Management Agent",
         "msg.welcome": "Welcome to the OwlAgent that combines Generative AI and IBM business rules.",

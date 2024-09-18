@@ -86,22 +86,22 @@ const OwlAgentHeader = () => {
           </SideNav>
 
           <HeaderGlobalBar>
-            <HeaderGlobalAction aria-label="Settings" tooltipAlignment="center" className="action-icons"
+            <HeaderGlobalAction aria-label={t("header.lbl.settings")} tooltipAlignment="center" className="action-icons"
               onClick={() => { setSettingsExpanded(!settingsExpanded); }}>
               <Settings size={20} />
             </HeaderGlobalAction>
-            <HeaderGlobalAction aria-label="Notifications" tooltipAlignment="center" className="action-icons" id="notifications-button">
+            <HeaderGlobalAction aria-label={t("header.lbl.notifications")} tooltipAlignment="center" className="action-icons" id="notifications-button">
               <Notification size={20} />
             </HeaderGlobalAction>
-            <HeaderGlobalAction aria-label="User Avatar" tooltipAlignment="center" className="action-icons" >
+            <HeaderGlobalAction aria-label={t("header.lbl.user")} tooltipAlignment="center" className="action-icons" >
               <UserAvatar size={20} />
             </HeaderGlobalAction>
           </HeaderGlobalBar>
 
           <HeaderPanel expanded={settingsExpanded}>
             <div className="header-panel-content">
-              <h3>{t('app.alt.configuration')}</h3>
-              <Dropdown id="language" titleText="Language" initialSelectedItem={languages.find((item) => (item.value === language))} label="Language" type="inline"
+              <h3>{t('header.alt.configuration')}</h3>
+              <Dropdown id="language" titleText={t("header.lbl.language")} initialSelectedItem={languages.find((item) => (item.value === language))} label={t("header.lbl.language")} type="inline"
                 items={languages}
                 itemToString={item => item ? item.text : ""}
                 onChange={(e) => { changeLanguage(e.selectedItem.value) }} />
