@@ -16,7 +16,6 @@ class TestToolManager(unittest.TestCase):
     def test_owl_tool_entity_definition(self):
         oae = OwlToolEntity()
         oae.tool_fct_name="hello"
-        assert oae.tool_id
         oae_json = oae.model_dump()
         more_oas= {}
         more_oas[oae.tool_id]=oae_json

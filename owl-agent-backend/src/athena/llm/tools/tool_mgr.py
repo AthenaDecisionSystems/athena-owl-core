@@ -1,7 +1,7 @@
 from typing import Any
 from functools import lru_cache
 from athena.app_settings import get_config
-import yaml
+import yaml, uuid
 from athena.llm.tools.tool_factory import ToolInstanceFactoryInterface, OwlToolEntity
 from langchain_community.tools.tavily_search import TavilySearchResults
 
@@ -22,6 +22,8 @@ class ToolManager():
                 self.TOOLS[oae.tool_id]=oae
     
     def save_tool(self, toolEntity: OwlToolEntity) -> str:
+        if toolEntity.tool_id is None or toolEntity.tool_id == "":
+            toolEntity.tool_id=str(uuid.uuid4())
         self.TOOLS[toolEntity.tool_id] = toolEntity
         return toolEntity.tool_id
     

@@ -7,12 +7,13 @@ from langchain.tools import StructuredTool
 class OwlToolEntity(BaseModel):
     """
     Delaration of a tool entity, read from yaml definition"""
-    tool_id: str = str(uuid.uuid4())
+    tool_id: str = ""
     tool_name: Optional[str] = ""
     tool_description: Optional[str] = ""
     tool_class_name: Optional[str] = ""
     tool_fct_name: Optional[str] = ""
     tool_arg_schema_class: Optional[str] = None
+    tags: list[str] = []
     
 class ToolInstanceFactoryInterface(object):
     """

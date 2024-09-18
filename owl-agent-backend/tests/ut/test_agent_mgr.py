@@ -61,14 +61,14 @@ class TestAgentsManager(unittest.TestCase):
         print("\n\n >>> test_get_agent_by_name\n")
         mgr=get_agent_manager()
         assert mgr
-        p=mgr.get_agent_by_name("open_ai_gpt35")
+        p=mgr.get_agent_by_name("OpenAI chain")
         assert p
-        assert "openai" in p.description
+        assert "OpenAI" in p.description
         
     def test_read_tool_list(self):
         print("\n\n >>> test_read_tool_list\n")
         mgr=get_agent_manager()
-        p=mgr.get_agent_by_name("claude-3-opus")
+        p=mgr.get_agent_by_name("Claude-3 Opus")
         assert type(p) == OwlAgent
         assert len(p.tools) == 0 
         print(p)

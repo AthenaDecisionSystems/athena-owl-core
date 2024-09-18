@@ -1,11 +1,11 @@
 openai_chain_agent:
   agent_id: openai_chain_agent
-  name: open_ai_gpt35
-  description: openai based agent with simple prompt 
+  name: OpenAI chain
+  description: OpenAI based agent with simple prompt 
   #class_name: athena.llm.agents.agent_openai.OpenAIAgent
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
   modelClassName: langchain_openai.ChatOpenAI
-  modelName: gpt-3.5-turbo
+  modelName: gpt-4o
   prompt_ref: default_prompt
   temperature: 0
   top_k: 1
@@ -13,10 +13,10 @@ openai_chain_agent:
 
 openai_tool_chain:
   agent_id: openai_tool_chain
-  name: open_ai_gpt35
+  name: OpenAI with tool chain
   description: openai based agent with prompt coming from langchain hub  and tool
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
-  modelName: gpt-3.5-turbo
+  modelName: gpt-4o
   modelClassName: langchain_openai.ChatOpenAI
   prompt_ref: openai_functions_prompt
   temperature: 0
@@ -27,11 +27,11 @@ openai_tool_chain:
 
 openai_graph_agent:
   agent_id: openai_graph_agent
-  name: "Base Graph Agent using openAI"
+  name: "Base Graph Agent using OpenAI"
   description: openai based agent using graph and simple prompt 
   runner_class_name: athena.llm.agents.base_graph_agent.BaseGraphAgent
   modelClassName: langchain_openai.ChatOpenAI
-  modelName: gpt-3.5-turbo
+  modelName: gpt-4o
   prompt_ref: default_prompt
   temperature: 0
   top_k: 1
@@ -39,11 +39,11 @@ openai_graph_agent:
 
 base_tool_graph_agent:
   agent_id: base_tool_graph_agent
-  name: "Base Graph Agent using tools"
+  name: "Base Graph OpenAI Agent using tools"
   runner_class_name: athena.llm.agents.base_tool_graph_agent.BaseToolGraphAgent
   modelClassName: langchain_openai.ChatOpenAI
   description: A default agent that uses LLM and search tool to do web search
-  modelName: gpt-3.5-turbo
+  modelName: gpt-4o
   prompt_ref: openai_functions_prompt
   temperature: 0
   top_k: 1
@@ -53,7 +53,7 @@ base_tool_graph_agent:
 
 anthropic_claude_3_base:
   agent_id: anthropic_claude_3_base
-  name: claude-3-opus
+  name: Claude-3 Opus
   description: Anthropic Claude 3 based agent with simple prompt 
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
   modelClassName: langchain_anthropic.ChatAnthropic
@@ -65,7 +65,7 @@ anthropic_claude_3_base:
 
 ollama_mistral:
   agent_id: ollama_mistral
-  name: "ollama mistral"
+  name: "Ollama Mistral"
   description: Mistral model running locally with Ollama
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
   modelName: mistral
@@ -77,7 +77,7 @@ ollama_mistral:
 
 mistral_large_agent:
   agent_id: mistral_large_agent
-  name: "mistral_large_agent"
+  name: "Mistral large agent"
   description: Mistral large model via Mistral API 
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
   modelName: mistral-large-latest
@@ -89,7 +89,7 @@ mistral_large_agent:
 
 fake_agent:
   agent_id: fake_agent
-  name: fake_agent
+  name: Fake Agent
   description: Fake agent for testing 
   runner_class_name: athena.llm.agents.fake_agent.FakeAgent
   modelName: not_needed
