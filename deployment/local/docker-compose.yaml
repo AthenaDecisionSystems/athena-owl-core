@@ -1,7 +1,7 @@
 services:
   owl-backend:
     hostname: owl-backend
-    image: localhost:5002/athena-owl-backend:1.0.0
+    image: athenadecisionsystems/athena-owl-backend:1.0.0
     container_name: owl-backend
     build:
       context: ../../owl-agent-backend/src
@@ -15,7 +15,7 @@ services:
  
   owl-frontend:
     hostname: owl-frontend
-    image: localhost:5002/athena-owl-frontend:1.0.0
+    image: athenadecisionsystems/athena-owl-frontend:1.0.0
     container_name: owl-frontend
     build:
       context: ../../owl-agent-interface/
