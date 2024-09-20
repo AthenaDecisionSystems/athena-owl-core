@@ -6,10 +6,9 @@ It has to implement the factory method to create the tools
 """
 from typing import Any, Optional
 from enum import Enum
-from pydantic.v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
-from athena.llm.tools.tool_factory import ToolInstanceFactoryInterface
-from athena.llm.tools.tool_mgr import OwlToolEntity
+from athena.llm.tools.tool_mgr import DefaultToolInstanceFactory
 
 
 # Demonstrate complex argument with enumerated value
@@ -37,14 +36,9 @@ def query_crm_backend(crmArgument: CrmArgument):
 
 
 
-class DemoToolInstanceFactory(ToolInstanceFactoryInterface):
+class DemoToolInstanceFactory(DefaultToolInstanceFactory):
     # use to map to function
     methods = { "query_crm_backend": query_crm_backend}
     arg_schemas = {"CrmArgument": CrmArgument}
     
-    def build_tool_instances(self, tool_entities: list[OwlToolEntity]) -> list[Any]:
-        """ From the list of tools to use build the function reference for LLM """
-        tool_list=[]
-        for tool_entity in tool_entities:
-            tool_list.append(self.define_tool( tool_entity.tool_description, tool_entity.tool_fct_name, tool_entity.tool_arg_schema_class))  # type: ignore
-        return tool_list
+

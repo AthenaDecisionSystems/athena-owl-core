@@ -10,7 +10,7 @@ This manager may instantiate an agent if not already created.
 It persists state of the conversation (not yet implemented)
 """
 from athena.routers.dto_models import ConversationControl, ResponseControl
-from athena.llm.agents.agent_mgr import OwlAgent, get_agent_manager, OwlAgentDefaultRunner
+from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgentDefaultRunner
 import logging
 import uuid
 

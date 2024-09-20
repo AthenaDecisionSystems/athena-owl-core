@@ -1,6 +1,6 @@
 .PHONY: create_ns
 # Setting global variables
-DEV_NS=owl
+DEV_NS=ibu
 
 # -------------------------------------------------------
 # Entry points
@@ -25,7 +25,10 @@ create_secret_from_env:
 	@kubectl create  secret generic env  --from-env-file=../local/.env -n $(DEV_NS)
 
 deploy_owl_backend:
-	@helm install -name owl-backend owl-backend -n $(DEV_NS)
+	@helm install owl-backend owl-backend -n $(DEV_NS)
+
+upgrade_owl_backend:
+	@helm upgrade owl-backend owl-backend -n $(DEV_NS)
 
 deploy_decision_svc:
 	@helm install -name decision-svc decision-svc -n $(DEV_NS)

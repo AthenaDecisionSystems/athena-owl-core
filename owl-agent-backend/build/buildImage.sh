@@ -22,3 +22,4 @@ else
 fi
 
 docker tag  ${IMAGE_NAME}:${TAG}   ${IMAGE_NAME}:latest
+docker tag  ${IMAGE_NAME}:${TAG}   rg.fr-par.scw.cloud/athena-demo/athena-owl-backend:${TAG}   

@@ -1,6 +1,5 @@
 from typing import Any
 from functools import lru_cache
-from athena.app_settings import get_config
 import yaml, uuid
 from pydantic import BaseModel
 from typing import Optional, Any
@@ -63,11 +62,10 @@ class ToolManager():
 _instance = None
 
 @lru_cache
-def get_tool_entity_manager() -> ToolManager:
+def get_tool_entity_manager(path) -> ToolManager:
     """ Factory to get access to unique instance of Tools manager"""
     global _instance
     if _instance is None:
-        path = get_config().owl_tools_path
         if path is None:
             path="./athena/config/tools.yaml"
         _instance = ToolManager()

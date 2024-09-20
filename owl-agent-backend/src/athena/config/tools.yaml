@@ -11,5 +11,6 @@ query_crm:
   tool_class_name: athena.llm.tools.demo_tools
   tool_description: "Call the customer relationship management (CRM) to get customer data."
   tool_fct_name: query_crm_backend
+  tool_arg_schema_class: CrmArgument
   tags:
     - internal_tool

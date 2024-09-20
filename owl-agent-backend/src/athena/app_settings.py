@@ -34,7 +34,7 @@ class AppSettings(BaseSettings):
     owl_agent_llm_history_length: int = 5
     owl_agent_llm_model: str = ""
     owl_agent_default_agent: str = "openai_chain_agent"
-    owl_agent_tool_factory_class: str = "athena.llm.tools.tool_mgr.BaseToolInstanceFactory"
+    owl_agent_tool_factory_class: str = "athena.llm.tools.tool_mgr.DefaultToolInstanceFactory"
 
     def get_tool_factory(self):
         module_path, class_name = self.owl_agent_tool_factory_class.rsplit('.',1)

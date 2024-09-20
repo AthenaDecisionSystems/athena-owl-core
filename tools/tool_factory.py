@@ -15,13 +15,12 @@ class OwlToolEntity(BaseModel):
     tool_arg_schema_class: Optional[str] = None
     tags: list[str] = []
     
-class ToolInstanceFactoryInterface(object):
+class DefaultToolInstanceFactory(object):
     """
     The extension of this factory needs to implement how to create tool instance,
-    defines the methods dictionary with method_name and method reference,
-    and the method aruments. arg_schemas is also a dict with the arguments, mostly has instance of a BaseModel
+    defines the method dictionary with method_name and method reference with the method aruments:
+    arg_schemas is also a dict with the arguments, mostly has instance of a BaseModel
    
-    
     Example:
     methods = { "query_crm_backend": query_crm_backend}
     arg_schemas = {"CrmArgument": CrmArgument}
@@ -57,4 +56,8 @@ class ToolInstanceFactoryInterface(object):
             )
         
     def build_tool_instances(self, tool_entities: list[OwlToolEntity]) -> list[Any]:
-        pass
+        """ From the list of tools to use build the function reference for LLM """
+        tool_list=[]
+        for tool_entity in tool_entities:
+            tool_list.append(self.define_tool( tool_entity.tool_description, tool_entity.tool_fct_name, tool_entity.tool_arg_schema_class))  # type: ignore
+        return tool_list

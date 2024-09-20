@@ -11,3 +11,4 @@ __pycache__/
 **/file_content/
 site/
 owl-demo-base/
+**/*.egg-info
