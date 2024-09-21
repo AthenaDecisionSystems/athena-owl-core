@@ -21,7 +21,7 @@ LOGGER = logging.getLogger(__name__)
 
 class AgentState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
-
+    input: Optional[HumanMessage]
 
 class BasicToolNode:
     """A node that runs the tools requested in the last AIMessage.
@@ -48,6 +48,7 @@ class BasicToolNode:
                     tool_call_id=tool_call["id"],
                 )
             )
+        print(outputs)
         return {"messages": outputs}
     
 class BaseToolGraphAgent(OwlAgentDefaultRunner):
@@ -71,16 +72,19 @@ class BaseToolGraphAgent(OwlAgentDefaultRunner):
     def call_llm(self, state: AgentState):
         """return the new state for the graph"""
         messages = state['messages']
-        #msg = state["input"]
+        msg = state["input"]
         LOGGER.debug(f"@@@ > call_chatbot in Base Graph Assistant: {messages}")
-        message = self.llm.invoke(messages)
-        return {'messages': [message]}
+        message = self.llm.invoke({"messages": messages})
+        return {'messages': [message], 'input': msg}
     
 
     def invoke(self, request, thread_id: str) -> dict[str, Any] | Any:
         self.config = {"configurable": {"thread_id": thread_id}}
         m=HumanMessage(content=request["input"])
-        resp= self.graph.invoke({"messages": [m]}, self.config)
+        msg=request["chat_history"]
+        msg.append(m)
+        print(f"messages: {msg}, input: {m}")
+        resp= self.graph.invoke({"messages": msg, "input": [m]}, self.config)
         return  resp["messages"][-1].content
          
     def get_state(self) -> StateSnapshot:

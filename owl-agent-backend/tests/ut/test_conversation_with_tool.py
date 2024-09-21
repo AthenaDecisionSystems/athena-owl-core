@@ -13,7 +13,7 @@ class TestConversationWithTool(unittest.TestCase):
     """
     Validate conversation with tool to get news from search
     """    
-    def test_conversation_with_chain_tool_agent(self):
+    def _test_conversation_with_chain_tool_agent(self):
         cc = ConversationControl()
         cc.agent_id="openai_tool_chain"
         cc.user_id="unit_test"
@@ -26,7 +26,7 @@ class TestConversationWithTool(unittest.TestCase):
         assert rep.messages
         print(f"agent --> {rep}")        
     
-    def _test_conversation_with_tool_graph_agent(self):
+    def test_conversation_with_tool_graph_agent(self):
         cc = ConversationControl()
         cc.agent_id="base_tool_graph_agent"
         cc.user_id="unit_test"
@@ -37,7 +37,7 @@ class TestConversationWithTool(unittest.TestCase):
         assert rep
         assert rep.chat_history
         assert rep.messages
-        print(f"agent --> {rep}")
+        print(f"agent --> {rep.chat_history}")
         
 if __name__ == '__main__':
     unittest.main()

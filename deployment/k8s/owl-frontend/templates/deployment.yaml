@@ -38,11 +38,20 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: NEXT_PUBLIC_BACKEND_BASE_API
-              value: http://localhost:8000/api/v1/
+              valueFrom:
+                configMapKeyRef:
+                  key: NEXT_PUBLIC_BACKEND_BASE_API
+                  name:  fe-config-cm
             - name: REACT_APP_DEMO_TEXT
-              value: '"My name is Sonya Smith, I have problem with my claim 2 for my water damage, my carpet is expensive, I m surprise of the current coverage, very disappointing?"'
+              valueFrom:
+                configMapKeyRef:
+                  key: REACT_APP_DEMO_TEXT
+                  name:  fe-config-cm
             - name: REACT_APP_OWL_AGENT_NAME
-              value: '"IBU Insurance Management Agent"'
+              valueFrom:
+                configMapKeyRef:
+                  key: REACT_APP_OWL_AGENT_NAME
+                  name:  fe-config-cm
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

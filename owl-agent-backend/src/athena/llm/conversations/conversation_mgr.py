@@ -31,10 +31,12 @@ def get_or_start_conversation(cc: ConversationControl) -> ResponseControl | None
     owl_agent: OwlAgentDefaultRunner = None
     if cc.thread_id is None or cc.thread_id == "":
         cc.thread_id = str(uuid.uuid4())
-    if not _ACTIVE_CONV or cc.thread_id not in _ACTIVE_CONV or  _ACTIVE_CONV[cc.thread_id] is None:
+        LOGGER.debug(f"@@@> thread= {cc.thread_id}")
+    if cc.thread_id not in _ACTIVE_CONV or  _ACTIVE_CONV[cc.thread_id] is None:
         # new conversation so let create an agent
         owl_agent = _get_new_owl_agent(cc.agent_id, cc.locale)
         _ACTIVE_CONV[cc.thread_id]= owl_agent
+        LOGGER.debug(f"@@@> agent to use= {owl_agent}")
     else:
         owl_agent = _ACTIVE_CONV[cc.thread_id]
         if owl_agent.agent_id != cc.agent_id:

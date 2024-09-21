@@ -1,4 +1,4 @@
-# [Athena OWL Core](https://athenadecisionsystems.github.io/athena-owl-core/)
+# [Athena OWL Core](https://athenadecisionsystems.github.io/athena-docs/)
 
 ## Introduction
 
@@ -24,16 +24,16 @@ The core OwlAgent framework interacts with key parts of the generative AI and de
 * Multiple business rule management systems (BRMS) for decision services (IBM ODM, DMOE, ADS + potentially others).
 * Multiple vector databases for RAG.
 
-The Athena OWL Core repository includes the generic code for OWL Assistant back end and front end. Solutions can range from simple mono-agent demonstrations (several are provided out-of-the-box) to complex multi-agent deployable implementations.
+The Athena OWL Core repository includes the generic code for OWL Agent back end and front end. Solutions can range from simple mono-agent demonstrations (several are provided out-of-the-box) to complex multi-agent deployable implementations.
 
-[Read the documentation](https://athenadecisionsystems.github.io/athena-owl-core/)
+[Read the documentation](https://athenadecisionsystems.github.io/athena-docs/)
 
-### High level requirements for an OwlAssistant
+### High level requirements for an OwlAgent
 
-An _OwlAssistant_ is an AI-based interactive assistant, sometimes called a chatbot.   For the purposes of the OwlAgent Framework, such an assistant needs the following capabilities:
+An _OwlAgent_ is an AI-based interactive agent, sometimes called a chatbot.   For the purposes of the OwlAgent Framework, such an agent needs the following capabilities:
 
-* [ ] Ability to access decision services by providing needed input parameters from a combination of chatbot context and enterprise data pulled from information systems, and by injecting the decision service output back to the LLM’s conversation context for output text generation.   This is the key capability that makes an OwlAssistant more than just a basic chatbot or document query service.
-* [ ] Ability to access information from corporate IT systems (typically databases or systems that host key corporate data such as CRM, Maximo, or ERP systems) - This lets the assistant make decisions in context by leveraging current data such as up-to-date customer information.
+* [ ] Ability to access decision services by providing needed input parameters from a combination of chatbot context and enterprise data pulled from information systems, and by injecting the decision service output back to the LLM’s conversation context for output text generation.   This is the key capability that makes an OwlAgent more than just a basic chatbot or document query service.
+* [ ] Ability to access information from corporate IT systems (typically databases or systems that host key corporate data such as CRM, Maximo, or ERP systems) - This lets the agent make decisions in context by leveraging current data such as up-to-date customer information.
 * [ ] Ability to leverage information found in corporate documents that help formulate responses or policy, on top of the formalized decisions made by decision services.   This can help provide context in decision explanations in addition to the explanations provided directly by the decision services.
 * [ ] Ability to host the chatbot in multiple environments, including public cloud, private cloud, or an enterprise data center.
 * [ ] Easily create tool calls for decision services in multiple BRMS (as well as calling optimization models or other symbolic reasoning systems).
@@ -43,9 +43,9 @@ An _OwlAssistant_ is an AI-based interactive assistant, sometimes called a chatb
 
 ## Code Overview
 
-The assistant itself is split into two parts:  The backend server which provides the REST APIs needed to manage assistant instances and conversations with them, and the frontend server which provides a default user experience for interacting with the backend.   Other servers such as a decision management server (BRMS server) and a vector data store for document access might also be running.   Typically, these individual services are deployed as Docker images and can be run together to make a full assistant using Docker compose or a Kubernetes cluster.
+The agent itself is split into two parts:  The backend server which provides the REST APIs needed to manage agent instances and conversations with them, and the frontend server which provides a default user experience for interacting with the backend.   Other servers such as a decision management server (BRMS server) and a vector data store for document access might also be running.   Typically, these individual services are deployed as Docker images and can be run together to make a full agent using Docker compose or a Kubernetes cluster.
 
-To make a new assistant, you use a declarative format in a YAML file to specify what makes the assistant unique:  The prompt, the tools it can call, the models and other services it uses.   This minimizes the amount of programming you need to do to make a new assistant, and makes it possible for several assistants to easily co-exist together in an environment.
+To make a new agent, you use a declarative format in a YAML file to specify what makes the agent unique:  The prompt, the tools it can call, the models and other services it uses.   This minimizes the amount of programming you need to do to make a new agent, and makes it possible for several agents to easily co-exist together in an environment.
 
 ### The Owl Backend
 
@@ -53,7 +53,7 @@ The OWL Backend is a runnable server. See [readme file](owl-agent-backend/README
 
 ### The Owl Frontend
 
-[Read this to run the OWL Frontend](owl-agent-frontend/README.md)  The front end is a default interactive chatbot UI suitable for demos and simple applications that use OwlAssistants.  It can be started here and it can be used with any demo backend that is running.
+[Read this to run the OWL Frontend](owl-agent-frontend/README.md)  The front end is a default interactive chatbot UI suitable for demos and simple applications that use Owlagents.  It can be started here and it can be used with any demo backend that is running.
 
 ## The journey to your demonstration
 
@@ -75,18 +75,6 @@ The [contributing guidelines are in this note.](./CONTRIBUTING.md)
 
 * [01/2024] Creation
 * [05/2024] Integration of LangChain
-* [06/2024] Supporting assistants, agents APIs
+* [06/2024] Supporting agents APIs
+* [09/2024] Supporting k8s deployment
 
-## Building this booklet locally
-
-The content of this repository is written with markdown files, packaged with [MkDocs](https://www.mkdocs.org/) and can be built into a book-readable format by MkDocs build processes.
-
-1. Install MkDocs locally following the [official documentation instructions](https://www.mkdocs.org/#installation).
-1. Install Material plugin for mkdocs:  `pip install -r requirements.txt`
-1. `mkdocs serve`
-1. Go to `http://127.0.0.1:8000/` in your browser.
-
-## Learn more about mkdocs
-
-* [Mkdocs](https://www.mkdocs.org/)
-* [Material for MkDocs](https://squidfunk.github.io/mkdocs-material)

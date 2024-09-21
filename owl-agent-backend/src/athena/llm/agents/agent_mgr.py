@@ -203,6 +203,8 @@ class AgentManager(object):
             OwlAgentInterface
         """
         agent_entity = self.get_agent_by_id(agent_id)
+        if not agent_entity:
+            raise Exception(f"no agent found with id {agent_id}")
         return self.build_agent_runner_from_entity(agent_entity,locale)
 
     def build_agent_runner_from_entity(self, agent_entity: OwlAgent, locale: str = "en") -> OwlAgentDefaultRunner | None:

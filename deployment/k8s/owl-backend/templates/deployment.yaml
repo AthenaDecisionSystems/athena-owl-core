@@ -38,7 +38,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: CONFIG_FILE
-              vqlue: /app/config/config.yaml
+              value: /app/config/config.yaml
             - name: ANTHROPIC_API_KEY
               valueFrom:
                 secretKeyRef:
