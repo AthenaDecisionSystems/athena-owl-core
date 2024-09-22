@@ -121,7 +121,13 @@ class OwlAgentDefaultRunner(object):
         return resp
     
     def send_conversation(self, controller: ConversationControl) -> ResponseControl | Any:
-        LOGGER.debug(f"\n@@@> query assistant {controller.query}")
+        """
+        Process the chat history, and then the query. If there is no query then there may be an
+        answer to a close question.
+        The request to the LLM will need the input and the chat_history
+        :return: the response with history and controlling object for the conversation 
+        """
+        LOGGER.debug(f"\n@@@> query to the agent is: {controller.query}")
         lg_chat_history = self._transform_chat_history(controller.chat_history)
         if controller.query is None or len(controller.query) == 0:
             resp=self.process_close_answer(controller)
@@ -145,7 +151,7 @@ class OwlAgentDefaultRunner(object):
         return self.prompt
     
     def invoke(self, request, thread_id: Optional[str], **kwargs) -> dict[str, Any] | Any:
-        return self.get_runnable().invoke(request)  # by default a chain agent does not use thread_id
+        return self.get_runnable().invoke(request)  # by default a chain agent does not use thread_id.
     
     def _instantiate_model(self,modelName, modelClass, temperature):
         module_path, class_name = modelClass.rsplit('.',1)

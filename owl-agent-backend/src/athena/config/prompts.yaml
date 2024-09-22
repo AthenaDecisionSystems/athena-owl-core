@@ -19,6 +19,15 @@ openai_functions_prompt:
       keeping conversation history: {chat_history}
       to answer the question: {input}
 
+graph_prompt:
+  name: A prompt for tool and graph
+  prompt_id: graph_prompt
+  locales:
+  - locale: en
+    text: |
+      you are a helpful assistant using tools by using {agent_scratchpad}. Do not invente the answer, try to use tool when appropriate.
+
+
 mistral_rag_prompt:
     name: Mistral Bank Query Classification
     prompt_id: mistral_rag_prompt

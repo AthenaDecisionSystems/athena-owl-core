@@ -43,3 +43,11 @@ openai_functions_prompt:
       you are a helpful assistant using tools when needed by using {agent_scratchpad}
       keeping conversation history: {chat_history}
       to answer the question: {input}
+
+graph_prompt:
+  name: A prompt for tool and graph
+  prompt_id: graph_prompt
+  locales:
+  - locale: en
+    text: |
+      you are a helpful assistant using tools by using {agent_scratchpad}. Do not invente the answer, try to use tool when appropriate.

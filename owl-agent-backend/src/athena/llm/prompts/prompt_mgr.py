@@ -97,8 +97,8 @@ class Prompts:
             return ChatPromptTemplate.from_messages([
                     ("system", text),
                     MessagesPlaceholder(variable_name="chat_history", optional=True),
-                    MessagesPlaceholder(variable_name="input", optional=True),
-                    #("human", "{input}"),
+                    #MessagesPlaceholder(variable_name="input", optional=True),
+                    ("human", "{input}"),
                     MessagesPlaceholder(variable_name="agent_scratchpad", optional=True),
                 ])
         

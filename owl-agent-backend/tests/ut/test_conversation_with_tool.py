@@ -13,7 +13,7 @@ class TestConversationWithTool(unittest.TestCase):
     """
     Validate conversation with tool to get news from search
     """    
-    def _test_conversation_with_chain_tool_agent(self):
+    def test_conversation_with_chain_tool_agent(self):
         cc = ConversationControl()
         cc.agent_id="openai_tool_chain"
         cc.user_id="unit_test"
