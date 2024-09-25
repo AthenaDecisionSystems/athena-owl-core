@@ -5,7 +5,7 @@ Copyright 2024 Athena Decision Systems
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from athena.routers import conversations, documents, prompts, agents, tools
-from athena.app_settings import get_config
+from athena.app_settings import get_config, config_reload
 from dotenv import load_dotenv
 import os
 from contextlib import asynccontextmanager
@@ -13,6 +13,7 @@ from contextlib import asynccontextmanager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # everything before yield is done before the app starts
+    print(f"Owl Agent Backend v {get_config().version} starting ")
     load_dotenv(dotenv_path=get_config().owl_env_path)
     yield
     # do something when app stop
@@ -44,3 +45,8 @@ def alive() -> dict[str,str]:
 @app.get(get_config().api_route + "/version", tags=["Server Info"])
 def version() -> dict[str,str]:
     return {"Version": get_config().version}
+
+
+@app.put(get_config().api_route + "/reload", tags=["Reload Config"])
+def reload() -> str:
+    return config_reload()

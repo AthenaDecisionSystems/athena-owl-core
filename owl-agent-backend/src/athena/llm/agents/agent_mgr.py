@@ -46,7 +46,7 @@ class OwlAgent(BaseModel):
     top_k: int = 1
     top_p: int = 1
     tools: list[str] = []
-
+    hidden_to_ui: bool = False
 
 
 class OwlAgentDefaultRunner(object):

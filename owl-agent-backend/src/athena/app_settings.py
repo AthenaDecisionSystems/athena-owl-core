@@ -71,4 +71,7 @@ def set_config(config):
     global _config
     _config = config
     
-    
+def config_reload():
+    _config = None
+    get_config()
+    return "Reload configuration done"

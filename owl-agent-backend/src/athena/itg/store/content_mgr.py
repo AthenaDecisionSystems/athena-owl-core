@@ -182,8 +182,8 @@ class ContentManager:
         return self.vdb
 
 
-    def search(self, query: str):
-        return self.get_vector_store().similarity_search(query, k=10)
+    def search(self, query: str, top_k: int):
+        return self.get_vector_store().similarity_search(query, k=top_k)
 
 
 def get_content_mgr() -> ContentManager:
