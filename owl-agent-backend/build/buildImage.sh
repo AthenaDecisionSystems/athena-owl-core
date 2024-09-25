@@ -1,15 +1,15 @@
 #!/bin/bash
 scriptDir=$(dirname $0)
 
-IMAGE_NAME=jbcodeforce/athena-owl-backend
-#IMAGE_NAME=athenadecisionsystems/athena-owl-backend
+#IMAGE_NAME=jbcodeforce/athena-owl-backend
+IMAGE_NAME=athenadecisionsystems/athena-owl-backend
 
 if [[ $# -eq 2 ]]
 then
   TAG=$1
   OS=$2
 else
-  TAG=latest
+  TAG=1.0.0
   OS=linux
 fi
 
@@ -22,3 +22,4 @@ else
 fi
 
 docker tag  ${IMAGE_NAME}:${TAG}   ${IMAGE_NAME}:latest
+docker tag  ${IMAGE_NAME}:${TAG}   rg.fr-par.scw.cloud/athena-demo/athena-owl-backend:${TAG}   

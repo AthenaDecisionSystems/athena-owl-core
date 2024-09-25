@@ -6,7 +6,7 @@ from typing import  Any
 from ibu.itg.ds.loanapp_borrower_repo_mock import LoanApplicationClientRepositoryInterface
 from ibu.itg.ds.pydantic_generated_model import Loan, Request
 from ibu.itg.decisions.next_best_action_ds_client import callRuleExecutionServer
-from athena.llm.tools.tool_factory import ToolInstanceFactoryInterface, OwlToolEntity
+from athena.llm.tools.tool_mgr import DefaultToolInstanceFactory
 from langchain_community.tools.tavily_search import TavilySearchResults
 
 logging.basicConfig(
@@ -62,25 +62,12 @@ def assess_loan_app_with_decision(loan_amount: int, duration: int,   first_name:
     return rep.text
 
     
-methods = { "get_client_by_name": get_client_by_name, 
+
+
+
+    
+class IbuLoanToolInstanceFactory(DefaultToolInstanceFactory):
+    methods = { "get_client_by_name": get_client_by_name, 
            "assess_loan_app_with_decision": assess_loan_app_with_decision}
-arg_schemas = { "Loan": Loan}
-
-
-    
-class IbuLoanToolInstanceFactory(ToolInstanceFactoryInterface):
-    
-    def build_tool_instances(self, tool_entities: list[OwlToolEntity]) -> list[Any]:
-        tool_list=[]
-        for tool_entity in tool_entities:
-            # TO DO rethink about this approach
-            if tool_entity.tool_id == "tavily":
-                tool_list.append(TavilySearchResults(max_results=2))
-            elif "client" in tool_entity.tool_id:
-                tool_list.append(self.define_tool( tool_entity.tool_description, tool_entity.tool_fct_name, tool_entity.tool_arg_schema_class)) # type: ignore
-            elif  tool_entity.tool_id == "ibu_loan_assessment_action":
-                tool_list.append(self.define_tool(tool_entity.tool_description, tool_entity.tool_fct_name, tool_entity.tool_arg_schema_class)) # type: ignore
-            else:
-                raise Exception("Not yet implemented")
-        return tool_list
+    arg_schemas = { "Loan": Loan}
     

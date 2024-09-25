@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fe-config-cm
+data:
+  NEXT_PUBLIC_BACKEND_BASE_API: http://owl-backend:8000/api/v1/
+  REACT_APP_DEMO_TEXT:  "My name is Sonya Smith, I have problem with my claim 2 for my water damage, my carpet is expensive, I m surprise of the current coverage, very disappointing?"
+  REACT_APP_OWL_AGENT_NAME: "OWL Management Agent"
+

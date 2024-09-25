@@ -44,4 +44,4 @@ def delete_tool_entity(id: str) -> str:
 
 @router.post("/tools/reset", tags=["Manage tools"])
 def reset_from_files():
-    return get_tool_entity_manager().load_tools(get_config().owl_tools_path)
+    return get_tool_entity_manager().load_tool_definitions(get_config().owl_tools_path)

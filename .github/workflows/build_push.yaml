@@ -1,0 +1,87 @@
+name: Build and Publish image to docker
+on:
+  push:
+    branches:
+      - main
+      
+    paths-ignore:
+      - 'docs/**'
+      - '.vscode/**'
+      - 'deployment/**'
+      - 'tools/**'
+      - 'owl-agent-frontend/**'
+jobs:
+  validate-docker-secrets:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Validate docker registry secrets are defined
+      id: validate-docker-secrets
+      run: |
+        echo "Validating docker registry secrets are defined on the repository"
+
+        FAIL=false
+
+        validate_secret(){
+          FIELD=$1
+          VALUE=$2
+
+          if [ -z "${VALUE}" ]; then
+            echo "The secret ${FIELD} needs to be set on this repository."
+            FAIL=true
+          else
+            echo "The secret ${FIELD} is set on this repository."
+          fi
+        }
+
+        validate_secret DOCKER_USER ${DOCKER_USER}
+        validate_secret DOCKER_HUB_TOKEN ${DOCKER_HUB_TOKEN}
+        validate_secret DOCKER_REGISTRY ${DOCKER_REGISTRY}
+        if [ "${FAIL}" = "true" ]; then
+          exit 1
+        fi
+      env:
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+        DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+  publish_images:
+    needs:
+      validate-docker-secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out this repo
+        uses: actions/checkout@v4
+      - name: build owl agent backend image
+        run: |
+          IMAGE_NAME="${DOCKER_REG}/${DOCKER_R}/${DOCKER_I}"
+          docker login -u ${DOCKER_U} -p ${DOCKER_P} ${DOCKER_REG}
+          if [ -z "$IMAGE_TAG" ]; then
+            IMAGE_TAG=latest
+          fi
+          docker build owl-agent-backend/src/ -t ${IMAGE_NAME}:${IMAGE_TAG}
+          docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
+          docker push ${IMAGE_NAME}:${IMAGE_TAG}
+        env:
+          DOCKER_U: ${{ secrets.DOCKER_USER }}
+          DOCKER_P: ${{ secrets.DOCKER_HUB_TOKEN }}
+          DOCKER_REG: ${{ secrets.DOCKER_REGISTRY }}
+          DOCKER_R: athenadecisionsystems
+          DOCKER_I: athena-owl-backend
+          IMAGE_TAG: 1.0.0
+      - name: build owl agent frontend image
+        run: |
+          IMAGE_NAME="${DOCKER_REG}/${DOCKER_R}/${DOCKER_I}"
+          docker login -u ${DOCKER_U} -p ${DOCKER_P} ${DOCKER_REG}
+          if [ -z "$IMAGE_TAG" ]; then
+            IMAGE_TAG=latest
+          fi
+          docker build owl-agent-interface/ -t ${IMAGE_NAME}:${IMAGE_TAG}
+          docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
+          docker push ${IMAGE_NAME}:${IMAGE_TAG}
+        env:
+          DOCKER_U: ${{ secrets.DOCKER_USER }}
+          DOCKER_P: ${{ secrets.DOCKER_HUB_TOKEN }}
+          DOCKER_REG: ${{ secrets.DOCKER_REGISTRY }}
+          DOCKER_R: athenadecisionsystems
+          DOCKER_I: athena-owl-frontend
+          IMAGE_TAG: 1.0.0
+

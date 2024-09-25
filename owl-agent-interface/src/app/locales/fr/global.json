@@ -3,6 +3,13 @@
         "@copyright": "Copyright 2024, Athena Decision Systems",
         "@author": "Joel Milgram"
     },
+    "header": {
+        "lbl.configuration": "Configuration",
+        "alt.settings": "Paramètres",
+        "alt.user": "Utilisateur",
+        "alt.notifications": "Notifications",
+        "lbl.language": "Langue"
+    },
     "app": {
         "lbl.brand": "Réclamations sur les sinistres",
         "msg.welcome": "Bienvenue sur l'assistant conversationnel OwlAgent qui combine l'IA générative et les règles métier (IBM ODM).",

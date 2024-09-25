@@ -137,6 +137,31 @@
     outline: none;
 }
 
+.owl-agent-control {
+    margin-left: 2rem;
+    margin-bottom: 0.5rem;
+    width: 80%;
+}
+
+.owl-agent-control>button {
+    outline: none;
+}
+
+.owl-agent-reset-chat {
+    margin-left: 1rem;
+    margin-bottom: 0.5rem;
+    height: 4rem;
+    width: 10%
+}
+
+.owl-agent-reset-chat-confirmation {
+    position: absolute;
+    right: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+}
+
 .owl-agent-chats {
     background: $cool-gray-10;
     overflow: hidden;
@@ -145,16 +170,6 @@
     width: 100%;
     height: 50vh;
     padding: 0.5rem;
-}
-
-.chat-system-message {
-    background: $cool-gray-10;
-    margin-right: 5rem;
-    display: flex;
-    align-items: flex-start;
-    text-align: justify;
-    width: fit-content;
-    margin-bottom: 0.5rem;
 }
 
 .chat-user-message {
@@ -176,29 +191,81 @@
     margin-right: 0.5rem;
 }
 
-.chat-system-message>div>div>p>strong {
-    font-weight: bold;
-    text-decoration: underline;
-}
+.chat-system-message {
+    background: $cool-gray-10;
+    margin-right: 5rem;
+    display: flex;
+    align-items: flex-start;
+    text-align: justify;
+    width: fit-content;
+    margin-bottom: 0.5rem;
 
-.chat-system-message>div>div>p>a {
-    color: $blue-80;
-}
+    >div>blockquote {
+        border-left: 4px solid $layer-accent-02;
+        padding-left: 1rem;
+        margin-left: 0;
+    }
 
-.chat-system-message>div>div>ul {
-    padding-left: 2rem;
-    list-style-type: disc;
-}
+    >div,
+    >div>blockquote {
+        >p>strong {
+            font-weight: bold;
+            text-decoration: underline;
+        }
 
-.chat-system-message>div>div>ol {
-    padding-left: 1rem;
-    list-style-type: decimal;
-    list-style-position: inside;
+        >p>a {
+            color: $blue-80;
+        }
+
+        >ul {
+            padding-left: 1rem;
+            list-style-position: inside;
+            list-style-type: disc;
+        }
+
+        >ol {
+            padding-left: 1rem;
+            list-style-position: inside;
+            list-style-type: decimal;
+        }
+
+        >ul>li,
+        >ol>li {
+            >ul {
+                padding-left: 1rem;
+                list-style-position: inside;
+                list-style-type: circle;
+            }
+
+            >ol {
+                padding-left: 1rem;
+                list-style-position: inside;
+                list-style-type: decimal;
+            }
+
+            >ul>li,
+            >ol>li {
+
+                >ul {
+                    padding-left: 1rem;
+                    list-style-position: inside;
+                    list-style-type: square;
+                }
+
+                >ol {
+                    padding-left: 1rem;
+                    list-style-position: inside;
+                    list-style-type: decimal;
+                }
+            }
+        }
+    }
 }
 
 .chat-user-message ul {
-    padding-left: 2rem;
+    padding-left: 1rem;
     list-style-type: disc;
+    list-style-position: inside;
 }
 
 .chat-user-message code {

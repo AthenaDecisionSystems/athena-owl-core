@@ -4,6 +4,8 @@ import { AiGovernancePrompt, WatsonxData } from '@carbon/pictograms-react';
 import { Octokit } from '@octokit/core';
 import { View } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
+import AgentModel from './AgentModel';
+import AgentTools from './AgentTools';
 
 const octokitClient = new Octokit({});
 
@@ -24,14 +26,6 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
     const [toolSelectedItems, setToolSelectedItems] = useState({ selectedItems: [] });
 
     const [dropdownItemsPromptRef, setDropdownItemsPromptRef] = useState([]);
-    const [dropdownItemsTools, setDropdownItemsTools] = useState([]);
-
-    const modelClassNames = [
-        { name: "Anthropic", value: "langchain_anthropic.ChatAnthropic", modelNames: ["claude-3-opus-20240229"] },
-        { name: "Mistral AI", value: "langchain_mistralai.chat_models.ChatMistralAI", modelNames: ["open-mixtral-8x7b", "mistral-large-latest"] },
-        { name: "Ollama", value: "langchain_community.chat_models.ChatOllama", modelNames: [] },
-        { name: "Open AI", value: "langchain_openai.ChatOpenAI", modelNames: ["gpt-3.5-turbo", "gpt-4-turbo", "gpt-4o"] },
-    ];
 
     const [open, setOpen] = useState(false);
 
@@ -56,32 +50,6 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
         }
         setEmpty(false)
     }, [agent]);
-
-    useEffect(() => {
-        // Preload tools
-        async function getTools() {
-            try {
-                const res = await octokitClient.request(`GET ${backendBaseAPI}a/tools`);
-                if (res.status === 200) {
-                    const items = res.data.map(tool => (tool.tool_id));
-                    setDropdownItemsTools(items);
-                } else {
-                    setError('Error obtaining tool data (' + res.status + ')');
-                    console.error('Error obtaining tool data ', res);
-                }
-            } catch (error) {
-                setError('Error obtaining tool data:' + error.message);
-                console.error('Error obtaining tool data:' + error);
-            }
-        }
-
-        setLoading(true);
-        try {
-            getTools();
-        } finally {
-            setLoading(false);
-        }
-    }, []);
 
     useEffect(() => {
         setLoading(true);
@@ -183,7 +151,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
             </p>
             <WatsonxData style={{ width: '5rem', height: 'auto', padding: "0.5rem" }} />
 
-            <TextInput data-modal-primary-focus id="text-input-1"
+            <TextInput data-modal-primary-focus id="text-agent-name"
                 labelText="Agent name"
                 placeholder="e.g. IBU new agent"
                 invalid={empty}
@@ -192,7 +160,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
                 onChange={checkAndBuildId} />
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
 
-            <TextArea id="text-area-1"
+            <TextArea id="text-agent-description"
                 labelText="Description"
                 value={agentDescription}
                 onChange={(e) => setAgentDescription(e.target.value)}
@@ -208,23 +176,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
             </Select>
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
 
-            <Select id="select-model-class-name"
-                value={agentModelClassName}
-                labelText="Model Class Name"
-                onChange={(e) => setAgentModelClassName(e.target.value)}>
-                <SelectItem value="" text="" />
-                {modelClassNames.map((modelClassName, i) => (<SelectItem key={i} value={modelClassName.value} text={modelClassName.name} />))}
-            </Select>
-            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
-
-            <Select id="select-model-name"
-                value={agentModelName}
-                labelText="Model Name"
-                onChange={(e) => setAgentModelName(e.target.value)}>
-                <SelectItem value="" text="" />
-                {modelClassNames.find((modelClassName) => (modelClassName.value === agentModelClassName)).modelNames.map((modelName, i) => (<SelectItem key={i} value={modelName} text={modelName} />))}
-            </Select>
-            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
+            <AgentModel agentModelClassName={agentModelClassName} setAgentModelClassName={setAgentModelClassName} agentModelName={agentModelName} setAgentModelName={setAgentModelName} />
 
             <NumberInput id="carbon-number-temperature"
                 value={agentTemperature}
@@ -299,17 +251,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
             </>)}
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '1rem' }} />
 
-            {loading && (<DropdownSkeleton />)}
-            {!loading && (<MultiSelect id="multi-select-tools"
-                key={toolSelectedItems.selectedItems.join(",")}
-                label="Tools"
-                titleText="Tools"
-                items={dropdownItemsTools}
-                initialSelectedItems={toolSelectedItems.selectedItems}
-                onChange={(selection) => setToolSelectedItems(selection)}
-                selectionFeedback="top-after-reopen" />)
-            }
-            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '3rem' }} />
+            <AgentTools backendBaseAPI={backendBaseAPI} toolSelectedItems={toolSelectedItems} setToolSelectedItems={setToolSelectedItems} setError={setError} />
         </Modal >
     )
 };

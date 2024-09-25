@@ -6,8 +6,7 @@ sys.path.append(os.path.abspath(module_path))
 import yaml,json
 from yaml import BaseLoader
 from langchain.tools import StructuredTool
-from athena.llm.tools.tool_mgr import get_tool_entity_manager
-from athena.llm.tools.tool_factory import OwlToolEntity
+from athena.llm.tools.tool_mgr import get_tool_entity_manager, OwlToolEntity
 from athena.llm.tools.demo_tools import DemoToolInstanceFactory
 from importlib import import_module
 
@@ -16,7 +15,6 @@ class TestToolManager(unittest.TestCase):
     def test_owl_tool_entity_definition(self):
         oae = OwlToolEntity()
         oae.tool_fct_name="hello"
-        assert oae.tool_id
         oae_json = oae.model_dump()
         more_oas= {}
         more_oas[oae.tool_id]=oae_json

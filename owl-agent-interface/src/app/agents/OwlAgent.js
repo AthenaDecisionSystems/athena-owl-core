@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { Modal, TextArea } from '@carbon/react';
+import { ActionableNotification, Button, Modal, TextArea } from '@carbon/react';
 import { QuestionAndAnswer } from '@carbon/pictograms-react';
 import { ChatBot, UserAvatar, Send } from "@carbon/react/icons";
 import loadingImage from "../assets/loading.gif";
 import { useTranslation } from 'react-i18next';
 import ClosedQuestions from './ClosedQuestions';
+import OwlAgentControl from './OwlAgentControl';
+import { useEnv } from '../providers';
 
 const closedQuestionsDemo = {
     questions: [{
@@ -203,15 +205,15 @@ const closedQuestionsDemoBool = {
 };
 
 
-const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber }) => {
+// --- OwlAgent ---
+const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber, setError }) => {
+    let env = useEnv();
     const { t, i18n } = useTranslation();
 
-    // Ref for scrolling to the end of messages
-    const msgEnd = useRef(null);
-
     // State variables
+    const [activeAgent, setActiveAgent] = useState(null);
     const [input, setInput] = useState("");
-    const [useFileSearch, setUseFileSearch] = useState(true); // eslint-disable-line
+    const [useFileSearch, setUseFileSearch] = useState(true);
     const [resetHistory, setResetHistory] = useState(false);
     const [reenterInto, setReenterInto] = useState("");
     const [threadId, setThreadId] = useState(null);
@@ -221,7 +223,10 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
     const [messages, setMessages] = useState([]);
     const [chatHistory, setChatHistory] = useState([]);
 
+    const [chatResetRequested, setChatResetRequested] = useState(false);
+
     const inputRef = useRef(null);
+    const msgEnd = useRef(null); // Ref for scrolling to the end of messages
 
     useEffect(() => {
         if (inputRef.current) {
@@ -243,11 +248,17 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
 
     useEffect(() => {
         console.log("AgentId=", agent.agent_id)
+        setActiveAgent(agent);
         setResetHistory(true);
         setThreadId(null);
         setReenterInto("");
         setMessages([{ text: "Welcome to the " + (agent.name ? agent.name : agent.agent_id) + ". How can I help you today?", isBot: true }]);
     }, [agent]);
+
+    const resetChat = () => {
+        informUser("---Restart conversation---");
+        setChatResetRequested(false);
+    }
 
     const informUser = (message) => {
         // Inform the user
@@ -304,7 +315,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
             "reset": resetHistory,
             "callWithVectorStore": useFileSearch,
             "user_id": userId,
-            "agent_id": agent.agent_id,
+            "agent_id": activeAgent.agent_id,
             "thread_id": threadId,
             "chat_history": (resetHistory ? [] : chatHistory)
         }
@@ -389,8 +400,8 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
 
     const handleChangeInput = (e) => {
         //const value = e.target.value;
-        if (e.target.value.trim() === "demo" && window?._env_?.REACT_APP_DEMO_TEXT) {
-            e.target.value = window._env_.REACT_APP_DEMO_TEXT;
+        if (e.target.value.trim() === "demo") {
+            e.target.value = env.demoText;
         } else {
             if (e.target.value.trim() === "cqdemo") {
                 setLastMessage("cqdemo");
@@ -412,6 +423,15 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                 setLastMessage("cqbool");
                 e.target.value = "";
                 setMessages([...messages, closedQuestionsDemoBool]);
+            } else if (e.target.value.trim() === "show chat history" || e.target.value.trim() === "sch") {
+                setLastMessage("show chat history");
+                e.target.value = "";
+                setMessages([...messages, {
+                    text: messages.map(m => (
+                        (m.isBot ? "> **AI**: " : "> **User**: ") +
+                        (m.text.replace(/^---/, "").replace(/\n/g, "\n> "))
+                    )).join('\n---\n'), isBot: true
+                }]);
             }
         };
         setInput(e.target.value);
@@ -424,14 +444,26 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
     return (
         <Modal open={openState}
             onRequestClose={() => setOpenState(false)}
-            modalHeading={agent.name ? agent.name : agent.agent_id}
+            modalHeading={activeAgent && (activeAgent.name ? activeAgent.name : activeAgent.agent_id)}
             passiveModal
             size='lg'
             preventCloseOnClickOutside
             hasScrollingContent
             className="owl-agent-modal">
 
-            <QuestionAndAnswer style={{ width: '5rem', height: 'auto', padding: "0.5rem" }} />
+            <div style={{ display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}>
+                <QuestionAndAnswer style={{ width: '5rem', height: 'auto', padding: "0.5rem" }} />
+                <OwlAgentControl backendBaseAPI={backendBaseAPI} useFileSearch={useFileSearch} setUseFileSearch={setUseFileSearch} setError={setError} />
+                <Button kind="ghost" className="owl-agent-reset-chat" onClick={() => setChatResetRequested(true)}>Reset chat</Button>
+            </div>
+            {chatResetRequested && <div className="owl-agent-reset-chat-confirmation"><ActionableNotification title="Please confirm"
+                subtitle="Are you sure you want to reset the chat?"
+                kind="warning"
+                actionButtonLabel="Confirm"
+                lowContrast={true}
+                inline={false}
+                onActionButtonClick={resetChat}
+                onClose={() => { setChatResetRequested(false) }} /></div>}
 
             <div className="owl-agent-chats">
                 {messages.map((message, i) =>
@@ -444,10 +476,10 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                         </div> :
                             message.text === "Clear" ?
                                 <div>
-                                    New conversation started
+                                    The chat has been reset.
                                     <br />
                                     <br />
-                                    <button className="app-button" onClick={() => setMessages([{ text: "Welcome to the " + (agent.name ? agent.name : agent.agent_id) + ". How can I help you today?", isBot: true }])}>Clear chat</button>
+                                    <Button onClick={() => setMessages([{ text: "Welcome to the " + (activeAgent.name ? activeAgent.name : activeAgent.agent_id) + ". How can I help you today?", isBot: true }])}>Clear this window</Button>
                                 </div> :
                                 message.text === "..." ?
                                     <div className="waiting-for-response"><img src={loadingImage.src} alt="Loading..." /> </div> :
@@ -456,12 +488,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                                         message.className && message.className !== "" ?
                                             <div className={message.className}>{message.text}</div> :
                                             <div>
-                                                {message.text.split('\n').map((line, j) =>
-                                                    line === "" ? <br key={j} /> :
-                                                        <div key={j}>
-                                                            <ReactMarkdown>{line}</ReactMarkdown>
-                                                        </div>
-                                                )}
+                                                <ReactMarkdown>{message.text}</ReactMarkdown>
                                                 {message.time && <div>
                                                     <br />
                                                     <div className="response-time">{"Response in " + message.time + "s"}</div>
@@ -472,7 +499,7 @@ const OwlAgent = ({ backendBaseAPI, agent, openState, setOpenState, randomNumber
                 <div ref={msgEnd} />
             </div>
             <hr className="horizontal-line" onDoubleClick={restoreTextInputHeight} />
-            <div className="owl-agent-input" style={{ visibility: messages[messages.length - 1]?.closedQuestions ? "hidden" : "visible" }}>
+            <div className="owl-agent-input" style={{ visibility: (openState ? messages[messages.length - 1]?.closedQuestions ? "hidden" : "visible" : "hidden") }}>
                 <TextArea ref={inputRef}
                     placeholder="Enter your message here"
                     value={input}

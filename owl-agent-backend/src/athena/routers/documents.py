@@ -28,6 +28,6 @@ async def post_document_for_rag( file_description: FileDescription = Depends(), 
     except Exception as e:
          return {"status": 500, "message": "Backend exception", "error" : str(e)}
 
-@router.get("/documents/{query}", tags=["Manage documents"])
-def get_documents_from_query(query: str):
-    return get_content_mgr().search(query)
+@router.get("/documents/{query}/{top_k}", tags=["Manage documents"])
+def get_documents_from_query(query: str, top_k: int =3):
+    return get_content_mgr().search(query,top_k)
