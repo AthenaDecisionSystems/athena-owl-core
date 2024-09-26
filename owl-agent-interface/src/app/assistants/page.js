@@ -7,13 +7,13 @@ import { Octokit } from '@octokit/core';
 import AssistantMap from './AssistantMap';
 import { Add } from '@carbon/react/icons';
 import Assistant from './Assistant';
-import { useEnv } from "../providers";
+import { context } from "../providers";
 import { getEnv } from '../env';
 
 const octokitClient = new Octokit({});
 
 function AssistantsPage() {
-  let env = useEnv();
+  let env = context()?.env;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();

@@ -46,7 +46,7 @@ const AgentTools = ({ backendBaseAPI, toolSelectedItems, setToolSelectedItems, s
                 onChange={(selection) => setToolSelectedItems(selection)}
                 selectionFeedback="top-after-reopen" />)
             }
-            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '3rem' }} />
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '1rem' }} />
         </div>
     );
 };

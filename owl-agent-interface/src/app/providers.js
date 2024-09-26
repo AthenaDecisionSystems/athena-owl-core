@@ -13,9 +13,9 @@ export const EnvContext = createContext({});
 
 export function Providers({ children }) {
   const [env, setEnv] = useState({});
+  const [role, setRole] = useState("user"); // This is the current user role (admin, user, etc.)
   const [loading, setLoading] = useState(true);
 
-  const events = require('events');
   EventEmitter.defaultMaxListeners = 20;
 
   useEffect(() => {
@@ -33,32 +33,30 @@ export function Providers({ children }) {
 
   return (
     <div>
-      {loading && (<InlineLoading status="active" iconDescription="Please wait..." description="Veuillez patienter / Please wait..." />)}
+      <EnvContext.Provider value={{ env, role, setRole }}>
+        {loading && (<InlineLoading status="active" iconDescription="Please wait..." description="Veuillez patienter / Please wait..." />)}
 
-      {!loading && (env.backendBaseAPI === null || env.backendBaseAPI === undefined || env.backendBaseAPI === "") && (<div>
-        Erreur de configuration serveur: les variables d'environnement ne sont pas définies
-        <br></br>
-        Server configuration error: environment variables are not defined</div>)}
-      {!loading && env.backendBaseAPI && (
-        <I18nextProvider i18n={i18n}>
-          <Theme theme="g100">
-            <EnvContext.Provider value={env}>
+        {!loading && (env.backendBaseAPI === null || env.backendBaseAPI === undefined || env.backendBaseAPI === "") && (<div>
+          Erreur de configuration serveur: les variables d'environnement ne sont pas définies
+          <br></br>
+          Server configuration error: environment variables are not defined</div>)}
+        {!loading && env.backendBaseAPI && (
+          <I18nextProvider i18n={i18n}>
+            <Theme theme="g100">
               <OwlAgentHeader />
-            </EnvContext.Provider>
-          </Theme>
-          <Theme theme="g10">
-            <Content>
-              <EnvContext.Provider value={env}>
+            </Theme>
+            <Theme theme="g10">
+              <Content>
                 {children}
-              </EnvContext.Provider>
-            </Content>
-          </Theme>
-        </I18nextProvider>
-      )}
+              </Content>
+            </Theme>
+          </I18nextProvider>
+        )}
+      </EnvContext.Provider>
     </div>
   );
 }
 
-export const useEnv = () => {
+export const context = () => {
   return useContext(EnvContext);
 };

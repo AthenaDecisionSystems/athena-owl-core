@@ -69,6 +69,7 @@ const UploadDocument = ({ backendBaseAPI, setError }) => {
                     subtitle={uploadStatus.text}
                     title="Upload file: "
                 />)}
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
         </div>
     );
 };

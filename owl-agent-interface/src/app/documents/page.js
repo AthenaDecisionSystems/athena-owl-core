@@ -6,14 +6,14 @@ import React, { useEffect, useState } from 'react';
 import { Octokit } from '@octokit/core';
 import DocumentMap from './DocumentMap';
 import { Search } from '@carbon/react/icons';
-import { useEnv } from '../providers';
+import { context } from '../providers';
 import { getEnv } from '../env';
 import UploadDocument from './UploadDocument';
 
 const octokitClient = new Octokit({});
 
 function DocumentsPage() {
-  let env = useEnv();
+  let env = context()?.env;
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();

@@ -2,13 +2,13 @@ import { DropdownSkeleton, Modal, MultiSelect, Select, SelectItem, TextArea, Tex
 import React, { useEffect, useState } from 'react';
 import { QuestionAndAnswer } from '@carbon/pictograms-react';
 import { Octokit } from '@octokit/core';
-import { useEnv } from '../providers';
+import { context } from '../providers';
 import { getEnv } from '../env';
 
 const octokitClient = new Octokit({});
 
 const Assistant = ({ mode, assistant, assistants, openState, setOpenState, onSuccess, setError }) => {
-    let env = useEnv();
+    let env = context()?.env;
 
     // mode = 'create' or 'edit'
     const [loading, setLoading] = useState(true);

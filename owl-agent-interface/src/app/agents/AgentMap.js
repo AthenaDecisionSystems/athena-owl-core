@@ -4,7 +4,7 @@ import { WatsonxData } from '@carbon/pictograms-react';
 import { Close } from '@carbon/react/icons';
 import { Octokit } from '@octokit/core';
 import Agent from './Agent';
-import OwlAgent from './OwlAgent';
+import OwlAgentModal from './OwlAgentModal';
 
 const octokitClient = new Octokit({});
 
@@ -70,6 +70,18 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
         }
     }
 
+    const getEnglishPromptContent = (promptRef) => {
+        if (prompts && prompts.length > 0) {
+            const prompt = prompts.find(prompt => prompt.prompt_id === promptRef);
+            if (prompt) {
+                const locale = prompt.locales.find(locale => locale.locale === 'en');
+                if (locale) {
+                    return locale.text;
+                }
+            }
+        }
+    }
+
     const startEdition = (index) => {
         setEditAgent(index);
         setOpen(true);
@@ -88,7 +100,7 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
     return (
         <>
             {(owlAgent !== -1) && (
-                <OwlAgent backendBaseAPI={backendBaseAPI} agent={rows[owlAgent]} openState={openOwlAgent} setOpenState={setOpenOwlAgent} randomNumber={Math.random()} setError={setError} />
+                <OwlAgentModal backendBaseAPI={backendBaseAPI} agent={rows[owlAgent]} promptEnglishContent={getEnglishPromptContent(rows[owlAgent].prompt_ref)} openState={openOwlAgent} setOpenState={setOpenOwlAgent} randomNumber={Math.random()} setError={setError} />
             )}
             {(editAgent !== -1) && (
                 <Agent backendBaseAPI={backendBaseAPI} mode="edit" agent={rows[editAgent]} agents={rows} prompts={prompts} runnerClassNames={runnerClassNames} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />

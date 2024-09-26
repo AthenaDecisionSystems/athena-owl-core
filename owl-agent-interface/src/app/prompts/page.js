@@ -7,13 +7,13 @@ import { Octokit } from '@octokit/core';
 import PromptMap from './PromptMap';
 import { Add, TextStrikethrough } from '@carbon/react/icons';
 import Prompt from './Prompt';
-import { useEnv } from '../providers';
+import { context } from '../providers';
 import { getEnv } from '../env';
 
 const octokitClient = new Octokit({});
 
 function PromptsPage() {
-  let env = useEnv();
+  let env = context()?.env;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();

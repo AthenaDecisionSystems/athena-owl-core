@@ -5,12 +5,12 @@ import { Close } from '@carbon/react/icons';
 import { Octokit } from '@octokit/core';
 import Assistant from './Assistant';
 import OwlAgent from './OwlAgent';
-import { useEnv } from '../providers';
+import { context } from '../providers';
 
 const octokitClient = new Octokit({});
 
 export const AssistantMap = ({ rows, setRows, setError, reloadAssistants }) => {
-    const env = useEnv();
+    const ctx = context();
 
     const [loading, setLoading] = useState(true);
     const [agents, setAgents] = useState([]);
@@ -30,7 +30,7 @@ export const AssistantMap = ({ rows, setRows, setError, reloadAssistants }) => {
         // Preload agents
         async function getAgents() {
             try {
-                const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/agents`);
+                const res = await octokitClient.request(`GET ${ctx.env.backendBaseAPI}a/agents`);
                 if (res.status === 200) {
                     setAgents(res.data);
                 } else {
@@ -65,7 +65,7 @@ export const AssistantMap = ({ rows, setRows, setError, reloadAssistants }) => {
     const deleteAssistant = async (index) => {
         try {
             const res = await octokitClient.request(
-                `DELETE ${env.backendBaseAPI}a/assistants/${rows[index].assistant_id}`
+                `DELETE ${ctx.env.backendBaseAPI}a/assistants/${rows[index].assistant_id}`
             );
             if (res.status === 200) {
                 console.log('Assistant deleted', res.data);
