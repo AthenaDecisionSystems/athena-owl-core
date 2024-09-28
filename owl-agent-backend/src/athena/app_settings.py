@@ -29,7 +29,7 @@ class AppSettings(BaseSettings):
     owl_agent_vs_path: str = "./chromadb"
     owl_agent_vs_url: str = ""
     owl_agent_vs_embedding_fct: str = "OpenAIEmbeddings"
-    owl_agent_vs_embedding_fct: str = ""
+    owl_agent_vs_embedding_fct_model: str = "text-embedding-3-large"
     owl_agent_llm_client_class: str = ""
     owl_agent_llm_history_length: int = 5
     owl_agent_llm_model: str = ""

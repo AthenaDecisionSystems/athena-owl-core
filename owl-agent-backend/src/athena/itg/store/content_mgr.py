@@ -4,69 +4,92 @@ Copyright 2024 Athena Decision Systems
 """
 
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownHeaderTextSplitter
-from langchain_text_splitters.markdown import MarkdownTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import PyMuPDFLoader, BSHTMLLoader, WebBaseLoader
+from langchain_core.documents import Document
+
 import os, logging
-from typing import List, Optional 
-from athena.app_settings import get_config
+from typing import List, Optional, Dict, Tuple, Any
 from pydantic import BaseModel
+import chromadb
+import os
+from athena.app_settings import get_config
 
 LOGGER = logging.getLogger(__name__)
 LOGGER.setLevel(get_config().logging_level_int)
+DEFAULT_K = 4 
 
 """
-Service to manage documents for semantic search and RAG context source
+Service to manage documents for semantic search in vector data base and to support
+Retrieval Augmented Generation. 
 """
-embeddings={"OpenAIEmbeddings": OpenAIEmbeddings}
 
 class FileDescription(BaseModel):
     """
-    Metadata about a file, with potential URI to access to the file content
+    Metadata about a file, with potential URI to access to the file content, and collection name so we can
+    isolate content in the vector store
     """
     name: Optional[str] = ''
     description: Optional[str] = ''
     type: str= "md"
     file_name: Optional[str] = ''
     file_base_uri: Optional[str] = ''
+    collection_name: Optional[str] = "default"
+
+# 09/26/24 Added to support chromadb changes in its call api. so this is a wrapper class for openai embedding only
+class CustomOpenAIEmbeddings(OpenAIEmbeddings):
+
+    def __init__(self, openai_api_key, *args, **kwargs):
+        super().__init__(openai_api_key=openai_api_key, *args, **kwargs)
+        
+    def _embed_documents(self, texts):
+        return super().embed_documents(texts)  # <--- use OpenAIEmbedding's embedding function
+
+    def __call__(self, input):
+        return self._embed_documents(input)
+    
+
+    
+# supported embedding
+embeddings={"OpenAIEmbeddings": CustomOpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"),
+                                                       model = get_config().owl_agent_vs_embedding_fct_model)}
+
 
 
 class ContentManager:
     """
-    Content manager exposes APIs to process unstructured pdf, html, markdown, txt file and
+    Content manager exposes APIs to process unstructured pdf, html, markdown, or text file and
     offers a retriever for LLM chains or agents. It is a singleton.
-    External configuration come from app_settings
+    External configuration comes from app_settings
     """
     _instance = None
 
     def __new__(cls, **kwargs):
         _instance = super().__new__(cls)
-
-        config= get_config()
-        cls.path=config.owl_agent_content_file_path
-        if not os.path.exists(cls.path):
-            os.makedirs(cls.path)
+        cls.content_repo_path=get_config().owl_agent_content_file_path
+        if not os.path.exists(cls.content_repo_path):
+            os.makedirs(cls.content_repo_path)
         return _instance
         
 
     def process_doc(self, file_description: FileDescription, content)-> str:
         """
-        Persist  metadata file and potentially the file content in storage uri as specified in config
+        Persist  metadata file and potentially the file content in the storage location as specified in config
         """
         if file_description:
             if content:
                 file_description.file_base_uri=self.persist_content(file_description.file_name, content)
             
             if file_description.file_name:
-                # persist metadata file
+                # persist metadata file - if already exists replace it
                 file_name_base=file_description.file_name[:file_description.file_name.rfind('.')]
-                f = open(self.path + "/" + file_name_base + ".json","w")
+                f = open(self.content_repo_path + "/" + file_name_base + ".json","w")
                 f.write(file_description.model_dump_json())
                 f.close()
                 LOGGER.debug("Saved metadata " + file_name_base)
    
-            chunks=self.build_vector_content(file_description)
+            chunks=self.process_file_content(file_description)
             rep =  f"document {file_description.name} processed with {chunks} chunks embedded"
             LOGGER.debug(f"@@@> {rep}")
             return rep
@@ -74,24 +97,25 @@ class ContentManager:
             raise Exception("The file description content is mandatory")
         
       
-       
-
             
-    def build_vector_content(self,file_description: FileDescription) -> int:
-        # From the document type, perform the different chunking and embedding
+    def process_file_content(self,file_description: FileDescription) -> int:
+        """
+        From the document type, perform the different chunking and embedding
+        """
         if file_description.type == "pdf":
-            return self.embed_pdf_docs(file_description)
+            documents= self.split_pdf_docs(file_description)
         elif file_description.type == "text":
-            return self.embed_txt_docs(file_description)
+            documents= self.split_txt_docs(file_description)
         elif file_description.type == "md":
-            return self.embed_md_docs(file_description)
+            documents= self.split_md_docs(file_description)
         elif file_description.type == "html":
-            return self.embed_html_docs(file_description)
+            documents= self.split_html_docs(file_description)
         else:
-            return 0
-
+            documents = []
+        self.process_documents(documents,file_description.collection_name)
+        return len(documents)
             
-    def embed_txt_docs(self,file_description: FileDescription)-> int:
+    def split_txt_docs(self,file_description: FileDescription)-> List[Document]:
         text_splitter = RecursiveCharacterTextSplitter(
                 separators=[
                     "\n\n",
@@ -106,38 +130,32 @@ class ContentManager:
                     "\u3002",  # Ideographic full stop
                     "",
                 ],
-                chunk_size=100,
+                chunk_size=300,
                 chunk_overlap=20,
                 length_function=len,
                 is_separator_regex=False
             )
+        texts=[]
         with open(file_description.file_base_uri + "/" + file_description.file_name) as f: # type: ignore
             doc = f.read()
-            texts = text_splitter.create_documents([doc])
-            self.build_embeddings(texts)
-            return len(texts)
+            texts = text_splitter.create_documents([doc],[{"source": file_description.file_name}])
+        return texts
     
-    def embed_md_docs(self, file_description: FileDescription) -> int:
-        """
-         split a markdown file by a specified set of headers.
-        """
-        headers_to_split_on = [
-            ("#", "Header 1"),
-            ("##", "Header 2"),
-            ("###", "Header 3"),
-            ]
+    def split_md_docs(self, file_description: FileDescription) -> List[Document]:
+        docs=[]
         with open(file_description.file_base_uri + "/" + file_description.file_name, 'r') as file:
             markdown_document = file.read()
-            markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on, strip_headers=False)
-            md_header_splits = markdown_splitter.split_text(markdown_document)
-            self.build_embeddings(md_header_splits)       
-            LOGGER.debug(f"Added {str(len(md_header_splits))} chunks to vector DB ")
-            return len(md_header_splits)
+            headers_to_split_on =[ ("#", "Header 1"), ("##", "Header 2"), ("###", "Header 3")]
+            markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
+            docs = markdown_splitter.split_text(markdown_document)
+            # docs include metadatas with headers reference
+        return docs
         
-    def embed_html_docs(self, file_description: FileDescription) -> int:
+    def split_html_docs(self, file_description: FileDescription) -> List[Document]:
         """
          Load HTML doc or URL.
         """
+        docs=[]
         if "http" not in file_description.file_base_uri:
             loader=BSHTMLLoader(file_description.file_base_uri + "/" + file_description.file_name) 
         else:
@@ -145,45 +163,87 @@ class ContentManager:
                 web_paths=(file_description.file_base_uri,)
             )
         docs = loader.load()
-        self.build_embeddings(docs)       
-        LOGGER.info(f"Added {str(len(docs))} chunks to vector DB ")
-        return len(docs)
+        return docs
 
 
-    def embed_pdf_docs(self, file_description: FileDescription) -> int:
+    def split_pdf_docs(self, file_description: FileDescription) -> List[Document]:
         loader = PyMuPDFLoader(file_description.file_base_uri + "/" + file_description.file_name)
         documents = loader.load_and_split()
-        self.build_embeddings(documents)   
-        return len(documents)
+        return documents
 
-    def build_embeddings(self,docs):
-        vs = self.get_vector_store()
-        vs.from_documents(documents=docs, embedding= embeddings[get_config().owl_agent_vs_embedding_fct](),  persist_directory=get_config().owl_agent_vs_path)
-        print(f"Vector store updated with docs... {docs[0]}")
-        
+
+    def process_documents(self, docs, collection_name):
+        """
+        For each documents build a vector representation and persist both in a collection
+        """
+        vs = self.get_vector_store(collection_name)
+        vs.from_documents(documents=docs, 
+                          client=vs._client,
+                          persist_directory=vs._persist_directory,
+                          embedding= embeddings[get_config().owl_agent_vs_embedding_fct],
+                          collection_name=collection_name)
+
+        LOGGER.debug(f"Vector store updated with {len(docs)} docs")
+        LOGGER.debug(f" within {vs._client.count_collections()} collection")
+
+
+
     def persist_content(self,filename, content) -> str:
-        file_path = self.path + "/" + filename
+        """persist the uploaded file
+        """
+        file_path = self.content_repo_path + "/" + filename
         if type(content) == "str":
             f = open(file_path, "w")
         else:
             f = open(file_path, "wb")
         f.write(content)
         f.close()
-        return self.path
+        return self.content_repo_path
 
-    def get_retriever(self):
-        return self.get_vector_store().as_retriever()
 
-    def get_vector_store(self):
-        if len(get_config().owl_agent_vs_url) == 0:
-            self.vdb=Chroma(persist_directory=get_config().owl_agent_vs_path, embedding_function=embeddings[get_config().owl_agent_vs_embedding_fct]())
+    def get_retriever(self, collection_name:str):
+        vs = self.get_vector_store()
+        return vs.as_retriever()
+
+
+
+    def get_vector_store(self, collection_name:str ):
+        """
+        When there is a VS URL, access the collection via the http client
+        if not use local persistence
+        """
+        url = get_config().owl_agent_vs_url
+        path=get_config().owl_agent_vs_path
+        if path and len(url) == 0:
+            client = chromadb.PersistentClient(path)
+            vdb=Chroma(client=client, 
+                       collection_name=collection_name,
+                       persist_directory=path,
+                       embedding_function=embeddings[get_config().owl_agent_vs_embedding_fct],)
         else:
-            LOGGER.info("Not implemented")
-        return self.vdb
+            host,port = url.split(':')
+            client = chromadb.HttpClient(host= host, port=port)
+            vdb=Chroma(client=client, collection_name=collection_name,embedding_function=embeddings[get_config().owl_agent_vs_embedding_fct],)
+        client.get_or_create_collection(name=collection_name, 
+                                    embedding_function=embeddings[get_config().owl_agent_vs_embedding_fct],
+                                    metadata={"hnsw:space": "cosine"})
+        
+        return vdb
 
 
-    def search(self, query: str, top_k: int):
-        return self.get_vector_store().similarity_search(query, k=top_k)
+    def search(self, collection_name: str, query: str, top_k: int) -> List[Tuple[str, float]]:
+        vs = self.get_vector_store(collection_name)
+        # query_embedding = embeddings[get_config().owl_agent_vs_embedding_fct](query)
+        docs = vs.similarity_search(
+               query,  # type: ignore
+                k=top_k
+            )
+        # vector_store.similarity_search_by_vector
+        return docs
+
+    def clear_collection(self, collection_name: str):
+        vs = self.get_vector_store(collection_name)
+        vs._client.delete_collection(collection_name)
 
 
 def get_content_mgr() -> ContentManager:

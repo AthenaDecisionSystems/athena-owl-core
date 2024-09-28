@@ -63,6 +63,7 @@ def synchronous_chat_with_owl(conversationControl: ConversationControl) -> Respo
         resp.user_id = conversationControl.user_id
         resp.thread_id = conversationControl.thread_id
         resp.chat_history = conversationControl.chat_history
+        return resp
     LOGGER.debug(f"\n@@@> {resp}")
     return resp
 

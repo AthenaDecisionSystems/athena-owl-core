@@ -1,11 +1,12 @@
 version: '3.8'
 services:
-  ollama:
-    image: jbcodeforce/ollama
-    hostname: ollama
+  chromadb:
+    image: chromadb/chroma:latest
     volumes:
-        - ./start-ollama.sh:/start-ollama.sh
-    container_name: ollama
-    entrypoint: ["/usr/bin/bash", "/start-ollama.sh"]
+      - ./chromadb:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - PERSIST_DIRECTORY=/chroma/chroma # this is the default path, change it as needed
+      - ANONYMIZED_TELEMETRY=${ANONYMIZED_TELEMETRY:-TRUE}
     ports:
-        - 11434:11434
+      - 8010:8000

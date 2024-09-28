@@ -2,7 +2,7 @@
 Copyright 2024 Athena Decision Systems
 @author Jerome Boyer
 """
-from fastapi import File, UploadFile, Depends, APIRouter
+from fastapi import File, UploadFile, Depends, APIRouter, Body
 from athena.itg.store.content_mgr import FileDescription, get_content_mgr
 from athena.app_settings import get_config
 import logging
@@ -28,6 +28,6 @@ async def post_document_for_rag( file_description: FileDescription = Depends(), 
     except Exception as e:
          return {"status": 500, "message": "Backend exception", "error" : str(e)}
 
-@router.get("/documents/{query}/{top_k}", tags=["Manage documents"])
-def get_documents_from_query(query: str, top_k: int =3):
-    return get_content_mgr().search(query,top_k)
+@router.get("/documents/{collection}/{query}/{top_k}", tags=["Manage documents"])
+def get_documents_from_query(collection : str, query: str, top_k: int =3):
+    return get_content_mgr().search(collection, query,top_k)
