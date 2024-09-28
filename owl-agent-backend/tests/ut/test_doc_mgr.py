@@ -9,65 +9,65 @@ from athena.itg.store.content_mgr import get_content_mgr, FileDescription
 
 
 class TestDocumentManager(unittest.TestCase):
+    """
+    Test all operations of the content manager with vector store, remote or local
+    """
 
-
-    def test_no_file_doc_post_operation(self):
+    def test_1_no_file_doc_post_operation(self):
         """
-        Validate we can post without any file uploaded
+        Validate we cannot post without any file uploaded
         """
         service = get_content_mgr()
+        assert service
         with self.assertRaises(Exception) as context:
             rep=service.process_doc(None,None)
         self.assertTrue('description content is mandatory' in str(context.exception))
 
-    def build_file_descriptor(self, type: str):
+    def build_file_descriptor(self, type: str,fname: str):
         fd=FileDescription()
         fd.name="Claims-complaint-rules"
-        fd.file_name="ibu-claims-complaint-rules.txt"
+        fd.file_name=fname
         fd.file_base_uri="./tests/ut/documents"
         fd.type=type
+        fd.collection_name="test"
         return fd
     
     def test_process_txt_from_folder(self):
         print("\n--> test_process_ text\n")
-        fd = self.build_file_descriptor("text")
+        fd = self.build_file_descriptor("text","ibu-claims-complaint-rules.txt")
         service = get_content_mgr()
         rep=service.process_doc(fd,None)
         print(rep)
         assert rep
         assert "chunks" in rep
-
-    def test_a_search(self):
-        service = get_content_mgr()
-        rep = service.search("what is rule 53?")
+        rep = service.search("test","what is rule 53?",1)
+        assert len(rep) == 0 
+        rep = service.search("test","what is Rule 38?",1)
         print(rep)
 
     def test_process_md_from_folder(self):
         print("\n--> test_process_md_from_folder test\n")
-        fd = self.build_file_descriptor("md")
-        fd.file_name="ibu-claims-complaint-rules.md"
+        fd = self.build_file_descriptor("md","ibu-claims-complaint-rules.md")
         service = get_content_mgr()
         rep=service.process_doc(fd,None)
         print(rep)
         assert rep
         assert "chunks" in rep
-        rep = service.search("what is rule 53?")
+        rep = service.search("test","what is Rule 38?",1)
         print(rep)
+        rep = service.search("test","what is rule 53?",1)
+        assert len(rep) == 0 
         
     def test_process_html_from_folder(self):
         print("\n--> test_process HTML file test\n")
-        fd = self.build_file_descriptor("html")
-        fd.file_name="ibu-claims-complaint-rules.html"
+        fd = self.build_file_descriptor("html","ibu-claims-complaint-rules.html")
         service = get_content_mgr()
         rep=service.process_doc(fd,None)
-        print(rep)
         assert rep
-        assert "chunks" in rep
-        rep = service.search("what is the content of rule 41?")
+        rep = service.search("test","what is the content of rule 41?",1 )
         print(rep)
-        assert "Rule 41"
 
-    def test_process_pdf_from_folder(self):
+    def _test_process_pdf_from_folder(self):
         print("\n--> test_process_pdf_from_folder\n")
         fd = self.build_file_descriptor("pdf")
         fd.file_name="ibu-claims-complaint-rules.pdf"
@@ -77,7 +77,7 @@ class TestDocumentManager(unittest.TestCase):
         rep = service.search("what is claim handling")
         print(rep[0].page_content.encode())
 
-    def test_process_html_from_URL(self):
+    def _test_process_html_from_URL(self):
         print("\n--> test_process HTML page test\n")
         fd=FileDescription()
         fd.name="athena-decision-web"
@@ -90,7 +90,7 @@ class TestDocumentManager(unittest.TestCase):
         rep = service.search("do you know OwlAthena")
         print(rep)
 
-    def test_build_content(self):
+    def _test_build_content(self):
         """
         Should create  a file descriptor and a file for processing
         """

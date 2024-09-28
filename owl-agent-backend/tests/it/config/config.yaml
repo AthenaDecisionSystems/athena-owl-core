@@ -11,7 +11,7 @@ owl_glossary_path: ./src/athena/config/glossary.json
 owl_agent_llm_history_length: 5
 owl_agent_content_collection_name: base_collection
 owl_agent_content_file_path: ./tests/ut/file_content
-owl_agent_vs_path: ./tests/ut/chromadb
+owl_agent_vs_url: http://localhost:8010
 owl_agent_vs_embedding_fct: OpenAIEmbeddings
 owl_agent_vs_embedding_fct_model: text-embedding-3-large
 owl_agent_tool_factory_class:  athena.llm.tools.tool_mgr.DefaultToolInstanceFactory
