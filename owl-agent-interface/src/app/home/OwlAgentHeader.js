@@ -15,17 +15,23 @@ import {
   HeaderSideNavItems,
   HeaderPanel,
   Dropdown,
+  Stack,
 } from '@carbon/react';
-import { Switcher, Notification, UserAvatar, Settings } from '@carbon/icons-react';
+import { Notification, UserAvatar, Settings } from '@carbon/icons-react';
 
 import Link from 'next/link';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
+import { changeRole, context } from '../providers';
 
 const languages = [{ text: "🇬🇧 English", value: "en" }, { text: "🇪🇸 Español", value: "es" }, { text: "🇫🇷 Français", value: "fr" }, { text: "🇳🇱 Nederlands", value: "nl" }];
 
 const OwlAgentHeader = () => {
+  const ctx = context();
+  const role = ctx.role;
+  const setRole = ctx.setRole;
+
   const [settingsExpanded, setSettingsExpanded] = useState(false);
 
   const { t, i18n } = useTranslation();
@@ -45,42 +51,50 @@ const OwlAgentHeader = () => {
           <Link href="/" passHref legacyBehavior>
             <HeaderName prefix="Athena">Owl Agent</HeaderName>
           </Link>
-          <HeaderNavigation aria-label="Agents">
+          {role === "admin" && <HeaderNavigation aria-label="Agents">
             <Link href="/agents" passHref legacyBehavior>
               <HeaderMenuItem>Agents</HeaderMenuItem>
             </Link>
-          </HeaderNavigation>
-          <HeaderNavigation aria-label="Tools">
+          </HeaderNavigation>}
+          {role === "admin" && <HeaderNavigation aria-label="Tools">
             <Link href="/tools" passHref legacyBehavior>
               <HeaderMenuItem>Tools</HeaderMenuItem>
             </Link>
-          </HeaderNavigation>
-          <HeaderNavigation aria-label="Prompts">
+          </HeaderNavigation>}
+          {role === "admin" && <HeaderNavigation aria-label="Prompts">
             <Link href="/prompts" passHref legacyBehavior>
               <HeaderMenuItem>Prompts</HeaderMenuItem>
             </Link>
-          </HeaderNavigation>
-          <HeaderNavigation aria-label="Documents">
+          </HeaderNavigation>}
+          {role === "admin" && <HeaderNavigation aria-label="Documents">
             <Link href="/documents" passHref legacyBehavior>
               <HeaderMenuItem>Documents</HeaderMenuItem>
             </Link>
-          </HeaderNavigation>
+          </HeaderNavigation>}
+          {role === "user" && <HeaderNavigation aria-label="Chatbot">
+            <Link href="/owl" passHref legacyBehavior>
+              <HeaderMenuItem>Chatbot</HeaderMenuItem>
+            </Link>
+          </HeaderNavigation>}
 
           <SideNav aria-label="Side navigation" expanded={isSideNavExpanded} isPersistent={false} >
             <SideNavItems>
               <HeaderSideNavItems>
-                <Link href="/agents" passHref legacyBehavior>
+                {role === "admin" && <Link href="/agents" passHref legacyBehavior>
                   <HeaderMenuItem>Agents</HeaderMenuItem>
-                </Link>
-                <Link href="/tools" passHref legacyBehavior>
+                </Link>}
+                {role === "admin" && <Link href="/tools" passHref legacyBehavior>
                   <HeaderMenuItem>Tools</HeaderMenuItem>
-                </Link>
-                <Link href="/prompts" passHref legacyBehavior>
+                </Link>}
+                {role === "admin" && <Link href="/prompts" passHref legacyBehavior>
                   <HeaderMenuItem>Prompts</HeaderMenuItem>
-                </Link>
-                <Link href="/documents" passHref legacyBehavior>
+                </Link>}
+                {role === "admin" && <Link href="/documents" passHref legacyBehavior>
                   <HeaderMenuItem>Documents</HeaderMenuItem>
-                </Link>
+                </Link>}
+                {role === "user" && <Link href="/owl" passHref legacyBehavior>
+                  <HeaderMenuItem>Chatbot</HeaderMenuItem>
+                </Link>}
               </HeaderSideNavItems>
             </SideNavItems>
           </SideNav>
@@ -100,17 +114,23 @@ const OwlAgentHeader = () => {
 
           <HeaderPanel expanded={settingsExpanded}>
             <div className="header-panel-content">
-              <h3>{t('header.alt.configuration')}</h3>
-              <Dropdown id="language" titleText={t("header.lbl.language")} initialSelectedItem={languages.find((item) => (item.value === language))} label={t("header.lbl.language")} type="inline"
-                items={languages}
-                itemToString={item => item ? item.text : ""}
-                onChange={(e) => { changeLanguage(e.selectedItem.value) }} />
-              {t('app.msg.welcome').split('\n').map((line, key) =>
-                line === "" ? <br key={key} /> :
-                  <div key={key}>
-                    <ReactMarkdown>{line}</ReactMarkdown>
-                  </div>
-              )}
+              <h3>Configuration</h3>
+              {/*<h3>{t('header.alt.configuration')}</h3>*/}
+              <Stack gap={5}>
+                <Dropdown id="role" titleText="role" initialSelectedItem={role} label="Role" type="inline"
+                  items={["admin", "user"]}
+                  onChange={(e) => { setRole(e.selectedItem) }} />
+                <Dropdown id="language" titleText={t("header.lbl.language")} initialSelectedItem={languages.find((item) => (item.value === language))} label={t("header.lbl.language")} type="inline"
+                  items={languages}
+                  itemToString={item => item ? item.text : ""}
+                  onChange={(e) => { changeLanguage(e.selectedItem.value) }} />
+                {t('app.msg.welcome').split('\n').map((line, key) =>
+                  line === "" ? <br key={key} /> :
+                    <div key={key}>
+                      <ReactMarkdown>{line}</ReactMarkdown>
+                    </div>
+                )}
+              </Stack>
             </div>
           </HeaderPanel>
         </Header>

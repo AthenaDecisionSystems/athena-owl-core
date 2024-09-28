@@ -3,12 +3,12 @@ import { AspectRatio, Column, OverflowMenu, OverflowMenuItem, Popover, PopoverCo
 import { Tools } from '@carbon/pictograms-react';
 import { Octokit } from '@octokit/core';
 import Tool from './Tool';
-import { useEnv } from '../providers';
+import { context } from '../providers';
 
 const octokitClient = new Octokit({});
 
 export const ToolMap = ({ rows, setRows, setError, reloadTools }) => {
-    const env = useEnv();
+    const ctx = context();
 
     const [open, setOpen] = useState(false);
     const [editTool, setEditTool] = useState(-1);
@@ -16,7 +16,7 @@ export const ToolMap = ({ rows, setRows, setError, reloadTools }) => {
     const deleteTool = async (index) => {
         try {
             const res = await octokitClient.request(
-                `DELETE ${env.backendBaseAPI}a/tools/${rows[index].tool_id}`
+                `DELETE ${ctx.env.backendBaseAPI}a/tools/${rows[index].tool_id}`
             );
             if (res.status === 200) {
                 console.log('Tool deleted', res.data);

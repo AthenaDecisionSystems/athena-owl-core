@@ -5,29 +5,31 @@ const AgentModel = ({ agentModelClassName, setAgentModelClassName, agentModelNam
 
     const modelClassNames = [
         { name: "Anthropic", value: "langchain_anthropic.ChatAnthropic", modelNames: ["claude-3-opus-20240229"] },
-        { name: "Mistral AI", value: "langchain_mistralai.chat_models.ChatMistralAI", modelNames: ["open-mixtral-8x7b", "mistral-large-latest"] },
-        { name: "Ollama", value: "langchain_community.chat_models.ChatOllama", modelNames: [] },
-        { name: "Open AI", value: "langchain_openai.ChatOpenAI", modelNames: ["gpt-3.5-turbo", "gpt-4-turbo", "gpt-4o"] },
+        { name: "Mistral AI", value: "langchain_mistralai.chat_models.ChatMistralAI", modelNames: ["mistral-large-latest", "open-mixtral-8x7b",] },
+        { name: "Open AI", value: "langchain_openai.ChatOpenAI", modelNames: ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"] },
     ];
+
+    const changeModelClassName = (e) => {
+        setAgentModelClassName(e.target.value);
+        setAgentModelName(modelClassNames.find((modelClassName) => (modelClassName.value === e.target.value)).modelNames[0]);
+    }
 
     return (
         <div>
-            <Select id="select-model-class-name"
+            {agentModelClassName && <Select id="select-model-class-name"
                 value={agentModelClassName}
-                labelText="Model Class Name"
-                onChange={(e) => setAgentModelClassName(e.target.value)}>
-                <SelectItem value="" text="" />
+                labelText="LLM"
+                onChange={(e) => changeModelClassName(e)}>
                 {modelClassNames.map((modelClassName, i) => (<SelectItem key={i} value={modelClassName.value} text={modelClassName.name} />))}
-            </Select>
+            </Select>}
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
 
-            <Select id="select-model-name"
+            {agentModelName && <Select id="select-model-name"
                 value={agentModelName}
                 labelText="Model Name"
                 onChange={(e) => setAgentModelName(e.target.value)}>
-                <SelectItem value="" text="" />
                 {modelClassNames.find((modelClassName) => (modelClassName.value === agentModelClassName)).modelNames.map((modelName, i) => (<SelectItem key={i} value={modelName} text={modelName} />))}
-            </Select>
+            </Select>}
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
         </div>
     );

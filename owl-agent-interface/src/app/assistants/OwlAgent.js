@@ -4,10 +4,10 @@ import { Modal, TextArea } from '@carbon/react';
 import { QuestionAndAnswer } from '@carbon/pictograms-react';
 import { ChatBot, UserAvatar, Send } from "@carbon/react/icons";
 import loadingImage from "../assets/loading.gif";
-import { useEnv } from '../providers';
+import { context } from '../providers';
 
 const OwlAgent = ({ assistant, openState, setOpenState, randomNumber }) => {
-    const env = useEnv();
+    const ctx = context();
 
     // Ref for scrolling to the end of messages
     const msgEnd = useRef(null);
@@ -18,8 +18,6 @@ const OwlAgent = ({ assistant, openState, setOpenState, randomNumber }) => {
     const [messages, setMessages] = useState([{ text: "Welcome to the Owl Agent. How can I help you today?", isBot: true }]);
     const [chatHistory, setChatHistory] = useState([]);
     const [resetHistory, setResetHistory] = useState(false);
-    // const [assistantId, setAssistantId] = useState(window._env_.REACT_APP_ASSISTANT_ID_WITH_RULES);
-    // const [assistantIdWithoutRules, setAssistantIdWithoutRules] = useState(window._env_.REACT_APP_ASSISTANT_ID_WITHOUT_RULES);
     const [threadId, setThreadId] = useState(null);
     const [userId, setUserId] = useState("");
 
@@ -93,7 +91,7 @@ const OwlAgent = ({ assistant, openState, setOpenState, randomNumber }) => {
             body: JSON.stringify(body)
         };
 
-        fetch(env.backendBaseAPI + "c/generic_chat", requestOptions)
+        fetch(ctx.env.backendBaseAPI + "c/generic_chat", requestOptions)
             .then(response => response.json())
             .then(data => {
                 console.log("submitMessage: " + JSON.stringify(data));
@@ -142,7 +140,7 @@ const OwlAgent = ({ assistant, openState, setOpenState, randomNumber }) => {
 
     const handleChangeInput = (e) => {
         if (e.target.value.trim() === "demo") {
-            e.target.value = env.demoText;
+            e.target.value = ctx.env.demoText;
         }
         setInput(e.target.value)
     };

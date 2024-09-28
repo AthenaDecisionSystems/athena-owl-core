@@ -7,14 +7,14 @@ import { Octokit } from '@octokit/core';
 import AgentMap from './AgentMap';
 import { Add } from '@carbon/react/icons';
 import Agent from './Agent';
-import { useEnv } from '../providers';
+import { context } from '../providers';
 import { getEnv } from '../env';
 import { useTranslation } from 'react-i18next';
 
 const octokitClient = new Octokit({});
 
 function AgentsPage() {
-  let env = useEnv();
+  let env = context()?.env;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();

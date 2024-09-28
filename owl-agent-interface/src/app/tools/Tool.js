@@ -2,12 +2,12 @@ import { Modal, TextInput } from '@carbon/react';
 import React, { useEffect, useRef, useState } from 'react';
 import { Tools } from '@carbon/pictograms-react';
 import { Octokit } from '@octokit/core';
-import { useEnv } from '../providers';
+import { context } from '../providers';
 
 const octokitClient = new Octokit({});
 
 const Tool = ({ mode, tool, tools, openState, setOpenState, onSuccess, setError }) => {
-    let env = useEnv();
+    let env = context()?.env;
 
     // mode = 'create' or 'edit'
     const [empty, setEmpty] = useState(false)

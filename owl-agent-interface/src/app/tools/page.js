@@ -7,13 +7,13 @@ import { Octokit } from '@octokit/core';
 import ToolMap from './ToolMap';
 import { Add } from '@carbon/react/icons';
 import Tool from './Tool';
-import { useEnv } from '../providers';
+import { context } from '../providers';
 import { getEnv } from '../env';
 
 const octokitClient = new Octokit({});
 
 function ToolsPage() {
-  let env = useEnv();
+  let env = context()?.env;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState();
