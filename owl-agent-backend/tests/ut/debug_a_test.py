@@ -12,22 +12,27 @@ import yaml,json
 from typing import Optional 
 from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgent
 from athena.routers.dto_models import ConversationControl
-
+from langchain_core.messages import AIMessage
 
 class TestAgentsManager(unittest.TestCase):
     def test_calling_base_graph_agent(self):
-        print("\n\n test_calling_base_graph_agent\n")
+        print("\n\n debug a test \n")
         mgr = get_agent_manager()
-        oae: Optional[OwlAgent] = mgr.get_agent_by_id("openai_graph_agent")
+        oae: Optional[OwlAgent] = mgr.get_agent_by_id("base_tool_graph_agent")
         if oae is None:
-            raise ValueError("Base agent not found")
-        base_assistant =  mgr.build_agent_runner(oae.agent_id,"en")
-        assert base_assistant
+            raise ValueError("agent not found")
+        owl_agent =  mgr.build_agent_runner(oae.agent_id,"en")
+        assert owl_agent
         # Default assistant has one LLM and one tool to search the web
         cc = ConversationControl(query="what is langgraph?", thread_id="thread_test")
-        rep = base_assistant.send_conversation(cc)
+        rep = owl_agent.send_conversation(cc)
         assert rep.messages
         print(rep)
+        trace = owl_agent.get_conversation_trace(cc.thread_id)
+        print("-"*40)
+        print( trace)
+        print("-"*40)
+
 
 if __name__ == '__main__':
     unittest.main()

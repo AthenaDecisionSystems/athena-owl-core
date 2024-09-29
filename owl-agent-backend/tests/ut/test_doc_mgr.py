@@ -40,10 +40,10 @@ class TestDocumentManager(unittest.TestCase):
         print(rep)
         assert rep
         assert "chunks" in rep
-        rep = service.search("test","what is rule 53?",1)
-        assert len(rep) == 0 
-        rep = service.search("test","what is Rule 38?",1)
-        print(rep)
+        rep = service.search("test","which rule take into account  payment score and their claims score?",1)
+        assert len(rep) != 0 
+        print(rep[0].page_content)
+        assert "Rule 38" in rep[0].page_content
 
     def test_process_md_from_folder(self):
         print("\n--> test_process_md_from_folder test\n")
@@ -55,8 +55,8 @@ class TestDocumentManager(unittest.TestCase):
         assert "chunks" in rep
         rep = service.search("test","what is Rule 38?",1)
         print(rep)
-        rep = service.search("test","what is rule 53?",1)
-        assert len(rep) == 0 
+        assert len(rep) != 0 
+        print(rep[0].page_content)
         
     def test_process_html_from_folder(self):
         print("\n--> test_process HTML file test\n")
@@ -90,7 +90,7 @@ class TestDocumentManager(unittest.TestCase):
         rep = service.search("do you know OwlAthena")
         print(rep)
 
-    def _test_build_content(self):
+    def test_build_content(self):
         """
         Should create  a file descriptor and a file for processing
         """
@@ -111,10 +111,12 @@ Gahan is widely regarded as one of the greatest rock vocalists of all time, and 
         file_description: FileDescription = FileDescription(name = "Dave_Grahan",
                                                             file_name= "Dave_Grahan.md", 
                                                             type = "md", 
+                                                            collection_name="test",
                                                             description = "The history of a Dave_Grahan.")
         service = get_content_mgr()
         service.process_doc(file_description, content)
-        print(service.search("what kind of problem Dave Gahan has?"))
+        rep=service.search("test","what kind of problem Dave Gahan has?",2)
+        print(rep)
         
 if __name__ == '__main__':
     unittest.main()

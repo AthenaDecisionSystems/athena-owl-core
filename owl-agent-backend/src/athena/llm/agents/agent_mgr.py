@@ -10,7 +10,7 @@ from pydantic import BaseModel
 import uuid
 import yaml
 import logging
-from typing import Optional, Any
+from typing import Optional, Any, List
 from functools import lru_cache
 from athena.app_settings import get_config
 from importlib import import_module
@@ -59,6 +59,7 @@ class OwlAgentDefaultRunner(object):
     def __init__(self, agentEntity: OwlAgent, prompt: Optional[BasePromptTemplate], tool_instances: Optional[list[OwlToolEntity]]):
         self.instantiate_llm(agentEntity,prompt,tool_instances)
         self.agent_id = agentEntity.agent_id
+        self.checkpointer = None
     
     def instantiate_llm(self, agentEntity: OwlAgent, prompt: Optional[BasePromptTemplate], tool_instances: Optional[list[OwlToolEntity]]):
         LOGGER.debug("Initialing base chain OwlAgent")
@@ -150,9 +151,26 @@ class OwlAgentDefaultRunner(object):
     def get_prompt(self):
         return self.prompt
     
+    def getCheckpointer(self):
+        return self.checkpointer
+    
     def invoke(self, request, thread_id: Optional[str], **kwargs) -> dict[str, Any] | Any:
         return self.get_runnable().invoke(request)  # by default a chain agent does not use thread_id.
     
+    def get_conversation_trace(self,thread_id: str) -> List[dict]:
+        checkpointer = self.getCheckpointer()
+        if checkpointer:
+            config = {"configurable": {"thread_id": thread_id}}
+            trace =checkpointer.get(config)['channel_values']
+            tool_traces=[]
+            for m in trace['messages']:
+                if type(m) is AIMessage:
+                    if m.content == "" and len(m.additional_kwargs['tool_calls']) > 0:
+                        tool_traces.append(m.additional_kwargs['tool_calls'][0])
+            return tool_traces
+        else:
+            return []
+
     def _instantiate_model(self,modelName, modelClass, temperature):
         module_path, class_name = modelClass.rsplit('.',1)
         mod = import_module(module_path)

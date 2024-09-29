@@ -51,3 +51,10 @@ def get_or_start_conversation(cc: ConversationControl) -> ResponseControl | None
         return resp
     else:
         raise Exception(f"no agent found with id {cc.agent_id}")
+    
+def get_conversation_trace_given_thread_id(thread_id : str):
+    if thread_id in _ACTIVE_CONV:
+        owl_agent=_ACTIVE_CONV[thread_id]
+        return owl_agent.get_conversation_trace(thread_id)
+    else:
+        return []

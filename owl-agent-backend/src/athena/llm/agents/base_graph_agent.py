@@ -12,6 +12,7 @@ from langchain_core.prompts import BasePromptTemplate
 from langchain_core.runnables.config import RunnableConfig
 from langchain_core.messages import AnyMessage
 
+from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph.message import add_messages
 from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.pregel.types import StateSnapshot
@@ -35,9 +36,8 @@ class BaseGraphAgent(OwlAgentDefaultRunner):
         graph_builder.add_node("chatbot", self.call_chatbot)
         graph_builder.set_entry_point("chatbot")
         graph_builder.set_finish_point("chatbot")
-        self.graph = graph_builder.compile()
-
-        #self.graph = graph_builder.compile(checkpointer=self.memory)
+        self.checkpointer = MemorySaver()
+        self.graph = graph_builder.compile(checkpointer=self.checkpointer)
 
     def call_chatbot(self, state: State):
         """return the new state for the graph"""

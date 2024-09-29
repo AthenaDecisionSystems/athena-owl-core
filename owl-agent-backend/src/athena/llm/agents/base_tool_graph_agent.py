@@ -46,7 +46,8 @@ class BaseToolGraphAgent(OwlAgentDefaultRunner):
         )
         graph_builder.add_edge("tools", "llm")
         graph_builder.set_entry_point("llm")
-        self.graph = graph_builder.compile(checkpointer=MemorySaver())
+        self.checkpointer = MemorySaver()
+        self.graph = graph_builder.compile(checkpointer=self.checkpointer)
 
     def call_llm(self, state: AgentState):
         """return the new state for the graph"""

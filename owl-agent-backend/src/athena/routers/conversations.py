@@ -11,7 +11,7 @@ from typing import AsyncGenerator, NoReturn
 from athena.routers.dto_models import ClosedQuestionControl, ResponseControl, ConversationControl
 from athena.app_settings import get_config
 from athena.glossary.glossary_mgr import build_get_glossary
-from athena.llm.conversations.conversation_mgr import get_or_start_conversation
+from athena.llm.conversations.conversation_mgr import get_or_start_conversation, get_conversation_trace_given_thread_id
 
 """
 Routes for the conversations. There is one instance created per request
@@ -67,6 +67,9 @@ def synchronous_chat_with_owl(conversationControl: ConversationControl) -> Respo
     LOGGER.debug(f"\n@@@> {resp}")
     return resp
 
+@router.get("/conversation/trace/{thread_id}", tags=["Interact"])
+def get_conversation_trace_given_thread_id(thread_id : str):
+    return get_conversation_trace_given_thread_id(thread_id)
 
 @router.post("/chat", tags=["Interact"])
 async def async_chat_with_owl(conversationControl: ConversationControl) -> Response:
