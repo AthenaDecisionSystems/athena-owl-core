@@ -68,7 +68,7 @@ def synchronous_chat_with_owl(conversationControl: ConversationControl) -> Respo
     return resp
 
 @router.get("/conversation/trace/{thread_id}", tags=["Interact"])
-def get_conversation_trace_given_thread_id(thread_id : str):
+def conversation_trace_given_thread_id(thread_id : str):
     return get_conversation_trace_given_thread_id(thread_id)
 
 @router.post("/chat", tags=["Interact"])
