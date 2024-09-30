@@ -249,7 +249,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
         // Scroll to the end of messages when messages change
         console.log("Scroll to the end of messages", messages);
         if (messages.length > 1) {
-            msgEnd.current.scrollIntoView();
+            msgEnd.current.scrollIntoView(false);
         }
     }, [messages]);
 
