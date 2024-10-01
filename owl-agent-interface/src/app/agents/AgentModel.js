@@ -6,7 +6,9 @@ const AgentModel = ({ agentModelClassName, setAgentModelClassName, agentModelNam
     const modelClassNames = [
         { name: "Anthropic", value: "langchain_anthropic.ChatAnthropic", modelNames: ["claude-3-opus-20240229"] },
         { name: "Mistral AI", value: "langchain_mistralai.chat_models.ChatMistralAI", modelNames: ["mistral-large-latest", "open-mixtral-8x7b",] },
-        { name: "Open AI", value: "langchain_openai.ChatOpenAI", modelNames: ["gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"] },
+        {
+            name: "Open AI", value: "langchain_openai.ChatOpenAI", modelNames: ["gpt-4o-2024-08-06", "gpt-4o", "gpt-4-turbo", "gpt-3.5-turbo"]
+        },
     ];
 
     const changeModelClassName = (e) => {

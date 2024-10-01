@@ -45,6 +45,8 @@ function PromptsPage() {
     } catch (error) {
       setError('Error obtaining prompt data:' + error.message);
       console.error('Error obtaining prompt data:', error);
+    } finally {
+      setLoading(false);
     }
   }
 

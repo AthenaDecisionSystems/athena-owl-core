@@ -1,1 +1,2 @@
-export NEXT_PUBLIC_BACKEND_BASE_API=http://localhost:8000/api/v1/
+export NEXT_PUBLIC_BACKEND_BASE_API=http://localhost:8002/api/v1/
+export NEXT_PUBLIC_DEMO_TEXT="Hi IBU, I am on the phone with one of my very important customer. Her name is Sonya Smith. She has a problem with her claim 2 for their water damage. She told me that the carpet is expensive. She is surprised of the current coverage. Sonya finds this very disappointing. What would be the next best action?"
