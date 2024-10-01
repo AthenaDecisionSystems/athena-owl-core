@@ -2,6 +2,7 @@ services:
   owl-backend:
     hostname: owl-backend
     image: athenadecisionsystems/athena-owl-backend:1.0.0
+    pull_policy: always
     container_name: owl-backend
     build:
       context: ../../owl-agent-backend/src
@@ -16,6 +17,7 @@ services:
   owl-frontend:
     hostname: owl-frontend
     image: athenadecisionsystems/athena-owl-frontend:1.0.0
+    pull_policy: always
     container_name: owl-frontend
     build:
       context: ../../owl-agent-interface/

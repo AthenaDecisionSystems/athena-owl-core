@@ -42,7 +42,7 @@ class OwlAgent(BaseModel):
     modelClassName: Optional[str] = None
     runner_class_name: Optional[str] = "athena.llm.agents.agent_mgr.OwlAgentAbstractRunner"
     prompt_ref:  Optional[str] = None
-    temperature: int = 0  # between 0 to 100 and will be converted depending of te LLM
+    temperature: float = 0  # between 0 to 100 and will be converted depending of te LLM
     top_k: int = 1
     top_p: int = 1
     tools: list[str] = []

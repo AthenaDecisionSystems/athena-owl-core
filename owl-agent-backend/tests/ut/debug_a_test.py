@@ -18,19 +18,19 @@ class TestAgentsManager(unittest.TestCase):
     def test_calling_base_graph_agent(self):
         print("\n\n debug a test \n")
         mgr = get_agent_manager()
-        oae: Optional[OwlAgent] = mgr.get_agent_by_id("base_tool_graph_agent")
+        oae: Optional[OwlAgent] = mgr.get_agent_by_id("watson_llama_3_70_agent")
         if oae is None:
             raise ValueError("agent not found")
-        owl_agent =  mgr.build_agent_runner(oae.agent_id,"en")
-        assert owl_agent
+        owl_agent_runner =  mgr.build_agent_runner(oae.agent_id,"en")
+        assert owl_agent_runner
         # Default assistant has one LLM and one tool to search the web
         cc = ConversationControl(query="what is langgraph?", thread_id="thread_test")
-        rep = owl_agent.send_conversation(cc)
+        rep = owl_agent_runner.send_conversation(cc)
         assert rep.messages
-        print(rep)
-        trace = owl_agent.get_conversation_trace(cc.thread_id)
+        print(rep.messages[0].content)
+        trace = owl_agent_runner.get_conversation_trace(cc.thread_id)
         print("-"*40)
-        print( trace)
+        print(f"Trace = {trace}")
         print("-"*40)
 
 

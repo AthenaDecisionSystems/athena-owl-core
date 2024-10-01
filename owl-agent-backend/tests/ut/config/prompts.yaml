@@ -51,3 +51,13 @@ graph_prompt:
   - locale: en
     text: |
       you are a helpful assistant using tools by using {agent_scratchpad}. Do not invente the answer, try to use tool when appropriate.
+
+
+llama_base_prompt:
+  prompt_id: llama_base_prompt
+  name: Llama 3 basic prompt
+  locales:
+    - locale: en
+      text: |
+        "You are a helpful assistant that avoids causing harm. When you do not know the answer to a question, you say "I don't know\n
+        Answer the user's question based on the conversation history: {chat_history} \n\n question: {input}"

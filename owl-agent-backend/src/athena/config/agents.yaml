@@ -87,6 +87,19 @@ mistral_large_agent:
   top_k: 1
   top_p: 1
 
+watson_llama_3_70_agent:
+  agent_id: watson_llama_3_70_agent
+  name: "WatsonX.ai Llam 3 70b Instruct Agent"
+  description: WatsonX ai with Llama 3 at 70b parameters
+  runner_class_name: athena.llm.agents.adaptive_rag_graph.SequenceOfActionAgent
+  modelName: meta-llama/llama-3-70b-instruct
+  modelClassName: langchain_ibm.WatsonxLLM
+  prompt_ref: llama_base_prompt
+  temperature: 0.1
+  top_k: 20
+  top_p: 1
+
+
 fake_agent:
   agent_id: fake_agent
   name: Fake Agent

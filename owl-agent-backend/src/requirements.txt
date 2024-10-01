@@ -22,3 +22,4 @@ pyyaml
 lxml
 beautifulsoup4
 gunicorn
+ibm-watsonx-ai
