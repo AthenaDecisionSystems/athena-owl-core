@@ -47,6 +47,6 @@ def version() -> dict[str,str]:
     return {"Version": get_config().version}
 
 
-@app.put(get_config().api_route + "/reload", tags=["Reload Config"])
+@app.put(get_config().api_route + "/reload", tags=["Server Info"])
 def reload() -> str:
     return config_reload()

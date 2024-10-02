@@ -18,7 +18,7 @@ class ChatMessage(BaseModel):
 # a closed answer is received from the client-side UI app that interacts with the server-side assistant
 class ClosedAnswer(BaseModel):
     """
-    Definition of an answer to a closed question
+    Definition of an answer to a closed question                                                                    
     Answers to closed questions are used to enrich the objects kept as named parameters in the LangGraph AgentState
     """
     key_name: str = ""
