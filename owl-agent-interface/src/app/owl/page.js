@@ -58,20 +58,30 @@ function AgentsPage() {
     const loadData = async () => {
       const agents = await getAgents();
       const tools = await getTools();
-      // Change tool names, add ** at the beginning of the name if the tool has a tag decision
-      const enhancedToolNames = tools.map(tool => {
-        if (tool.tags.includes('decision')) {
-          tool.tool_name = "**" + tool.tool_name;
-        }
-        return tool;
-      }).sort((a, b) => a.tool_name.localeCompare(b.tool_name));;
-      setTools(enhancedToolNames);
-      const prompts = await getPrompts();
-      const agentsWithPrompts = await addPromptDetailsInAllAgents(agents, prompts);
-      const agentsWithTools = agentsWithPrompts.map(agent => ({ ...agent, toolsData: agent.tools.map(tool => (enhancedToolNames.find(t => t.tool_id === tool))) }));
+      if (tools) {
+        // Change tool names, add ** at the beginning of the name if the tool has a tag decision, add ++ if the tool has a tag rag
+        const enhancedToolNames = tools.map(tool => {
+          if (tool.tags.includes('decision')) {
+            tool.tool_name = "*" + tool.tool_name;
+          }
+          if (tool.tags.includes('rag')) {
+            tool.tool_name = "*" + tool.tool_name;
+          }
+          return tool;
+        }).sort((a, b) => a.tool_name.localeCompare(b.tool_name));;
+        setTools(enhancedToolNames);
+        const prompts = await getPrompts();
+        const agentsWithPrompts = await addPromptDetailsInAllAgents(agents, prompts);
+        const agentsWithTools = agentsWithPrompts.map(agent => ({ ...agent, toolsData: agent.tools.map(tool => (enhancedToolNames.find(t => t.tool_id === tool))) }));
 
-      setAgents(agentsWithTools);
-      setActiveAgent(agentsWithTools[0]);
+        setAgents(agentsWithTools);
+        setActiveAgent(agentsWithTools[0]);
+      } else {
+        setAgents(agents);
+        if (agents?.length > 0) {
+          setActiveAgent(agents[0]);
+        }
+      }
 
       setRandomNumber(Math.floor(Math.random() * 1000000000));
     }
@@ -95,6 +105,8 @@ function AgentsPage() {
       setMultiselectToolsKey("multi-select-tools-" + Date.now())
       // Check in activeAgent.tools if any tool id corresponds to a tool in tools that has the tag decision
       setUseDecisionServices(activeAgent.toolsData.some(tool => tool.tags.includes('decision')));
+      // Same with file search and tools that have the tag rag
+      setUseFileSearch(activeAgent.toolsData.some(tool => tool.tags.includes('rag')));
     }
   }, [activeAgent]);
 
@@ -239,20 +251,45 @@ function AgentsPage() {
         }
       });
       setToolSelectedItems({ selectedItems: newToolSelectedItems });
-      setUseDecisionServices(newUseDecisionServices);
     } else {
       // Remove all tools with tags that contain 'decision'
       const newToolSelectedItems = toolSelectedItems.selectedItems.filter(tool => !tool.tags.includes('decision'));
       setToolSelectedItems({ selectedItems: newToolSelectedItems });
-      setUseDecisionServices(newUseDecisionServices);
     }
     setUseDecisionServices(newUseDecisionServices);
+    setMultiselectToolsKey("multi-select-tools-" + Date.now())
+  }
+
+  const toggleUseFileSearch = () => {
+    const newUseFileSearch = !useFileSearch;
+    if (newUseFileSearch) {
+      // Add all tools with tags that contain 'rag'
+      const newToolSelectedItems = toolSelectedItems.selectedItems;
+      tools.forEach(tool => {
+        if (tool.tags.includes('rag')) {
+          if (!newToolSelectedItems.includes(tool)) {
+            newToolSelectedItems.push(tool);
+          }
+        }
+      });
+      setToolSelectedItems({ selectedItems: newToolSelectedItems });
+    } else {
+      // Remove all tools with tags that contain 'rag'
+      const newToolSelectedItems = toolSelectedItems.selectedItems.filter(tool => !tool.tags.includes('rag'));
+      setToolSelectedItems({ selectedItems: newToolSelectedItems });
+    }
+    setUseFileSearch(newUseFileSearch);
     setMultiselectToolsKey("multi-select-tools-" + Date.now())
   }
 
   const updateUseDecisionServicesToggle = (selection) => {
     const newUseDecisionServices = selection.selectedItems.some(tool => tool.tags.includes('decision'));
     setUseDecisionServices(newUseDecisionServices);
+  }
+
+  const updateUseFileSearchToggle = (selection) => {
+    const newUseFileSearch = selection.selectedItems.some(tool => tool.tags.includes('rag'));
+    setUseFileSearch(newUseFileSearch);
   }
 
   return (
@@ -283,7 +320,7 @@ function AgentsPage() {
                 toggled={useFileSearch}
                 labelA="No"
                 labelB="Yes"
-                onClick={() => setUseFileSearch(!useFileSearch)}
+                onClick={toggleUseFileSearch}
                 disabled={false} />
 
               <Toggle id={"UseDecisionServices"}
@@ -306,7 +343,7 @@ function AgentsPage() {
                 items={tools}
                 itemToString={(item) => (item ? item.tool_name : "")}
                 initialSelectedItems={toolSelectedItems.selectedItems}
-                onChange={(selection) => { setToolSelectedItems(selection); updateUseDecisionServicesToggle(selection) }} />)
+                onChange={(selection) => { setToolSelectedItems(selection); updateUseDecisionServicesToggle(selection); updateUseFileSearchToggle(selection) }} />)
               }
 
               <Button renderIcon={Save} kind="primary" onClick={updateAgent}>{"Apply changes"}</Button>
