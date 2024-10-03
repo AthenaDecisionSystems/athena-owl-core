@@ -19,7 +19,7 @@ from athena.app_settings import get_config
 LOGGER = logging.getLogger(__name__)
 LOGGER.setLevel(get_config().logging_level_int)
 DEFAULT_K = 4 
-
+DEFAULT_COLLECTION_NAME="owl_default"
 """
 Service to manage documents for semantic search in vector data base and to support
 Retrieval Augmented Generation. 
@@ -35,7 +35,8 @@ class FileDescription(BaseModel):
     type: str= "md"
     file_name: Optional[str] = ''
     file_base_uri: Optional[str] = ''
-    collection_name: Optional[str] = "default"
+    collection_name: Optional[str] = DEFAULT_COLLECTION_NAME
+
 
 # 09/26/24 Added to support chromadb changes in its call api. so this is a wrapper class for openai embedding only
 class CustomOpenAIEmbeddings(OpenAIEmbeddings):
@@ -172,7 +173,7 @@ class ContentManager:
         return documents
 
 
-    def process_documents(self, docs, collection_name):
+    def process_documents(self, docs, collection_name: str = DEFAULT_COLLECTION_NAME):
         """
         For each documents build a vector representation and persist both in a collection
         """
@@ -201,13 +202,13 @@ class ContentManager:
         return self.content_repo_path
 
 
-    def get_retriever(self, collection_name:str):
+    def get_retriever(self, collection_name:str=DEFAULT_COLLECTION_NAME):
         vs = self.get_vector_store()
         return vs.as_retriever()
 
 
 
-    def get_vector_store(self, collection_name:str ):
+    def get_vector_store(self, collection_name:str =DEFAULT_COLLECTION_NAME):
         """
         When there is a VS URL, access the collection via the http client
         if not use local persistence
@@ -231,7 +232,7 @@ class ContentManager:
         return vdb
 
 
-    def search(self, collection_name: str, query: str, top_k: int) -> List[Tuple[str, float]]:
+    def search(self, collection_name: str=DEFAULT_COLLECTION_NAME, query: str = "", top_k: int = 1) -> List[Tuple[str, float]]:
         vs = self.get_vector_store(collection_name)
         # query_embedding = embeddings[get_config().owl_agent_vs_embedding_fct](query)
         docs = vs.similarity_search(
@@ -241,7 +242,7 @@ class ContentManager:
         # vector_store.similarity_search_by_vector
         return docs
 
-    def clear_collection(self, collection_name: str):
+    def clear_collection(self, collection_name: str= DEFAULT_COLLECTION_NAME):
         vs = self.get_vector_store(collection_name)
         vs._client.delete_collection(collection_name)
 

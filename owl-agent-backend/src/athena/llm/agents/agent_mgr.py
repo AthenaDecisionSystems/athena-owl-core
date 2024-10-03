@@ -136,7 +136,6 @@ class OwlAgentDefaultRunner(object):
             request = { "input": [controller.query], "chat_history" : lg_chat_history }
             agent_resp= self.invoke(request, controller.thread_id)   # AIMessage
             resp= self.build_response(controller, agent_resp)
-            
         return resp
     
     def get_runnable(self):

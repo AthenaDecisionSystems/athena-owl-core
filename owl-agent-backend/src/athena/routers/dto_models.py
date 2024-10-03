@@ -57,11 +57,9 @@ class ClosedQuestionControl(BaseModel):
 
 class ConversationControl(BaseModel):
     locale: Optional[str] = "en"
-
     query: Optional[str] = None
     closed_answers: Optional[List[ClosedAnswer]] = None
     reenter_into: Optional[str] = None
-
     reset: bool = False  # to reset everything back to default config.
     callWithVectorStore: Optional[bool] = False
     user_id: Optional[str] = ""
@@ -97,9 +95,7 @@ class ResponseControl(BaseModel):
     messages: Optional[List[StyledMessage]] = None
     closed_questions: Optional[List[OwlClosedQuestionEntity]] = None    
     reenter_into: Optional[str] = None
-
     status: int = 200
-  
     error: Optional[str] = ''
     chat_history: List[ChatMessage] = []
     user_id: Optional[str] = ""
