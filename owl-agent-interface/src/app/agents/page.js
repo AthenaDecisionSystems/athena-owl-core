@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Column, Grid, SkeletonText, ToastNotification } from '@carbon/react';
+import { Button, Column, Grid, SkeletonText, ToastNotification, Toggle } from '@carbon/react';
 
 import React, { useEffect, useState } from 'react';
 import { Octokit } from '@octokit/core';
@@ -23,6 +23,7 @@ function AgentsPage() {
   const [runnerClassNames, setRunnerClassNames] = useState([]);
 
   const [open, setOpen] = useState(false);
+  const [showHiddenAgents, setShowHiddenAgents] = useState(false);
 
   const { t, i18n } = useTranslation();
 
@@ -104,9 +105,17 @@ function AgentsPage() {
         </Column>
       )}
 
-      {!loading && (<AgentMap backendBaseAPI={env.backendBaseAPI} rows={rows} setRows={setRows} prompts={prompts} runnerClassNames={runnerClassNames} setError={setError} reloadAgents={reloadAgents} />)}
+      {!loading && (<AgentMap backendBaseAPI={env.backendBaseAPI} rows={rows} setRows={setRows} prompts={prompts} runnerClassNames={runnerClassNames} showHiddenAgents={showHiddenAgents} setError={setError} reloadAgents={reloadAgents} />)}
 
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
+        <Toggle id="show-hidden-agents"
+          size="sm"
+          labelText="Show hidden agents"
+          defaultToggled={showHiddenAgents}
+          labelA="No"
+          labelB="Yes"
+          onClick={() => setShowHiddenAgents(!showHiddenAgents)} />
+        <br />
         {error && (<ToastNotification role="alert" caption={error} timeout={5000} title="Error" subtitle="" />)}
       </Column>
     </Grid>

@@ -8,7 +8,7 @@ import OwlAgentModal from './OwlAgentModal';
 
 const octokitClient = new Octokit({});
 
-export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNames, setError, reloadAgents }) => {
+export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNames, showHiddenAgents, setError, reloadAgents }) => {
     const [openPopoverLLMTable, setOpenPopoverLLMTable] = useState([]);
     const [openPopoverToolsTable, setOpenPopoverToolsTable] = useState([]);
     const [openPopoverPromptTable, setOpenPopoverPromptTable] = useState([]);
@@ -105,7 +105,7 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
             {(editAgent !== -1) && (
                 <Agent backendBaseAPI={backendBaseAPI} mode="edit" agent={rows[editAgent]} agents={rows} prompts={prompts} runnerClassNames={runnerClassNames} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />
             )}
-            {rows.filter(row => !row.hidden_to_ui).map((row, i) => (<Column key={i} lg={3} md={2} sm={2} >
+            {rows.filter(row => showHiddenAgents ? true : !row.hidden_to_ui).map((row, i) => (<Column key={i} lg={3} md={2} sm={2} >
                 <AspectRatio className="card" ratio="4x3" onDoubleClick={() => startEdition(i)}>
                     <div className="card-header" >
                         <WatsonxData style={{ padding: "0.5rem", cursor: "pointer" }} onClick={() => startOwlAgent(i)} />
@@ -115,7 +115,6 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
                             <OverflowMenuItem hasDivider isDelete itemText="Delete" onClick={() => deleteAgent(i)} />
                         </OverflowMenu>
                     </div>
-                    <div className="card-name">{row.hidden_to_ui ? "Hidden" : "Visible"}</div>
                     <div className="card-name">{row.name}</div>
                     <div className="card-item-id">{row.agent_id}</div>
                     <div className="card-description">{row.description}</div>
