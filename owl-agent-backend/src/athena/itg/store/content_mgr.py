@@ -210,7 +210,7 @@ class ContentManager:
 
     def get_vector_store(self, collection_name:str =DEFAULT_COLLECTION_NAME):
         """
-        When there is a VS URL, access the collection via the http client
+        When there is a Vector Store URL, access the collection via the http client
         if not use local persistence
         """
         url = get_config().owl_agent_vs_url
