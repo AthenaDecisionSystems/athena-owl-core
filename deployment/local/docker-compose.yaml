@@ -13,6 +13,9 @@ services:
       #OPENAI_API_KEY: $OPENAI_API_KEY
     env_file:
       - .env
+    volumes:
+      - ./data/file_content:/app/file_content
+      - ./data/vs_db:/app/vs_db
  
   owl-frontend:
     hostname: owl-frontend

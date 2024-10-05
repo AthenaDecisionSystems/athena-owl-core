@@ -26,7 +26,7 @@ class AppSettings(BaseSettings):
     owl_tools_path: str = "/app/athena/config/tools.yaml"
     owl_agent_content_collection_name: str = "base_collection"
     owl_agent_content_file_path: str = "/app/file_content"
-    owl_agent_vs_path: str = "./chromadb"
+    owl_agent_vs_path: str = "./vs_db"
     owl_agent_vs_url: str = ""
     owl_agent_vs_embedding_fct: str = "OpenAIEmbeddings"
     owl_agent_vs_embedding_fct_model: str = "text-embedding-3-large"

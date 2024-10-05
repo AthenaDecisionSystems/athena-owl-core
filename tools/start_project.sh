@@ -1,4 +1,5 @@
 #!/bin/bash
+# A Script to jump start a project.
 DEMO_NAME=owl-demo-base
 
 if [[ $# -eq 1 ]]; then
@@ -11,6 +12,6 @@ fi
 
 cd $DEMO_NAME
 if [ ! -f .env ]; then
-    cp ../tools/.env_tmpl .env
+    curl -X GET https://https://raw.githubusercontent.com/AthenaDecisionSystems/athena-owl-core/refs/heads/main/tools/.env_tmpl .env
 fi
-cp -r ../tools/demo_tmpl/* .
+curl -X GET https://github.com/AthenaDecisionSystems/athena-owl-core/tree/main/tools/demo_tmpl.zip 

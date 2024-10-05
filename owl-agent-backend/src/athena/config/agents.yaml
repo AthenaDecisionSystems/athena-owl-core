@@ -6,6 +6,7 @@ openai_chain_agent:
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
   modelClassName: langchain_openai.ChatOpenAI
   modelName: gpt-4o-2024-08-06
+  hidden_to_ui: false
   prompt_ref: default_prompt
   temperature: 0
   top_k: 1
@@ -19,6 +20,7 @@ openai_tool_chain:
   modelName: gpt-4o-2024-08-06
   modelClassName: langchain_openai.ChatOpenAI
   prompt_ref: openai_functions_prompt
+  hidden_to_ui: false
   temperature: 0
   top_k: 1
   top_p: 1
@@ -33,18 +35,20 @@ openai_graph_agent:
   modelClassName: langchain_openai.ChatOpenAI
   modelName: gpt-4o-2024-08-06
   prompt_ref: default_prompt
+  hidden_to_ui: false
   temperature: 0
   top_k: 1
   top_p: 1
 
 base_tool_graph_agent:
   agent_id: base_tool_graph_agent
-  name: "Base Graph OpenAI Agent using tools"
+  name: "Base Reason Act cycle graph using LangGraph OpenAI Agent using tools"
   runner_class_name: athena.llm.agents.base_tool_graph_agent.BaseToolGraphAgent
   modelClassName: langchain_openai.ChatOpenAI
   description: A default agent that uses LLM and search tool to do web search
   modelName:  gpt-4o-2024-08-06
   prompt_ref: graph_prompt
+  hidden_to_ui: false
   temperature: 0
   top_k: 1
   top_p: 1
@@ -58,6 +62,7 @@ anthropic_claude_3_base:
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
   modelClassName: langchain_anthropic.ChatAnthropic
   modelName: claude-3-opus-20240229
+  hidden_to_ui: false
   prompt_ref: default_prompt
   temperature: 0
   top_k: 1
@@ -71,6 +76,7 @@ ollama_mistral:
   modelName: mistral
   modelClassName: langchain_community.chat_models.ChatOllama
   prompt_ref: mistral_rag_prompt
+  hidden_to_ui: false
   temperature: 0
   top_k: 1
   top_p: 1
@@ -83,6 +89,7 @@ mistral_large_agent:
   modelName: mistral-large-latest
   modelClassName: langchain_mistralai.chat_models.ChatMistralAI
   prompt_ref: mistral_rag_prompt
+  hidden_to_ui: false
   temperature: 0
   top_k: 1
   top_p: 1
@@ -95,6 +102,7 @@ watson_llama_3_70_agent:
   modelName: meta-llama/llama-3-70b-instruct
   modelClassName: langchain_ibm.WatsonxLLM
   prompt_ref: llama_base_prompt
+  hidden_to_ui: false
   temperature: 0.1
   top_k: 20
   top_p: 1
@@ -107,6 +115,7 @@ fake_agent:
   runner_class_name: athena.llm.agents.fake_agent.FakeAgent
   modelName: not_needed
   prompt_ref: default_prompt
+  hidden_to_ui: true
   temperature: 0
   top_k: 1
   top_p: 1
