@@ -397,7 +397,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
 
     const handleEnter = async (e) => {
         // Handle enter key press: Enter to submit message, Shift+Enter to add a new line
-        if (e.key === "Enter" && !e.shiftKey) {
+        if (e.key === "Enter" && !e.shiftKey && input.trim() !== "") {
             await handleSend();
         }
         // Arrow Up to get last message
