@@ -23,6 +23,10 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.agents import create_tool_calling_agent, AgentExecutor, create_json_chat_agent, create_structured_chat_agent
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import AIMessage, HumanMessage
+from ibm_watsonx_ai import Credentials
+from ibm_watsonx_ai.metanames import GenTextParamsMetaNames
+
+import os
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)-8s %(message)s',
@@ -35,7 +39,7 @@ class OwlAgent(BaseModel):
     """
     Entity definition to persist data about a OwlAgent
     """
-    agent_id: str = str(uuid.uuid4())
+    agent_id: Optional[str] = str(uuid.uuid4())
     name: str = ""
     description: Optional[str] = None
     modelName: str = ""
@@ -69,7 +73,7 @@ class OwlAgentDefaultRunner(object):
             self.prompt = ChatPromptTemplate.from_messages([
                         ("system", "You are a helpful assistant"),
             ])
-        self.model=self._instantiate_model(agentEntity.modelName, agentEntity.modelClassName, agentEntity.temperature)
+        self.model=self._instantiate_model(agentEntity)
         if tool_instances:
             self.tools = tool_instances
             agent = create_tool_calling_agent(self.model, self.tools, self.prompt)
@@ -170,12 +174,33 @@ class OwlAgentDefaultRunner(object):
         else:
             return []
 
-    def _instantiate_model(self,modelName, modelClass, temperature):
-        module_path, class_name = modelClass.rsplit('.',1)
+    def _instantiate_model(self,agentEntity: OwlAgent):
+        module_path, class_name = agentEntity.modelClassName.rsplit('.',1)
         mod = import_module(module_path)
         llm_model_class = getattr(mod, class_name)
-        return llm_model_class(model=modelName, temperature= temperature/100)
+        if "watsonx" in class_name.lower():
+            return self._special_watsonx(llm_model_class,agentEntity)
+        return llm_model_class(model=agentEntity.modelName, temperature= agentEntity.temperature)
  
+    def _special_watsonx(self, llm_model_class, agentEntity):
+        project_id=os.environ.get("IBM_WATSON_PROJECT_ID")
+        watson_api_key=os.environ.get("IBM_WATSONX_APIKEY")
+        watsonx_url=os.environ.get("IBM_WATSONX_URL")
+        credentials = Credentials(url=watsonx_url,
+                                  api_key=watson_api_key)
+        parameters = {
+            GenTextParamsMetaNames.DECODING_METHOD: "sample",
+            GenTextParamsMetaNames.MAX_NEW_TOKENS: 200,
+            GenTextParamsMetaNames.MIN_NEW_TOKENS: 10,
+            GenTextParamsMetaNames.TEMPERATURE: agentEntity.temperature,
+            GenTextParamsMetaNames.TOP_K: agentEntity.top_k,
+        }
+        return llm_model_class(url=credentials.get('url'),
+                      apikey=credentials.get('apikey'),
+                      project_id=project_id,
+                      model_id=agentEntity.modelName,
+                      params=parameters
+                    )
     
 class AgentManager(object):
     """
@@ -194,6 +219,7 @@ class AgentManager(object):
             a_dict = yaml.load(f, Loader=yaml.FullLoader)  # a dict with assistant entities
             for oa in a_dict:
                 oae=OwlAgent.model_validate(a_dict[oa])
+                oae.agent_id=oa
                 self.AGENTS[oae.agent_id]=oae
     
     def get_agents(self) -> dict[str,OwlAgent]:

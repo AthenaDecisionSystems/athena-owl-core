@@ -8,6 +8,7 @@ owl_env/
 **/database/
 __pycache__/
 **/chromadb/
+**/vs_db/
 **/file_content/
 site/
 owl-demo-base/
