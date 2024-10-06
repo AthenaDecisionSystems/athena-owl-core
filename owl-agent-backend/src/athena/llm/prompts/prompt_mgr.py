@@ -142,7 +142,11 @@ class Prompts:
     def load_prompts(self, path: str = "prompts.json"):
         """Reads the prompts from a file."""
         with open(path, "r", encoding="utf-8") as f:
-            self.PROMPTS = yaml.load(f, Loader=yaml.FullLoader)  # a dict with prompts
+            a_dict= yaml.load(f, Loader=yaml.FullLoader)  # a dict with prompts
+            for oa in a_dict:
+                oae=OwlPromptEntity.model_validate(a_dict[oa])
+                oae.prompt_id = oa
+                self.PROMPTS[oae.prompt_id]=oae
          
 
 @lru_cache

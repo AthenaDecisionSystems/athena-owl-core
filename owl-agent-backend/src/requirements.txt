@@ -4,6 +4,7 @@ langchain-openai
 langchain-anthropic
 langchain-mistralai
 langchain-chroma
+langchain-milvus
 langchain_ibm
 langchain_community 
 langchain

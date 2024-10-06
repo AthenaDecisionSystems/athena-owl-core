@@ -1,5 +1,4 @@
 openai_chain_agent:
-  agent_id: openai_chain_agent
   name: OpenAI chain
   description: OpenAI based agent with simple prompt 
   #class_name: athena.llm.agents.agent_openai.OpenAIAgent
@@ -12,7 +11,6 @@ openai_chain_agent:
   top_p: 1
 
 openai_tool_chain:
-  agent_id: openai_tool_chain
   name: OpenAI with tool chain
   description: openai based agent with prompt coming from langchain hub  and tool
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
@@ -26,7 +24,6 @@ openai_tool_chain:
   - tavily
 
 openai_graph_agent:
-  agent_id: openai_graph_agent
   name: "Base Graph Agent using OpenAI"
   description: openai based agent using graph and simple prompt 
   runner_class_name: athena.llm.agents.base_graph_agent.BaseGraphAgent
@@ -38,7 +35,6 @@ openai_graph_agent:
   top_p: 1
 
 base_tool_graph_agent:
-  agent_id: base_tool_graph_agent
   name: "Base Graph OpenAI Agent using tools"
   runner_class_name: athena.llm.agents.base_tool_graph_agent.BaseToolGraphAgent
   modelClassName: langchain_openai.ChatOpenAI
@@ -51,8 +47,19 @@ base_tool_graph_agent:
   tools:
   - tavily
 
+watson_graph_agent:
+  name: "Base Graph with Watson Llama 3 Agent"
+  runner_class_name: athena.llm.agents.base_graph_agent.BaseGraphAgent
+  description: A default agent that uses LLM using WatsonX and Llama3
+  modelName: meta-llama/llama-3-70b-instruct
+  modelClassName: langchain_ibm.WatsonxLLM
+  prompt_ref: default_prompt
+  temperature: 0.2
+  top_k: 1
+  top_p: 1
+
+
 anthropic_claude_3_base:
-  agent_id: anthropic_claude_3_base
   name: Claude-3 Opus
   description: Anthropic Claude 3 based agent with simple prompt 
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
@@ -64,7 +71,6 @@ anthropic_claude_3_base:
   top_p: 1
 
 ollama_mistral:
-  agent_id: ollama_mistral
   name: "Ollama Mistral"
   description: Mistral model running locally with Ollama
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
@@ -76,7 +82,6 @@ ollama_mistral:
   top_p: 1
 
 mistral_large_agent:
-  agent_id: mistral_large_agent
   name: "Mistral large agent"
   description: Mistral large model via Mistral API 
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
@@ -88,7 +93,6 @@ mistral_large_agent:
   top_p: 1
 
 watson_llama_3_70_agent:
-  agent_id: watson_llama_3_70_agent
   name: "WatsonX.ai Llam 3 70b Instruct Agent"
   description: WatsonX ai with Llama 3 at 70b parameters
   runner_class_name: athena.llm.agents.adaptive_rag_graph.SequenceOfActionAgent
@@ -101,7 +105,6 @@ watson_llama_3_70_agent:
 
 
 fake_agent:
-  agent_id: fake_agent
   name: Fake Agent
   description: Fake agent for testing 
   runner_class_name: athena.llm.agents.fake_agent.FakeAgent

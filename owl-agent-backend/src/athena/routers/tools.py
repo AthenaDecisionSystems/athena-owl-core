@@ -24,9 +24,9 @@ def get_all_tools() -> List[OwlToolEntity]:
 def get_tool_by_id(id: str) -> OwlToolEntity:
     return get_tool_entity_manager().get_tool_by_id(id)
 
-@router.get("/tools/name/{name}", tags=["Manage tools"])
-def get_tool_by_name(name: str) -> OwlToolEntity | None:
-    return get_tool_entity_manager().get_tool_by_name(name)
+@router.get("/tools/functionname/{name}", tags=["Manage tools"])
+def get_tool_by_function_name(name: str) -> OwlToolEntity | None:
+    return get_tool_entity_manager().get_tool_by_function_name(name)
 
 @router.post("/tools/", tags=["Manage tools"])
 def new_tool_entity(e: OwlToolEntity) -> str:

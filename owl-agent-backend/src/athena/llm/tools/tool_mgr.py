@@ -11,7 +11,7 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 class OwlToolEntity(BaseModel):
     """
     Delaration of a tool entity, read from yaml definition"""
-    tool_id: str = ""
+    tool_id: Optional[str] = ""
     tool_name: Optional[str] = ""
     tool_description: Optional[str] = ""
     tool_class_name: Optional[str] = ""
@@ -35,6 +35,7 @@ class ToolManager():
             a_dict = yaml.load(f, Loader=yaml.FullLoader)  # a dict with assistant entities
             for oa in a_dict:
                 oae=OwlToolEntity.model_validate(a_dict[oa])
+                oae.tool_id = oa
                 self.TOOLS[oae.tool_id]=oae
     
     def save_tool(self, toolEntity: OwlToolEntity) -> str:
@@ -46,7 +47,7 @@ class ToolManager():
     def get_tool_by_id(self, id: str) -> OwlToolEntity:
         return self.TOOLS[id]
     
-    def get_tool_by_name(self, name: str) -> OwlToolEntity | None:
+    def get_tool_by_function_name(self, name: str) -> OwlToolEntity | None:
         for e in self.TOOLS:
             if self.TOOLS[e].tool_fct_name == name:
                 return self.TOOLS[e]
