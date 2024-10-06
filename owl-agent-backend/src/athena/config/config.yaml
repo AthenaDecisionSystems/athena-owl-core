@@ -1,18 +1,26 @@
 logging_level: DEBUG
-version: v0.0.7
+version: v0.0.8
 owl_env_path: ../.env
+# this is a page to test websocket
 app_index_path: /app/athena/routers/index.html
+# The different paths to access the different files to configure the backend.
+# Those paths are absolute from within the container. For testing use another config file
 owl_glossary_path: /app/athena/config/glossary.json
 owl_agents_path: /app/athena/config/agents.yaml
 owl_tools_path: /app/athena/config/tools.yaml
 owl_prompts_path: /app/athena/config/prompts.yaml
+# Content manage is to persist uploaded file, and manage vector store
 owl_agent_content_collection_name: base_collection
 owl_agent_content_file_path: /app/file_content
-# do not use chroma in client server in cost use case
-# owl_agent_vs_url: http://localhost:8010
-owl_agent_vs_path: /app/vs_db
+# For milvus specify the file name with prefix .db
+#owl_agent_vs_path: /app/vs_db/milvus.db
+owl_agent_vs_path: /app/vs_db/
+# for the class to user, the framework supports Chroma or Milvus (default) only
+owl_agent_vs_class_name: langchain_chroma.Chroma
+#owl_agent_vs_class_name: langchain_milvus.Milvus
 owl_agent_vs_embedding_fct: OpenAIEmbeddings
 owl_agent_vs_embedding_fct_model: text-embedding-3-large
+
 owl_agent_llm_history_length: 5
 owl_agent_tool_factory_class:  athena.llm.tools.tool_mgr.DefaultToolInstanceFactory
 owl_agent_decision_service_fct_name: athena.itg.decisions.nba_ds_dummy.callDecisionService

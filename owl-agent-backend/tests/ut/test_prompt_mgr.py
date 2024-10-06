@@ -13,21 +13,27 @@ class TestPromptsManager(unittest.TestCase):
 
 
     def test_get_all_prompts(self):
+        """ The propmpt manager loads the definitions the first time it is called.
+        """
         p_mgr=get_prompt_manager()
         l=p_mgr.get_prompts()
         assert l
+        assert len(l) > 1
         assert l["default_prompt"]
         opeDict=l["default_prompt"]
         ope=OwlPromptEntity.model_validate(opeDict)
         assert ope.name == "default_prompt"
+        assert ope.locales
+        assert ope.locales[0]
         print(ope.locales[0].text)
 
-    def test_get_default_prompt(self):
+    def test_get_prompt_fct(self):
         # Should get the default prompt string
         p_mgr=get_prompt_manager()
         assert p_mgr
         p=p_mgr.get_prompt("default_prompt")
         assert p
+        assert type(p) == str
         assert "question based" in p
 
     def test_get_wrong_prompt(self):
@@ -71,6 +77,9 @@ class TestPromptsManager(unittest.TestCase):
         assert locales["en"]
         
     def test_build_prompt_from_prompt_entity(self):
+        """
+        Validate creation of prompt template 
+        """
         print("\n\n --- test_build_prompt_instance_from_prompt_entity")
         p_mgr=get_prompt_manager()
         prompt = p_mgr.build_prompt("default_prompt","en")

@@ -10,20 +10,25 @@ from athena.itg.store.content_mgr import get_content_mgr, FileDescription
 
 class TestDocumentManager(unittest.TestCase):
     """
-    Test all operations of the content manager with vector store, remote or local
+    Test all operations of the content manager with vector store, local
     """
+    @classmethod
+    def setUpClass(cls):
+        cls.service = get_content_mgr()
 
     def test_1_no_file_doc_post_operation(self):
         """
         Validate we cannot post without any file uploaded
         """
-        service = get_content_mgr()
-        assert service
+        assert self.service
         with self.assertRaises(Exception) as context:
-            rep=service.process_doc(None,None)
+            rep=self.service.process_doc(None,None)
         self.assertTrue('description content is mandatory' in str(context.exception))
 
     def build_file_descriptor(self, type: str,fname: str):
+        """
+        define a file descriptor to be reused by test cases
+        """
         fd=FileDescription()
         fd.name="Claims-complaint-rules"
         fd.file_name=fname
@@ -32,28 +37,32 @@ class TestDocumentManager(unittest.TestCase):
         fd.collection_name="test"
         return fd
     
-    def test_process_txt_from_folder(self):
+    def _test_process_txt_from_folder(self):
+        """ 
+        Validate reading, chunking, then searching stuff from a text file
+        """
         print("\n--> test_process_ text\n")
         fd = self.build_file_descriptor("text","ibu-claims-complaint-rules.txt")
-        service = get_content_mgr()
-        rep=service.process_doc(fd,None)
+        rep=self.service.process_doc(fd,None)
         print(rep)
         assert rep
         assert "chunks" in rep
-        rep = service.search("test","which rule take into account  payment score and their claims score?",1)
+        rep = self.service.search("test","which rule take into account  payment score and their claims score?",1)
         assert len(rep) != 0 
         print(rep[0].page_content)
         assert "Rule 38" in rep[0].page_content
 
     def test_process_md_from_folder(self):
+        """ 
+        Validate reading, chunking, then searching stuff from a markdown file
+        """
         print("\n--> test_process_md_from_folder test\n")
         fd = self.build_file_descriptor("md","ibu-claims-complaint-rules.md")
-        service = get_content_mgr()
-        rep=service.process_doc(fd,None)
+        rep=self.service.process_doc(fd,None)
         print(rep)
         assert rep
         assert "chunks" in rep
-        rep = service.search("test","what is Rule 38?",1)
+        rep = self.service.search("test","what is Rule 38?",1)
         print(rep)
         assert len(rep) != 0 
         print(rep[0].page_content)
@@ -61,36 +70,34 @@ class TestDocumentManager(unittest.TestCase):
     def test_process_html_from_folder(self):
         print("\n--> test_process HTML file test\n")
         fd = self.build_file_descriptor("html","ibu-claims-complaint-rules.html")
-        service = get_content_mgr()
-        rep=service.process_doc(fd,None)
+        rep=self.service.process_doc(fd,None)
         assert rep
-        rep = service.search("test","what is the content of rule 41?",1 )
+        rep = self.service.search("test","what is the content of rule 41?",1 )
         print(rep)
 
     def _test_process_pdf_from_folder(self):
         print("\n--> test_process_pdf_from_folder\n")
         fd = self.build_file_descriptor("pdf")
         fd.file_name="ibu-claims-complaint-rules.pdf"
-        service = get_content_mgr()
-        rep=service.process_doc(fd,None)
+        rep=self.service.process_doc(fd,None)
         assert rep
-        rep = service.search("what is claim handling")
+        rep = self.service.search("test","what is claim handling",2)
         print(rep[0].page_content.encode())
 
-    def _test_process_html_from_URL(self):
-        print("\n--> test_process HTML page test\n")
+    def test_process_html_from_URL(self):
+        print("\n--> test_process load HTML pagefrom public web site and search\n")
         fd=FileDescription()
         fd.name="athena-decision-web"
         fd.file_name= fd.name
         fd.type="html"
-        fd.file_base_uri="https://athenadecisions.com/"
-        service = get_content_mgr()
-        rep=service.process_doc(fd,None)
+        fd.file_base_uri="https://athenadecisionsystems.github.io/athena-docs/"
+        rep=self.service.process_doc(fd,None)
         assert rep
-        rep = service.search("do you know OwlAthena")
+        rep = self.service.search("test","do you know Owl framework from Athena?",2)
         print(rep)
 
     def test_build_content(self):
+        print("\n--> test_build_content\n")
         """
         Should create  a file descriptor and a file for processing
         """
@@ -113,9 +120,8 @@ Gahan is widely regarded as one of the greatest rock vocalists of all time, and 
                                                             type = "md", 
                                                             collection_name="test",
                                                             description = "The history of a Dave_Grahan.")
-        service = get_content_mgr()
-        service.process_doc(file_description, content)
-        rep=service.search("test","what kind of problem Dave Gahan has?",2)
+        self.service.process_doc(file_description, content)
+        rep=self.service.search("test","what kind of problem Dave Gahan has?",2)
         print(rep)
         
 if __name__ == '__main__':

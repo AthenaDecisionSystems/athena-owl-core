@@ -6,10 +6,12 @@ Copyright 2024 Athena Decision Systems
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownHeaderTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_chroma import Chroma
+from langchain_milvus import Milvus
 from langchain_community.document_loaders import PyMuPDFLoader, BSHTMLLoader, WebBaseLoader
 from langchain_core.documents import Document
 
 import os, logging
+from importlib import import_module
 from typing import List, Optional, Dict, Tuple, Any
 from pydantic import BaseModel
 import chromadb
@@ -146,7 +148,8 @@ class ContentManager:
         docs=[]
         with open(file_description.file_base_uri + "/" + file_description.file_name, 'r') as file:
             markdown_document = file.read()
-            headers_to_split_on =[ ("#", "Header 1"), ("##", "Header 2"), ("###", "Header 3")]
+            # no space in the header name for the metadata
+            headers_to_split_on =[ ("#", "Header_1"), ("##", "Header_2"), ("###", "Header_3")]
             markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=headers_to_split_on)
             docs = markdown_splitter.split_text(markdown_document)
             # docs include metadatas with headers reference
@@ -177,15 +180,23 @@ class ContentManager:
         """
         For each documents build a vector representation and persist both in a collection
         """
-        vs = self.get_vector_store(collection_name)
-        vs.from_documents(documents=docs, 
+        uri,vs = self.get_vector_store(collection_name)
+        if uri: # this is a hack as from document will have different parameters
+            vs.from_documents(  # Milvus
+                docs,
+                embeddings[get_config().owl_agent_vs_embedding_fct],
+                collection_name=collection_name,
+                connection_args={"uri": uri},
+            )
+        else:  # chroma
+            vs.from_documents(documents=docs, 
                           client=vs._client,
                           persist_directory=vs._persist_directory,
                           embedding= embeddings[get_config().owl_agent_vs_embedding_fct],
                           collection_name=collection_name)
 
         LOGGER.debug(f"Vector store updated with {len(docs)} docs")
-        LOGGER.debug(f" within {vs._client.count_collections()} collection")
+        
 
 
 
@@ -203,9 +214,8 @@ class ContentManager:
 
 
     def get_retriever(self, collection_name:str=DEFAULT_COLLECTION_NAME):
-        vs = self.get_vector_store()
+        _,vs = self.get_vector_store()
         return vs.as_retriever()
-
 
 
     def get_vector_store(self, collection_name:str =DEFAULT_COLLECTION_NAME):
@@ -213,27 +223,46 @@ class ContentManager:
         When there is a Vector Store URL, access the collection via the http client
         if not use local persistence
         """
+        module_path, class_name= get_config().owl_agent_vs_class_name.rsplit('.',1)
+        mod = import_module(module_path)
+        runner_class = getattr(mod, class_name)
+        uri = None
         url = get_config().owl_agent_vs_url
         path=get_config().owl_agent_vs_path
+        embedding_fct=embeddings[get_config().owl_agent_vs_embedding_fct]
         if path and len(url) == 0:
-            client = chromadb.PersistentClient(path)
-            vdb=Chroma(client=client, 
-                       collection_name=collection_name,
-                       persist_directory=path,
-                       embedding_function=embeddings[get_config().owl_agent_vs_embedding_fct],)
-        else:
-            host,port = url.split(':')
-            client = chromadb.HttpClient(host= host, port=port)
-            vdb=Chroma(client=client, collection_name=collection_name,embedding_function=embeddings[get_config().owl_agent_vs_embedding_fct],)
-        client.get_or_create_collection(name=collection_name, 
+            if class_name == "Chroma":
+                client = chromadb.PersistentClient(path)
+                client.get_or_create_collection(name=collection_name, 
                                     embedding_function=embeddings[get_config().owl_agent_vs_embedding_fct],
                                     metadata={"hnsw:space": "cosine"})
-        
-        return vdb
+            else:
+                uri=path
+                connect_args={"uri": uri}
+        elif class_name == "Chroma":   # remote based connection
+            host,port = url.split(':')
+            client = chromadb.HttpClient(host= host, port=port)
+            client.get_or_create_collection(name=collection_name, 
+                                    embedding_function=embeddings[get_config().owl_agent_vs_embedding_fct],
+                                    metadata={"hnsw:space": "cosine"})
+        else:
+            host,port = url.split(':')
+            uri = "http://"+ host+ ":" + port
+            connect_args={ "host": host, "port": port, }
+        if class_name == "Milvus":
+            vdb= runner_class(embedding_function=embedding_fct,
+                             collection_name=collection_name,
+                             connection_args=connect_args)
+        else:
+            vdb= runner_class(client=client, 
+                       collection_name=collection_name,
+                       persist_directory=path,
+                       embedding_function=embedding_fct)
+        return uri,vdb
 
 
     def search(self, collection_name: str=DEFAULT_COLLECTION_NAME, query: str = "", top_k: int = 1) -> List[Tuple[str, float]]:
-        vs = self.get_vector_store(collection_name)
+        _,vs = self.get_vector_store(collection_name)
         # query_embedding = embeddings[get_config().owl_agent_vs_embedding_fct](query)
         docs = vs.similarity_search(
                query,  # type: ignore
@@ -243,7 +272,7 @@ class ContentManager:
         return docs
 
     def clear_collection(self, collection_name: str= DEFAULT_COLLECTION_NAME):
-        vs = self.get_vector_store(collection_name)
+        _,vs = self.get_vector_store(collection_name)
         vs._client.delete_collection(collection_name)
 
 
