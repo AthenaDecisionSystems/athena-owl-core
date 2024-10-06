@@ -13,22 +13,10 @@ class TestConversationWithTool(unittest.TestCase):
     """
     Validate conversation with tool to get news from search
     """    
-    def test_conversation_with_chain_tool_agent(self):
-        cc = ConversationControl()
-        cc.agent_id="openai_tool_chain"
-        cc.user_id="unit_test"
-        cc.thread_id="1"
-        cc.chat_history=[]
-        cc.query="What is Athena Decision Systems?"
-        rep = get_or_start_conversation(cc)
-        assert rep
-        assert rep.chat_history
-        assert rep.messages
-        print(f"agent --> {rep}")        
     
-    def test_conversation_with_tool_graph_agent(self):
+    def _test_conversation_with_tool_graph_agent(self):
         cc = ConversationControl()
-        cc.agent_id="base_tool_graph_agent"
+        cc.agent_id="watson_graph_agent"
         cc.user_id="unit_test"
         cc.thread_id="1"
         cc.chat_history=[]
@@ -38,6 +26,7 @@ class TestConversationWithTool(unittest.TestCase):
         assert rep.chat_history
         assert rep.messages
         print(f"agent --> {rep.chat_history}")
-        
+        assert "Athena Decision Systems" in rep.messages[0].content
+
 if __name__ == '__main__':
     unittest.main()

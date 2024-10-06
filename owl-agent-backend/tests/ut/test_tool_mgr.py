@@ -12,21 +12,34 @@ from importlib import import_module
 
 class TestToolManager(unittest.TestCase):
     
-    def test_owl_tool_entity_definition(self):
+    def test_1_owl_tool_entity_definition(self):
+        " Test to understand model dumps ..."
         oae = OwlToolEntity()
+        oae.tool_id="hello_fct"
         oae.tool_fct_name="hello"
-        oae_json = oae.model_dump()
+        oae_as_dict = oae.model_dump()
+        assert type(oae_as_dict) == dict
         more_oas= {}
-        more_oas[oae.tool_id]=oae_json
-        print(yaml.dump(json.dumps(more_oas)))
+        more_oas[oae.tool_id]=oae
+        assert type(more_oas) == dict
+        try:
+            alist = json.dumps(more_oas)
+        except Exception as e:
+            print("this is expected as  OwlToolEntity is not JSON serializable")
+        more_oas= {}
+        more_oas[oae.tool_id]=oae_as_dict
+        alist = json.dumps(more_oas)
+        print(yaml.dump(alist))
         print(yaml.dump(more_oas))
     
-    def test_get_all_predefined_tools(self):
+    def test_2_get_all_predefined_tools(self):
         mgr = get_tool_entity_manager()
         l = mgr.get_tools()
         assert l
         assert len(l) >= 2
-        print(l)
+        for te in l:
+            assert l[te].tool_id
+
     
     def test_crd_operations(self):
         mgr = get_tool_entity_manager()
@@ -43,7 +56,14 @@ class TestToolManager(unittest.TestCase):
         except Exception as e:
             print(e)
     
-    def test_build_tool_reference_for_llm(self):
+    def test_get_tool_by_function_name(self):
+        mgr = get_tool_entity_manager()
+        ote= mgr.get_tool_by_function_name("query_crm_backend")
+        assert ote
+        assert ote.tool_id
+        assert ote.tool_fct_name == "query_crm_backend"
+
+    def test_build_tool_intance_given_its_id(self):
         mgr = get_tool_entity_manager()
         ote= mgr.get_tool_by_id("query_crm")
         otes=[ote]

@@ -36,7 +36,7 @@ class BaseToolGraphAgent(OwlAgentDefaultRunner):
     def __init__(self, agentEntity: OwlAgent, prompt: Optional[BasePromptTemplate], tool_instances: Optional[list[OwlToolEntity]]):
         self.agent_id = agentEntity.agent_id
         #self.llm=super().instantiate_llm(agentEntity, prompt, tool_instances)
-        self.model=self._instantiate_model(agentEntity.modelName, agentEntity.modelClassName, agentEntity.temperature)
+        self.model=self._instantiate_model(agentEntity)
         model_with_tools = self.model.bind_tools(tool_instances)
         self.llm = prompt | model_with_tools
         tool_node=ToolNode(tool_instances)
