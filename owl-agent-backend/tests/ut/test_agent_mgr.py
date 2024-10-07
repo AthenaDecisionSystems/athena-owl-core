@@ -19,7 +19,7 @@ class TestAgentsManager(unittest.TestCase):
         print("\n\n >>> test_owl_agent_entity_to_json_to_yaml\n")
         # Use the default setting of the OwlAgent
         oae = OwlAgent()
-        assert oae.agent_id
+        oae.agent_id="a_nice_agent"
         oae_dict = oae.model_dump()
         assert oae_dict["runner_class_name"] == "athena.llm.agents.agent_mgr.OwlAgentAbstractRunner"
         oaes= {}

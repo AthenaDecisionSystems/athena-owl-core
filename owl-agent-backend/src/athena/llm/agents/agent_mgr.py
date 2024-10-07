@@ -39,7 +39,7 @@ class OwlAgent(BaseModel):
     """
     Entity definition to persist data about a OwlAgent
     """
-    agent_id: Optional[str] = str(uuid.uuid4())
+    agent_id: Optional[str] = None
     name: str = ""
     description: Optional[str] = None
     modelName: str = ""
@@ -211,16 +211,21 @@ class AgentManager(object):
         self.AGENTS: dict = dict()
 
     def save_agent(self, agentEntity: OwlAgent) -> str:
+        if agentEntity.agent_id is None:
+            agentEntity.agent_id = str(uuid.uuid4())
         self.AGENTS[agentEntity.agent_id] = agentEntity
         return agentEntity.agent_id
     
     def load_agents(self, path: str):
-        with open(path, "r", encoding="utf-8") as f:
-            a_dict = yaml.load(f, Loader=yaml.FullLoader)  # a dict with assistant entities
-            for oa in a_dict:
-                oae=OwlAgent.model_validate(a_dict[oa])
-                oae.agent_id=oa
-                self.AGENTS[oae.agent_id]=oae
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                a_dict = yaml.load(f, Loader=yaml.FullLoader)  # a dict with assistant entities
+                for oa in a_dict:
+                    oae=OwlAgent.model_validate(a_dict[oa])
+                    oae.agent_id=oa
+                    self.AGENTS[oae.agent_id]=oae
+        except Exception as e:
+            print(f"@@@> Error {e}")
     
     def get_agents(self) -> dict[str,OwlAgent]:
         return self.AGENTS
