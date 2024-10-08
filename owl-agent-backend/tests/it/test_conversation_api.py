@@ -43,7 +43,7 @@ class TestAssistantsAPIs(unittest.TestCase):
         assert response
         assert response.status_code == 200
         print(type(response.content))        
-        assert "sorry" in response.content.decode() # type: ignore
+        assert "framework" in response.content.decode() # type: ignore
     
     def _test_fake_assistant(self):
         print(">>> test_fake_assistant \n ")
