@@ -1,4 +1,5 @@
 export NEXT_PUBLIC_BACKEND_BASE_API=http://localhost:8002/api/v1/
+export NEXT_PUBLIC_COLLECTION_NAME=ibu_insurance
 export NEXT_PUBLIC_DEMO_TEXT="*I received this email from my customer. What should I answer as a next best action?*
 
 **From**: Sonya Smith (sonya.smith@thecure.org)

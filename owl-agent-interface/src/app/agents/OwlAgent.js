@@ -409,7 +409,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
     const handleChangeInput = (e) => {
         //const value = e.target.value;
         if (e.target.value.trim() === "demo") {
-            e.target.value = ctx.env.demoText.replace(/\n/g, "\n\n"); console.log("demoText=", ctx.env.demoText);
+            e.target.value = ctx.env.demoText.replace(/\n/g, "\n\n");
         } else {
             if (e.target.value.trim() === "cqdemo") {
                 setLastMessage("cqdemo");
