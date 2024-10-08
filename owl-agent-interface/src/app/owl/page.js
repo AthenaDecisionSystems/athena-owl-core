@@ -29,7 +29,7 @@ function AgentsPage() {
   const [toolSelectedItems, setToolSelectedItems] = useState({ selectedItems: [] });
   const [agentModelName, setAgentModelName] = useState("");
   const [agentModelClassName, setAgentModelClassName] = useState("");
-  const [showSettings, setShowSettings] = useState(false);
+  const [showSettings, setShowSettings] = useState(true);
   const [showDocuments, setShowDocuments] = useState(false);
   const [multiselectToolsKey, setMultiselectToolsKey] = useState("multi-select-tools");
 
@@ -217,7 +217,8 @@ function AgentsPage() {
         temperature: agentToUpdate.temperature,
         top_k: agentToUpdate.top_k,
         top_p: agentToUpdate.top_p,
-        tools: agentToUpdate.tools
+        tools: agentToUpdate.tools,
+        hidden_to_ui: true
       });
 
       if (res.status === 200) {

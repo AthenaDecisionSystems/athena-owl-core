@@ -192,14 +192,14 @@
 
 .chat-user-message {
     background: $cool-gray-70;
-    margin-left: 5rem;
+    /*margin-left: 5rem;*/
     color: $white;
     display: flex;
     align-items: flex-start;
     /*text-align: justify;*/
     margin-bottom: 0.5rem;
     border-radius: 0.5rem;
-    padding: 0.3rem;
+    padding: 0.5rem;
 }
 
 .chat-icon {
@@ -211,12 +211,12 @@
 
 .chat-system-message {
     background: $cool-gray-10;
-    margin-right: 5rem;
+    /*margin-right: 5rem;*/
     display: flex;
     align-items: flex-start;
     /*text-align: justify;*/
     width: fit-content;
-    margin-bottom: 0.5rem;
+    margin-bottom: 2.5rem;
 
     >div>blockquote {
         border-left: 4px solid $layer-accent-02;

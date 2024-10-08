@@ -68,12 +68,6 @@ const ClosedQuestion = forwardRef(({ index, question, disabled }, ref) => {
         }
 
         return text;
-        return text.split('\n').map((line, i) =>
-            line === "" ? <br key={i} /> :
-                <div key={i}>
-                    <ReactMarkdown>{line}</ReactMarkdown>
-                </div>
-        )
     }
 
     const textInputError = (value) => {
@@ -206,7 +200,7 @@ const ClosedQuestion = forwardRef(({ index, question, disabled }, ref) => {
             defaultToggled={inputValue}
             labelA="No"
             labelB="Yes"
-            onClick={() => setInputValue(!inputValue)}
+            onClick={() => { setInputValue(!inputValue); return false }}
             disabled={disabled} />
     )
     if (dataType === 'Text' && enumeration) return (
