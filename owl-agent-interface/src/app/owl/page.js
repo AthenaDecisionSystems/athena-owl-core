@@ -169,7 +169,7 @@ function AgentsPage() {
     // For each agent, I need to check in prompts if it has a prompt_ref. If so, I need to check in locales if it has an 'en' locale. If so, I need to retrieve the text and put it in the agent so that I can display it in the component
     const agentsWithPrompts = agents.map(agent => {
       if (agent.prompt_ref) {
-        const prompt = prompts.find(prompt => prompt.prompt_id === agent.prompt_ref);
+        const prompt = prompts?.find(prompt => prompt.prompt_id === agent.prompt_ref);
         if (prompt) {
           const locale = prompt.locales.find(locale => locale.locale === 'en');
           if (locale) {

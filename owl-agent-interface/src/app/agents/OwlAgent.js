@@ -406,6 +406,13 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
         }
     };
 
+    const onKeyUp = (e) => {
+        // Arrow Down to clear input
+        if (e.target.value.trim() === "") {
+            setInput("");
+        }
+    }
+
     const handleChangeInput = (e) => {
         //const value = e.target.value;
         if (e.target.value.trim() === "demo") {
@@ -500,7 +507,8 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                     value={input}
                     rows={3}
                     onChange={handleChangeInput}
-                    onKeyDown={handleEnter} />
+                    onKeyDown={handleEnter}
+                    onKeyUp={onKeyUp} />
                 <Send style={{ cursor: "pointer" }} size={30} onClick={handleSend} />
             </div>
         </div>
