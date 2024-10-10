@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from athena.routers import conversations, documents, prompts, agents, tools
 from athena.app_settings import get_config, config_reload
-from dotenv import load_dotenv
+from dotenv import load_dotenv, dotenv_values
 import os
 from contextlib import asynccontextmanager
 
@@ -14,11 +14,32 @@ from contextlib import asynccontextmanager
 async def lifespan(app: FastAPI):
     # everything before yield is done before the app starts
     print(f"Owl Agent Backend v {get_config().version} starting ")
-    load_dotenv(dotenv_path=get_config().owl_env_path)
+
+    # print("------ os.environ BEFORE ------")
+    # for key in os.environ:
+    #    print(key + " = " + os.environ[key])
+    # print("------")
+
+    print("Loading application .env file at", get_config().owl_env_path)
+
+    # load_dotenv does not overwrite variables if they already exist
+    # load_dotenv(dotenv_path=get_config().owl_env_path)
+    config = dotenv_values(dotenv_path=get_config().owl_env_path)
+    for key in config:
+        os.environ[key] = config[key]
+
+    # print("------ os.environ AFTER ------")
+    # for key in os.environ:
+    #    print(key + " = " + os.environ[key])
+    # print("------")
+
+
     yield
     # do something when app stop
 
 app = FastAPI(lifespan=lifespan)
+
+print("FastAPI will start with current directory =", os.getcwd())
 
 # List of authorized origins
 origins = os.getenv("OWL_CLIENTS", ["http://localhost:3000"])
