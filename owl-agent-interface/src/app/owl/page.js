@@ -104,9 +104,9 @@ function AgentsPage() {
       setToolSelectedItems({ selectedItems: activeAgent.toolsData });
       setMultiselectToolsKey("multi-select-tools-" + Date.now())
       // Check in activeAgent.tools if any tool id corresponds to a tool in tools that has the tag decision
-      setUseDecisionServices(activeAgent.toolsData.some(tool => tool.tags.includes('decision')));
+      setUseDecisionServices(activeAgent.toolsData.some(tool => tool?.tags.includes('decision')));
       // Same with file search and tools that have the tag rag
-      setUseFileSearch(activeAgent.toolsData.some(tool => tool.tags.includes('rag')));
+      setUseFileSearch(activeAgent.toolsData.some(tool => tool?.tags.includes('rag')));
     }
   }, [activeAgent]);
 
