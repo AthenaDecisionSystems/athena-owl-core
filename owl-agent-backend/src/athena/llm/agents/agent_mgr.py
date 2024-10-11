@@ -188,11 +188,18 @@ class OwlAgentDefaultRunner(object):
         watsonx_url=os.environ.get("IBM_WATSONX_URL")
         credentials = Credentials(url=watsonx_url,
                                   api_key=watson_api_key)
+        
+        # To comply with all models, agentEntity.temperature is an integer between 0 and 100
+        temperature = agentEntity.temperature / 100
+        # if temperature is not between 0 and 1, set it to 0.5
+        if temperature < 0 or temperature > 1:
+            temperature = 0.5
+            
         parameters = {
             GenTextParamsMetaNames.DECODING_METHOD: "sample",
             GenTextParamsMetaNames.MAX_NEW_TOKENS: 200,
             GenTextParamsMetaNames.MIN_NEW_TOKENS: 10,
-            GenTextParamsMetaNames.TEMPERATURE: agentEntity.temperature,
+            GenTextParamsMetaNames.TEMPERATURE: temperature,
             GenTextParamsMetaNames.TOP_K: agentEntity.top_k,
         }
         return llm_model_class(url=credentials.get('url'),
