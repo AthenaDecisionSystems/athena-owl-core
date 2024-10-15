@@ -49,6 +49,7 @@ class ClosedQuestionControl(BaseModel):
     closed_answers: List[ClosedAnswer]
     reset: bool = False  # to reset everything back to default config.
     callWithVectorStore: Optional[bool] = False
+    callWithDecisionService: Optional[bool] = False
     user_id: Optional[str] = ""
     agent_id: Optional[str] = ""
     thread_id: Optional[str] = ""
@@ -62,6 +63,7 @@ class ConversationControl(BaseModel):
     reenter_into: Optional[str] = None
     reset: bool = False  # to reset everything back to default config.
     callWithVectorStore: Optional[bool] = False
+    callWithDecisionService: Optional[bool] = False
     user_id: Optional[str] = ""
     agent_id: Optional[str] = ""
     thread_id: Optional[str] = ""

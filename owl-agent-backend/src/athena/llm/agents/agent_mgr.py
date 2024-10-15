@@ -25,7 +25,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.messages import AIMessage, HumanMessage
 from ibm_watsonx_ai import Credentials
 from ibm_watsonx_ai.metanames import GenTextParamsMetaNames
-
+import langchain
 import os
 
 logging.basicConfig(
@@ -33,7 +33,7 @@ logging.basicConfig(
     level=logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
 LOGGER = logging.getLogger(__name__)
-
+langchain.debug = True
 
 class OwlAgent(BaseModel):
     """
