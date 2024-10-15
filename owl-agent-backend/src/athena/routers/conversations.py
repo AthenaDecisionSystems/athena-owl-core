@@ -48,7 +48,7 @@ router = APIRouter( prefix=get_config().api_route + "/c",
 @router.post("/generic_chat", tags=["Interact"])
 def synchronous_chat_with_owl(conversationControl: ConversationControl) -> ResponseControl:
     global owl_agent
-    LOGGER.debug(f"\n@@@> Input from chat UI= {conversationControl}")
+    LOGGER.debug(f"\n@@@synchronous_chat_with_owl> Input from chat UI= {conversationControl}")
     resp = ResponseControl()
     try:
         if not conversationControl.agent_id or conversationControl.agent_id == "":
@@ -56,7 +56,7 @@ def synchronous_chat_with_owl(conversationControl: ConversationControl) -> Respo
         resp = get_or_start_conversation(conversationControl)
         
     except Exception as e:
-        LOGGER.debug(f"\n@@@> Exception in chat conversation with error: {str(e)}")
+        LOGGER.debug(f"\n@@@synchronous_chat_with_owl> Exception in chat conversation with error: {str(e)}")
         resp.status = 500
         resp.error = f"ERROR: backend exception {str(e)}"
         resp.agent_id = conversationControl.agent_id
@@ -64,7 +64,7 @@ def synchronous_chat_with_owl(conversationControl: ConversationControl) -> Respo
         resp.thread_id = conversationControl.thread_id
         resp.chat_history = conversationControl.chat_history
         return resp
-    LOGGER.debug(f"\n@@@> {resp}")
+    LOGGER.debug(f"\n@@@synchronous_chat_with_owl> Response= {resp}")
     return resp
 
 @router.get("/conversation/trace/{thread_id}", tags=["Interact"])

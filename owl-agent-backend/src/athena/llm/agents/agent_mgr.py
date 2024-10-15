@@ -132,7 +132,7 @@ class OwlAgentDefaultRunner(object):
         The request to the LLM will need the input and the chat_history
         :return: the response with history and controlling object for the conversation 
         """
-        LOGGER.debug(f"\n@@@> query to the agent is: {controller.query}")
+        LOGGER.debug(f"\n@@@send_conversation> query to the agent is: {controller.query}")
         lg_chat_history = self._transform_chat_history(controller.chat_history)
         if controller.query is None or len(controller.query) == 0:
             resp=self.process_close_answer(controller)
@@ -189,12 +189,13 @@ class OwlAgentDefaultRunner(object):
         credentials = Credentials(url=watsonx_url,
                                   api_key=watson_api_key)
         
-        # To comply with all models, agentEntity.temperature is an integer between 0 and 100
-        temperature = agentEntity.temperature / 100
-        # if temperature is not between 0 and 1, set it to 0.5
-        if temperature < 0 or temperature > 1:
-            temperature = 0.5
-            
+        temperature = agentEntity.temperature
+        # # To comply with all models, agentEntity.temperature is an integer between 0 and 100
+        # temperature = agentEntity.temperature / 100
+        # # if temperature is not between 0 and 1, set it to 0.5
+        # if temperature < 0 or temperature > 1:
+        #     temperature = 0.5
+
         parameters = {
             GenTextParamsMetaNames.DECODING_METHOD: "sample",
             GenTextParamsMetaNames.MAX_NEW_TOKENS: 200,
