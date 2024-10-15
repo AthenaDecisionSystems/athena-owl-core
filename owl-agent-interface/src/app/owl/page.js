@@ -351,7 +351,7 @@ function AgentsPage() {
             </Stack>
           </AccordionItem>
           <AccordionItem key="2" title="Documents" className="owl-agent-config-accordion-item" open={showDocuments} onClick={() => { setShowSettings(false); setShowDocuments(true) }}>
-            <p><a href="#">Link to RAG doc</a></p>
+            <p><a target="_blank" href="/IBUpolicies.pdf">IBU Policies document</a></p>
             <p><a href="#">Link to Demo Scenario</a></p>
             <p><a href="#">Link to whatever else</a></p>
           </AccordionItem>
