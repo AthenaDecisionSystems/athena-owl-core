@@ -128,13 +128,14 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
                             <PopoverContent className="card-popover-content">
                                 <IconButton label="Close" renderIcon={Close} align="top-right" kind="ghost" onClick={() => displayPopoverLLMTable(i, false)} />
                                 <div className="card-detail-large">
-                                    <div className="card-popover-content-block">
-                                        <div className="card-detail">Class name: {row.modelClassName}</div>
-                                        <div className="card-detail">Model: {row.modelName}</div>
-                                        <div className="card-detail">Temperature: {row.temperature}</div>
-                                        <div className="card-detail">Top K: {row.top_k}</div>
-                                        <div className="card-detail">Top P: {row.top_p}</div>
-                                    </div>
+                                    {(row.modelClassName || row.modelName || row.temperature || row.top_k || row.top_p) &&
+                                        <div className="card-popover-content-block">
+                                            {row.modelClassName && <div className="card-detail">Class name: {row.modelClassName}</div>}
+                                            {row.modelName && <div className="card-detail">Model: {row.modelName}</div>}
+                                            {row.temperature && <div className="card-detail">Temperature: {row.temperature}</div>}
+                                            {row.top_k && <div className="card-detail">Top K: {row.top_k}</div>}
+                                            {row.top_p && <div className="card-detail">Top P: {row.top_p}</div>}
+                                        </div>}
                                 </div>
                             </PopoverContent>
                         </Popover>
