@@ -1,6 +1,6 @@
-import { Button, FileUploaderDropContainer, FileUploaderItem, InlineNotification, Loading } from "@carbon/react";
-import { Add, Upload } from "@carbon/react/icons";
-import React, { useState } from "react";
+import { Button, FileUploaderItem, InlineNotification, Loading } from "@carbon/react";
+import { Document, DocumentMultiple_02, Upload } from "@carbon/react/icons";
+import React, { useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
 const UploadDocument = ({ env, setError }) => {
@@ -9,6 +9,8 @@ const UploadDocument = ({ env, setError }) => {
     const [loading, setLoading] = useState(false);
 
     const { t, i18n } = useTranslation();
+
+    const hiddenFileInputRef = useRef(null);
 
     const updateFile = (event) => {
         const file0 = event.target.files[0];
@@ -58,13 +60,20 @@ const UploadDocument = ({ env, setError }) => {
 
     return (
         <div>
-            <FileUploaderDropContainer name="fileUploader"
-                labelText="Drag and drop a file here or click to upload"
+            <input
+                type="file"
+                ref={hiddenFileInputRef}
                 multiple={false}
+                onChange={(updateFile)}
                 accept={['text/plain', 'text/html', 'text/x-markdown', 'application/pdf']}
-                onAddFiles={updateFile} />
-            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
-
+                style={{ display: 'none' }}
+                id="file-upload"
+            />
+            <Button
+                renderIcon={Document}
+                iconDescription="Select a file"
+                onClick={() => hiddenFileInputRef.current.click()}
+                style={{ width: "14rem", borderRadius: "1rem", marginBottom: "1rem" }}>Select a file</Button>
             {file && <FileUploaderItem name={file.name} status="edit"
                 iconDescription="Delete file"
                 onDelete={() => setFile()}

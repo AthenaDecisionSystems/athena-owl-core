@@ -100,14 +100,14 @@ const OwlAgentHeader = () => {
           </SideNav>
 
           <HeaderGlobalBar>
-            <HeaderGlobalAction aria-label={t("header.lbl.settings")} tooltipAlignment="center" className="action-icons"
+            <HeaderGlobalAction aria-label={t("header.alt.settings")} tooltipAlignment="center" className="action-icons"
               onClick={() => { setSettingsExpanded(!settingsExpanded); }}>
               <Settings size={20} />
             </HeaderGlobalAction>
-            <HeaderGlobalAction aria-label={t("header.lbl.notifications")} tooltipAlignment="center" className="action-icons" id="notifications-button">
+            <HeaderGlobalAction aria-label={t("header.alt.notifications")} tooltipAlignment="center" className="action-icons" id="notifications-button">
               <Notification size={20} />
             </HeaderGlobalAction>
-            <HeaderGlobalAction aria-label={t("header.lbl.user")} tooltipAlignment="center" className="action-icons" >
+            <HeaderGlobalAction aria-label={t("header.alt.user")} tooltipAlignment="center" className="action-icons" >
               <UserAvatar size={20} />
             </HeaderGlobalAction>
           </HeaderGlobalBar>
@@ -117,7 +117,7 @@ const OwlAgentHeader = () => {
               <h3>Configuration</h3>
               {/*<h3>{t('header.alt.configuration')}</h3>*/}
               <Stack gap={5}>
-                <Dropdown id="role" titleText="role" initialSelectedItem={role} label="Role" type="inline"
+                <Dropdown id="role" titleText="Role" initialSelectedItem={role} label="Role" type="inline"
                   items={["admin", "user"]}
                   onChange={(e) => { setRole(e.selectedItem) }} />
                 <Dropdown id="language" titleText={t("header.lbl.language")} initialSelectedItem={languages.find((item) => (item.value === language))} label={t("header.lbl.language")} type="inline"

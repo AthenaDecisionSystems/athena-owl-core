@@ -4,7 +4,7 @@
         "@author": "Joel Milgram"
     },
     "header": {
-        "lbl.configuration": "Configuration",
+        "alt.configuration": "Configuration",
         "alt.settings": "Settings",
         "alt.user": "User",
         "alt.notifications": "Notifications",
