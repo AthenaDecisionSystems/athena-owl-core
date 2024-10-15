@@ -322,6 +322,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
             "reenter_into": reenterInto,
             "reset": resetHistory,
             "callWithVectorStore": useFileSearch,
+            "callWithDecisionService": useDecisionServices,
             "user_id": userId,
             "agent_id": agent.agent_id,
             "thread_id": threadId,
