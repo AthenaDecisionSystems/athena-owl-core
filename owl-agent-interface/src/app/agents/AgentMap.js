@@ -122,26 +122,25 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
                     <div className="card-class-name" title="Model class name">{row.modelClassName}</div>
                     <div className="card-class-name" title="Model name">{row.modelName}</div>
 
-                    <div className="card-item-id">
+                    {(row.modelClassName && row.modelName) && <div className="card-item-id">
                         <Popover title="Display LLM parameters" align="bottom-left" open={openPopoverLLMTable[i]} >
                             <a style={{ cursor: "pointer" }} onClick={() => displayPopoverLLMTable(i, true)}>LLM Parameters</a>
                             <PopoverContent className="card-popover-content">
                                 <IconButton label="Close" renderIcon={Close} align="top-right" kind="ghost" onClick={() => displayPopoverLLMTable(i, false)} />
                                 <div className="card-detail-large">
-                                    {(row.modelClassName && row.modelName) &&
-                                        <div className="card-popover-content-block">
-                                            {row.modelClassName && <div className="card-detail">Class name: {row.modelClassName}</div>}
-                                            {row.modelName && <div className="card-detail">Model: {row.modelName}</div>}
-                                            {row.temperature && <div className="card-detail">Temperature: {row.temperature}</div>}
-                                            {row.top_k && <div className="card-detail">Top K: {row.top_k}</div>}
-                                            {row.top_p && <div className="card-detail">Top P: {row.top_p}</div>}
-                                        </div>}
+                                    <div className="card-popover-content-block">
+                                        {row.modelClassName && <div className="card-detail">Class name: {row.modelClassName}</div>}
+                                        {row.modelName && <div className="card-detail">Model: {row.modelName}</div>}
+                                        {row.temperature && <div className="card-detail"> Temperature: {row.temperature}</div>}
+                                        {row.top_k && <div className="card-detail">Top K: {row.top_k}</div>}
+                                        {row.top_p && <div className="card-detail">Top P: {row.top_p}</div>}
+                                    </div>
                                 </div>
                             </PopoverContent>
                         </Popover>
-                    </div>
+                    </div>}
 
-                    <div className="card-item-id">
+                    {row.prompt_ref && <div className="card-item-id">
                         <Popover title="Display Prompt" align="bottom-left" open={openPopoverPromptTable[i]} >
                             <a style={{ cursor: "pointer" }} onClick={() => displayPopoverPromptTable(i, true)}>Prompt</a>
                             <PopoverContent className="card-popover-content">
@@ -166,7 +165,7 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
                                 </div>
                             </PopoverContent>
                         </Popover>
-                    </div>
+                    </div>}
                     {(row.tools && row.tools.length > 0) && (
                         <div className="card-item-id">
                             <Popover title="Display Tools" align="bottom-left" open={openPopoverToolsTable[i]} >
