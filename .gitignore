@@ -2,6 +2,7 @@ venv/
 owl_env/
 **/.env
 **/.venv/
+**/aocvenv/
 **/__pycache__/
 **/*.log
 **/.pytest_cache/
