@@ -217,6 +217,7 @@
     /*text-align: justify;*/
     width: fit-content;
     margin-bottom: 2.5rem;
+    line-height: 1.5;
 
     >div>blockquote {
         border-left: 4px solid $layer-accent-02;
@@ -249,12 +250,14 @@
             padding-left: 1rem;
             list-style-position: inside;
             list-style-type: disc;
+            line-height: 1.5;
         }
 
         >ol {
             padding-left: 1rem;
             list-style-position: inside;
             list-style-type: decimal;
+            line-height: 1.5;
         }
 
         >ul>li,
@@ -263,11 +266,13 @@
                 padding-left: 1rem;
                 list-style-position: inside;
                 list-style-type: circle;
+                line-height: 1.5;
             }
 
             >ol {
                 padding-left: 1.5rem;
                 list-style-type: decimal;
+                line-height: 1.5;
             }
 
             >ul>li,
@@ -277,11 +282,13 @@
                     padding-left: 1rem;
                     list-style-position: inside;
                     list-style-type: square;
+                    line-height: 1.5;
                 }
 
                 >ol {
                     padding-left: 1.5rem;
                     list-style-type: decimal;
+                    line-height: 1.5;
                 }
             }
         }
