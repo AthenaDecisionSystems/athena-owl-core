@@ -16,6 +16,10 @@ export const DocumentMap = ({ rows }) => {
 
     return (
         <>
+            {rows.length === 0 && <Column lg={3} md={2} sm={2} >
+                <h3>No documents found</h3>
+            </Column>}
+
             {rows.map((row, i) => (
                 <Column key={i} lg={3} md={2} sm={2} >
                     <AspectRatio className="card" ratio="4x3">
@@ -26,12 +30,11 @@ export const DocumentMap = ({ rows }) => {
                                 <OverflowMenuItem hasDivider isDelete itemText="Delete" disabled />
                             </OverflowMenu>
                         </div>
-                        <div className="card-name">{row?.id}</div>
-                        {Object.keys(row.metadata).map((key, j) => <>
-                            <div className="card-description" key={j}>{key}: {row.metadata[key]}</div>
-                        </>)}
-                        <div className="card-label">Page content:</div>
-                        <div className="card-description">{row.page_content}</div>
+                        {/* <div className="card-name">{row?.id}</div> */}
+                        <div className="card-label">Chunk source: {row.metadata["source"]}</div>
+
+                        <div className="card-label">Chunk content:</div>
+                        <div className="card-description" style={{ maxHeight: "10rem" }}>{row.page_content.length > 256 ? row.page_content.substring(0, 256) + "..." : row.page_content}</div>
                     </AspectRatio>
                 </Column>
             ))}
