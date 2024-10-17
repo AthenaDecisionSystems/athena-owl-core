@@ -13,7 +13,7 @@ export const EnvContext = createContext({});
 
 export function Providers({ children }) {
   const [env, setEnv] = useState({});
-  const [role, setRole] = useState("user"); // This is the current user role (admin, user, etc.)
+  const [role, setRole] = useState("all"); // This is the current user role (admin, user, etc.)
   const [loading, setLoading] = useState(true);
 
   EventEmitter.defaultMaxListeners = 20;

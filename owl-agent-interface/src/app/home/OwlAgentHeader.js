@@ -51,27 +51,27 @@ const OwlAgentHeader = () => {
           <Link href="/" passHref legacyBehavior>
             <HeaderName prefix="Athena">Owl Agent</HeaderName>
           </Link>
-          {role === "admin" && <HeaderNavigation aria-label="Agents">
+          {(role === "admin" || role === "all") && <HeaderNavigation aria-label="Agents">
             <Link href="/agents" passHref legacyBehavior>
               <HeaderMenuItem>Agents</HeaderMenuItem>
             </Link>
           </HeaderNavigation>}
-          {role === "admin" && <HeaderNavigation aria-label="Tools">
+          {(role === "admin" || role === "all") && <HeaderNavigation aria-label="Tools">
             <Link href="/tools" passHref legacyBehavior>
               <HeaderMenuItem>Tools</HeaderMenuItem>
             </Link>
           </HeaderNavigation>}
-          {role === "admin" && <HeaderNavigation aria-label="Prompts">
+          {(role === "admin" || role === "all") && <HeaderNavigation aria-label="Prompts">
             <Link href="/prompts" passHref legacyBehavior>
               <HeaderMenuItem>Prompts</HeaderMenuItem>
             </Link>
           </HeaderNavigation>}
-          {role === "admin" && <HeaderNavigation aria-label="Documents">
+          {(role === "admin" || role === "all") && <HeaderNavigation aria-label="Documents">
             <Link href="/documents" passHref legacyBehavior>
               <HeaderMenuItem>Documents</HeaderMenuItem>
             </Link>
           </HeaderNavigation>}
-          {role === "user" && <HeaderNavigation aria-label="Chatbot">
+          {(role === "user" || role === "all") && <HeaderNavigation aria-label="Chatbot">
             <Link href="/owl" passHref legacyBehavior>
               <HeaderMenuItem>Chatbot</HeaderMenuItem>
             </Link>
@@ -80,19 +80,19 @@ const OwlAgentHeader = () => {
           <SideNav aria-label="Side navigation" expanded={isSideNavExpanded} isPersistent={false} >
             <SideNavItems>
               <HeaderSideNavItems>
-                {role === "admin" && <Link href="/agents" passHref legacyBehavior>
+                {(role === "admin" || role === "all") && <Link href="/agents" passHref legacyBehavior>
                   <HeaderMenuItem>Agents</HeaderMenuItem>
                 </Link>}
-                {role === "admin" && <Link href="/tools" passHref legacyBehavior>
+                {(role === "admin" || role === "all") && <Link href="/tools" passHref legacyBehavior>
                   <HeaderMenuItem>Tools</HeaderMenuItem>
                 </Link>}
-                {role === "admin" && <Link href="/prompts" passHref legacyBehavior>
+                {(role === "admin" || role === "all") && <Link href="/prompts" passHref legacyBehavior>
                   <HeaderMenuItem>Prompts</HeaderMenuItem>
                 </Link>}
-                {role === "admin" && <Link href="/documents" passHref legacyBehavior>
+                {(role === "admin" || role === "all") && <Link href="/documents" passHref legacyBehavior>
                   <HeaderMenuItem>Documents</HeaderMenuItem>
                 </Link>}
-                {role === "user" && <Link href="/owl" passHref legacyBehavior>
+                {(role === "user" || role === "all") && <Link href="/owl" passHref legacyBehavior>
                   <HeaderMenuItem>Chatbot</HeaderMenuItem>
                 </Link>}
               </HeaderSideNavItems>
@@ -118,7 +118,7 @@ const OwlAgentHeader = () => {
               {/*<h3>{t('header.alt.configuration')}</h3>*/}
               <Stack gap={5}>
                 <Dropdown id="role" titleText="Role" initialSelectedItem={role} label="Role" type="inline"
-                  items={["admin", "user"]}
+                  items={["admin", "user", "all"]}
                   onChange={(e) => { setRole(e.selectedItem) }} />
                 <Dropdown id="language" titleText={t("header.lbl.language")} initialSelectedItem={languages.find((item) => (item.value === language))} label={t("header.lbl.language")} type="inline"
                   items={languages}
