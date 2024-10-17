@@ -200,7 +200,7 @@ const ClosedQuestion = forwardRef(({ index, question, disabled }, ref) => {
             defaultToggled={inputValue}
             labelA="No"
             labelB="Yes"
-            onClick={() => { setInputValue(!inputValue); return false }}
+            onClick={() => { setInputValue(!inputValue); return true; }}
             disabled={disabled} />
     )
     if (dataType === 'Text' && enumeration) return (
