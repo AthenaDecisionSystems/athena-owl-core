@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Accordion, AccordionItem, Column, Dropdown, DropdownSkeleton, Grid, Select, SelectItem, Stack, ToastNotification, Toggle } from '@carbon/react';
-import { Trusted } from '@carbon/pictograms-react';
+import { Accordion, AccordionItem, Button, Column, Dropdown, DropdownSkeleton, Grid, Select, SelectItem, Stack, ToastNotification, Toggle } from '@carbon/react';
+import { Reset, Trusted } from '@carbon/pictograms-react';
 import { Octokit } from '@octokit/core';
 import { context } from '../providers';
 import { getEnv } from '../env';
@@ -231,6 +231,8 @@ function AgentsPage() {
           </AccordionItem>
         </Accordion>
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '1rem' }} />
+
+        <Button renderIcon={Reset} size="sm" kind="tertiary" onClick={() => { owlAgentRef.current.resetConversation() }}>{"Reset Conversation"}</Button>
 
       </Column>
       <Column lg={12} md={6} sm={3} className="page__r5">
