@@ -1,11 +1,12 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { ActionableNotification, Button, TextArea } from '@carbon/react';
-import { ChatBot, UserAvatar, Send } from "@carbon/react/icons";
+import { ActionableNotification, Button, Popover, TextArea } from '@carbon/react';
+import { ChatBot, UserAvatar, Send, Clean, Light, DecisionTree } from "@carbon/react/icons";
 import loadingImage from "../assets/loading.gif";
 import { useTranslation } from 'react-i18next';
 import ClosedQuestions from './ClosedQuestions';
 import { context } from '../providers';
 import MarkdownRenderer from '../utils/MarkdownRenderer';
+import { AiExplainability, Idea, Ideate } from "@carbon/pictograms-react";
 
 
 const closedQuestionsDemo = {
@@ -242,6 +243,25 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
     const inputRef = useRef(null);
     const msgEnd = useRef(null); // Ref for scrolling to the end of messages
 
+    const [showPopupExplanation, setShowPopupExplanation] = useState(false);
+    const [showPopupRules, setShowPopupRules] = useState(false);
+
+    const handleClickExplanation = () => {
+        setShowPopupExplanation(true);
+    };
+
+    const handleCloseExplanation = () => {
+        setShowPopupExplanation(false);
+    };
+
+    const handleClickRules = () => {
+        setShowPopupRules(true);
+    };
+
+    const handleCloseRules = () => {
+        setShowPopupRules(false);
+    };
+
     useEffect(() => {
         if (inputRef.current) {
             inputRef.current.focus();
@@ -378,7 +398,19 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                     content += "</div>";
                     newMessages = [message, { text: content, type: "html", className: "", time: undefined, isBot: true }];
                 } else {
-                    newMessages = [message, { text: answer[0].content, className: answer[0].style_class, time: undefined, isBot: true, }];
+                    const content = answer[0].content.match(/(.*?)(?=<explanation>)/s)[0];
+                    const explanation = answer[0].content.match(/<explanation>(.*?)<\/explanation>/s);
+                    const explanationContent = explanation && explanation[1];
+                    const rules = answer[0].content.match(/<rule>(.*?)<\/rule>/s);
+                    const rulesContent = rules && rules[1];
+
+                    newMessages = [message, { text: content, className: answer[0].style_class, time: undefined, isBot: true, }];
+                    if (explanationContent) {
+                        newMessages.push({ text: explanationContent, popup: "explanation", isBot: true });
+                    }
+                    if (rulesContent) {
+                        newMessages.push({ text: rulesContent, type: "html", popup: "rules", isBot: true });
+                    }
                 }
                 if (closedQuestions.length > 0) {
                     newMessages.push({ questions: closedQuestions, isBot: true, closedQuestions: true });
@@ -413,6 +445,8 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
         // Arrow Up to get last message
         if ((e.key === "ArrowUp") && (input.trim() === "")) {
             setInput(lastMessage);
+            e.target.value = lastMessage;
+            e.target.selectionStart = e.target.selectionEnd = 0;
         }
     };
 
@@ -427,6 +461,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
         //const value = e.target.value;
         if (e.target.value.trim() === "demo") {
             e.target.value = ctx.env.demoText.replace(/\n/g, "\n\n");
+            e.target.selectionStart = e.target.selectionEnd = 0;
         } else {
             if (e.target.value.trim() === "cqdemo") {
                 setLastMessage("cqdemo");
@@ -480,9 +515,11 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
             <div className="owl-agent-chats">
                 {messages.map((message, i) =>
                     <div key={i} className={message.isBot ? "chat-system-message" : "chat-user-message"}>
-                        {message.isBot ?
-                            <ChatBot className="chat-icon" /> :
-                            <UserAvatar className="chat-icon" />}
+                        {(i === 0 || (i > 0 && messages[i - 1].isBot !== message.isBot)) ?
+                            (message.isBot ?
+                                <ChatBot className="chat-icon" /> :
+                                <UserAvatar className="chat-icon" />) :
+                            <span style={{ width: "2.5rem" }}></span>}
                         {(message.closedQuestions && message.questions.length > 0) ? <div className="closed-questions">
                             <ClosedQuestions lastMessage={i === messages.length - 1} questions={message.questions} feedback={sendClosedAnswers} />
                         </div> :
@@ -491,21 +528,45 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                                     The chat has been reset.
                                     <br />
                                     <br />
-                                    <Button onClick={() => setMessages([{ text: "Welcome to the " + (agent.name ? agent.name : agent.agent_id) + ". How can I help you today?", isBot: true }])}>Clear this window</Button>
+                                    <Button renderIcon={Clean} onClick={() => setMessages([{ text: "Welcome to the " + (agent.name ? agent.name : agent.agent_id) + ". How can I help you today?", isBot: true }])}>Clear this window</Button>
                                 </div> :
                                 message.text === "..." ?
                                     <div className="waiting-for-response"><img src={loadingImage.src} alt="Loading..." /> </div> :
-                                    message.type === "html" ?
-                                        <div dangerouslySetInnerHTML={{ __html: message.text }} /> :
-                                        message.className && message.className !== "" ?
-                                            <div className={message.className}>{message.text}</div> :
+                                    message.popup === "explanation" ?
+                                        <div>
+                                            <Button renderIcon={Light} onClick={handleClickExplanation}>Explanations</Button>
+                                            {showPopupExplanation && (
+                                                <div className="popup chat-system-message">
+                                                    <div className="popup-content">
+                                                        <span className="close" onClick={handleCloseExplanation}>&times;</span>
+                                                        <MarkdownRenderer message={"# Explanations\n\n-----\n\n" + message.text} />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div> :
+                                        message.popup === "rules" ?
                                             <div>
-                                                <MarkdownRenderer message={message.text}></MarkdownRenderer>
-                                                {message.time && <div>
-                                                    <br />
-                                                    <div className="response-time">{"Response in " + message.time + "s"}</div>
-                                                </div>}
-                                            </div>}
+                                                <Button renderIcon={DecisionTree} onClick={handleClickRules}>Rules</Button>
+                                                {showPopupRules && (
+                                                    <div className="popup chat-system-message">
+                                                        <div className="popup-content">
+                                                            <span className="close" onClick={handleCloseRules}>&times;</span>
+                                                            <div dangerouslySetInnerHTML={{ __html: "<h3>Rule(s) that applied</h3><hr/>" + message.text }} />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div> :
+                                            message.type === "html" ?
+                                                <div dangerouslySetInnerHTML={{ __html: message.text }} /> :
+                                                message.className && message.className !== "" ?
+                                                    <div className={message.className}>{message.text}</div> :
+                                                    <div>
+                                                        <MarkdownRenderer message={message.text} />
+                                                        {message.time && <div>
+                                                            <br />
+                                                            <div className="response-time">{"Response in " + message.time + "s"}</div>
+                                                        </div>}
+                                                    </div>}
                     </div>
                 )}
                 <div ref={msgEnd} />
