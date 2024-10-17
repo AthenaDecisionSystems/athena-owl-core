@@ -207,10 +207,19 @@ const closedQuestionsDemoBool = {
 const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecisionServices, openState, randomNumber, setError }, ref) => {
     useImperativeHandle(ref, () => ({
         resetConversation() {
-            informUser("---Restart conversation---");
+            if (threadId) {
+                informUser("---Restart conversation---");
+            }
         },
         updateAgent() {
-            informUser("Your changes have been saved.");
+            if (messages[messages.length - 1].text.startsWith("Your changes have been saved.")) {
+                messages[messages.length - 1].text += ".. and saved again.";
+            } else {
+                informUser("Your changes have been saved.");
+            }
+        },
+        informUser(msg) {
+            informUser(msg);
         }
     }));
 
