@@ -122,72 +122,74 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
                     <div className="card-class-name" title="Model class name">{row.modelClassName}</div>
                     <div className="card-class-name" title="Model name">{row.modelName}</div>
 
-                    {(row.modelClassName && row.modelName) && <div className="card-item-id">
-                        <Popover title="Display LLM parameters" align="bottom-left" open={openPopoverLLMTable[i]} >
-                            <a style={{ cursor: "pointer" }} onClick={() => displayPopoverLLMTable(i, true)}>LLM Parameters</a>
-                            <PopoverContent className="card-popover-content">
-                                <IconButton label="Close" renderIcon={Close} align="top-right" kind="ghost" onClick={() => displayPopoverLLMTable(i, false)} />
-                                <div className="card-detail-large">
-                                    <div className="card-popover-content-block">
-                                        <div className="card-detail">Class name: {row.modelClassName}</div>
-                                        <div className="card-detail">Model: {row.modelName}</div>
-                                        <div className="card-detail">Temperature: {row.temperature}</div>
-                                        <div className="card-detail">Top K: {row.top_k}</div>
-                                        <div className="card-detail">Top P: {row.top_p}</div>
-                                    </div>
-                                </div>
-                            </PopoverContent>
-                        </Popover>
-                    </div>}
-
-                    {row.prompt_ref && <div className="card-item-id">
-                        <Popover title="Display Prompt" align="bottom-left" open={openPopoverPromptTable[i]} >
-                            <a style={{ cursor: "pointer" }} onClick={() => displayPopoverPromptTable(i, true)}>Prompt</a>
-                            <PopoverContent className="card-popover-content">
-                                <IconButton label="Close" renderIcon={Close} align="top-right" kind="ghost" onClick={() => displayPopoverPromptTable(i, false)} />
-                                <div className="card-detail-large">
-                                    <div className="card-popover-content-block">
-                                        <div className="card-detail">Prompt ref.: {row.prompt_ref}</div>
-                                        {(prompts && prompts.length > 0) && (<>
-                                            {prompts.filter(prompt => prompt.prompt_id === row.prompt_ref).map((prompt, i) => (<div key={i}>
-                                                <div className="card-detail">Prompt Name: {prompt.name}</div>
-                                                <div className="card-detail-large">
-                                                    {prompt.locales.map((locale, j) => (
-                                                        <div key={j} className="card-popover-content-block">
-                                                            <div className="card-name">{locale.locale}</div>
-                                                            <div className="card-description" dangerouslySetInnerHTML={{ __html: locale.text.replace(/\n/g, "<br/>") }} />
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>))}
-                                        </>)}
-                                    </div>
-                                </div>
-                            </PopoverContent>
-                        </Popover>
-                    </div>}
-                    {(row.tools && row.tools.length > 0) && (
-                        <div className="card-item-id">
-                            <Popover title="Display Tools" align="bottom-left" open={openPopoverToolsTable[i]} >
-                                <a style={{ cursor: "pointer" }} onClick={() => displayPopoverToolsTable(i, true)}>Tools</a>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between" }}>
+                        {(row.modelClassName && row.modelName) && <span>
+                            <Popover title="Display LLM parameters" align="bottom-left" open={openPopoverLLMTable[i]}>
+                                <a style={{ cursor: "pointer" }} onClick={() => displayPopoverLLMTable(i, true)}>LLM Parameters</a>
                                 <PopoverContent className="card-popover-content">
-                                    <IconButton label="Close" renderIcon={Close} align="top-right" kind="ghost" onClick={() => displayPopoverToolsTable(i, false)} />
+                                    <IconButton label="Close" renderIcon={Close} align="top-right" kind="ghost" onClick={() => displayPopoverLLMTable(i, false)} />
                                     <div className="card-detail-large">
                                         <div className="card-popover-content-block">
-                                            <div className="card-description">Tools:
-                                                <ul>
-                                                    {row.tools.map((tool, j) => (
-                                                        <li key={j}>{tool}</li>
-                                                    ))}
-                                                </ul>
-                                            </div>
+                                            <div className="card-detail">Class name: {row.modelClassName}</div>
+                                            <div className="card-detail">Model: {row.modelName}</div>
+                                            <div className="card-detail">Temperature: {row.temperature}</div>
+                                            <div className="card-detail">Top K: {row.top_k}</div>
+                                            <div className="card-detail">Top P: {row.top_p}</div>
                                         </div>
                                     </div>
                                 </PopoverContent>
                             </Popover>
-                        </div>)}
+                        </span>}
+
+                        {row.prompt_ref && <span>
+                            <Popover title="Display Prompt" align="bottom-left" open={openPopoverPromptTable[i]} >
+                                <a style={{ cursor: "pointer" }} onClick={() => displayPopoverPromptTable(i, true)}>Prompt</a>
+                                <PopoverContent className="card-popover-content">
+                                    <IconButton label="Close" renderIcon={Close} align="top-right" kind="ghost" onClick={() => displayPopoverPromptTable(i, false)} />
+                                    <div className="card-detail-large">
+                                        <div className="card-popover-content-block">
+                                            <div className="card-detail">Prompt ref.: {row.prompt_ref}</div>
+                                            {(prompts && prompts.length > 0) && (<>
+                                                {prompts.filter(prompt => prompt.prompt_id === row.prompt_ref).map((prompt, i) => (<div key={i}>
+                                                    <div className="card-detail">Prompt Name: {prompt.name}</div>
+                                                    <div className="card-detail-large">
+                                                        {prompt.locales.map((locale, j) => (
+                                                            <div key={j} className="card-popover-content-block">
+                                                                <div className="card-name">{locale.locale}</div>
+                                                                <div className="card-description" dangerouslySetInnerHTML={{ __html: locale.text.replace(/\n/g, "<br/>") }} />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>))}
+                                            </>)}
+                                        </div>
+                                    </div>
+                                </PopoverContent>
+                            </Popover>
+                        </span>}
+                        {(row.tools && row.tools.length > 0) && (
+                            <span>
+                                <Popover title="Display Tools" align="bottom-left" open={openPopoverToolsTable[i]} >
+                                    <a style={{ cursor: "pointer" }} onClick={() => displayPopoverToolsTable(i, true)}>Tools</a>
+                                    <PopoverContent className="card-popover-content">
+                                        <IconButton label="Close" renderIcon={Close} align="top-right" kind="ghost" onClick={() => displayPopoverToolsTable(i, false)} />
+                                        <div className="card-detail-large">
+                                            <div className="card-popover-content-block">
+                                                <div className="card-description">Tools:
+                                                    <ul>
+                                                        {row.tools.map((tool, j) => (
+                                                            <li key={j}>{tool}</li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
+                            </span>)}
+                    </div>
                 </AspectRatio>
-            </Column>
+            </Column >
             ))}
         </>
     );
