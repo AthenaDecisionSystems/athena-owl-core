@@ -9,6 +9,11 @@ load_dotenv()
 from athena.routers.dto_models import ConversationControl
 from athena.llm.conversations.conversation_mgr import get_or_start_conversation
 
+"""
+Test at the conversation manager service level, different agents with or without tools
+
+This is the bigger non-regression test.
+"""
 class TestConversation(unittest.TestCase):
      
     def define_conversation_control(self,agent_id:str, query: str, thread_id: str) -> str:
@@ -88,5 +93,7 @@ class TestConversation(unittest.TestCase):
         assert rep.messages
         print(f"agent --> {rep.chat_history}")
         assert "Athena Decision Systems" in rep.messages[0].content
+
+
 if __name__ == '__main__':
     unittest.main()
