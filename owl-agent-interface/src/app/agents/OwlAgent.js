@@ -398,7 +398,8 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                     content += "</div>";
                     newMessages = [message, { text: content, type: "html", className: "", time: undefined, isBot: true }];
                 } else {
-                    const content = answer[0].content.match(/(.*?)(?=<explanation>)/s)[0];
+                    const index = answer[0].content.indexOf("<explanation>");
+                    const content = (index !== -1) ? answer[0].content.substring(0, index) : answer[0].content;
                     const explanation = answer[0].content.match(/<explanation>(.*?)<\/explanation>/s);
                     const explanationContent = explanation && explanation[1];
                     const rules = answer[0].content.match(/<rule>(.*?)<\/rule>/s);
