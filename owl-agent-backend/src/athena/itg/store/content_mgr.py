@@ -10,12 +10,11 @@ from langchain_milvus import Milvus
 from langchain_community.document_loaders import PyMuPDFLoader, BSHTMLLoader, WebBaseLoader
 from langchain_core.documents import Document
 
-import os, logging
+import os, logging, json
 from importlib import import_module
-from typing import List, Optional, Dict, Tuple, Any
+from typing import List, Optional, Tuple
 from pydantic import BaseModel
 import chromadb
-import os
 from athena.app_settings import get_config
 
 LOGGER = logging.getLogger(__name__)
@@ -274,6 +273,18 @@ class ContentManager:
     def clear_collection(self, collection_name: str= DEFAULT_COLLECTION_NAME):
         _,vs = self.get_vector_store(collection_name)
         vs._client.delete_collection(collection_name)
+
+    def get_documents_with_metadata(self) -> list[FileDescription]:
+        l = []
+        for filename in os.listdir(self.content_repo_path):
+            if filename.endswith(".json"):
+                file_path = os.path.join(self.content_repo_path, filename)
+                with open(file_path, 'r') as f:
+                    data = json.load(f)
+                    print(data)
+                    fd = FileDescription.model_validate(data)
+                    l.append(fd)
+        return l
 
 
 def get_content_mgr() -> ContentManager:

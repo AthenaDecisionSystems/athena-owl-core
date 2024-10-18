@@ -15,6 +15,7 @@ from athena.routers.dto_models import ConversationControl
 from langchain_core.messages import AIMessage
 
 class TestAgentsManager(unittest.TestCase):
+    
     def test_calling_base_graph_agent(self):
         print("\n\n debug a test \n")
         mgr = get_agent_manager()
