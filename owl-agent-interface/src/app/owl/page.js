@@ -233,7 +233,7 @@ function AgentsPage() {
         </Accordion>
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '1rem' }} />
 
-        <Button renderIcon={Reset} size="sm" kind="tertiary" onClick={() => { owlAgentRef.current.resetConversation() }}>{"Reset Conversation"}</Button>
+        <Button renderIcon={Reset} size="sm" kind="tertiary" onClick={() => { owlAgentRef.current.resetConversation() }}>{"Reset Conversation History"}</Button>
 
       </Column>
       <Column lg={12} md={6} sm={3} className="page__r5">

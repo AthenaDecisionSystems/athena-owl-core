@@ -34,7 +34,7 @@ function DocumentsPage() {
 
   const getDocuments = async () => {
     const collectionName = env.collectionName || "owl_default";
-    console.log('Querying documents:', `GET ${env.backendBaseAPI}a/documents/${collectionName}/${query}/${topK}`);
+    console.log('Querying documents:', `GET ${env.backendBaseAPI}a/documents/${collectionName}/${encodeURIComponent(query)}/${topK}`);
     try {
       const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/documents/${collectionName}/${query}/${topK}`);
 
@@ -78,7 +78,7 @@ function DocumentsPage() {
           invalid={empty}
           invalidText="This field cannot be empty"
           value={query}
-          onChange={(e) => { setEmpty(!e.target.value); setQuery(e.target.value.trim()) }}
+          onChange={(e) => { setEmpty(!e.target.value.trim()); setQuery(e.target.value) }}
           onKeyDown={(e) => { if (e.key === 'Enter') searchDocuments(); }} />
       </Column>
       <Column lg={3} md={2} sm={2}>
