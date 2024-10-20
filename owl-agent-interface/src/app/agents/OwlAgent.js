@@ -560,7 +560,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                                             message.type === "html" ?
                                                 <div dangerouslySetInnerHTML={{ __html: message.text }} /> :
                                                 message.className && message.className !== "" ?
-                                                    <div className={message.className}>{message.text}</div> :
+                                                    <div dangerouslySetInnerHTML={{ __html: message.text }} className={message.className}>div{message.text}</div> :
                                                     <div>
                                                         <MarkdownRenderer message={message.text} />
                                                         {message.time && <div>
