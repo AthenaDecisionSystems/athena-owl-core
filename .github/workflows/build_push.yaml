@@ -36,6 +36,8 @@ jobs:
         validate_secret DOCKER_USER ${DOCKER_USER}
         validate_secret DOCKER_HUB_TOKEN ${DOCKER_HUB_TOKEN}
         validate_secret DOCKER_REGISTRY ${DOCKER_REGISTRY}
+        validate_secret DOCKER_IMAGE_NAME ${DOCKER_I}
+        validate_secret DOCKER_REPOSITORY ${DOCKER_R}
         if [ "${FAIL}" = "true" ]; then
           exit 1
         fi
@@ -43,6 +45,8 @@ jobs:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
         DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+        DOCKER_I: ${{ secrets.DOCKER_IMAGE_NAME }}
+        DOCKER_R: ${{ secrets.DOCKER_REPOSITORY }}
   publish_images:
     needs:
       validate-docker-secrets
@@ -58,15 +62,14 @@ jobs:
             IMAGE_TAG=latest
           fi
           docker build owl-agent-backend/src/ -t ${IMAGE_NAME}:${IMAGE_TAG}
-          docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
           docker push ${IMAGE_NAME}:${IMAGE_TAG}
         env:
           DOCKER_U: ${{ secrets.DOCKER_USER }}
           DOCKER_P: ${{ secrets.DOCKER_HUB_TOKEN }}
           DOCKER_REG: ${{ secrets.DOCKER_REGISTRY }}
-          DOCKER_R: athenadecisionsystems
-          DOCKER_I: athena-owl-backend
-          IMAGE_TAG: 1.0.0
+          DOCKER_R: ${{ secrets.DOCKER_REPOSITORY }}
+          DOCKER_I: ${{ secrets.DOCKER_IMAGE_NAME }}
+          IMAGE_TAG: latest
       - name: build owl agent frontend image
         run: |
           IMAGE_NAME="${DOCKER_REG}/${DOCKER_R}/${DOCKER_I}"
@@ -75,13 +78,12 @@ jobs:
             IMAGE_TAG=latest
           fi
           docker build owl-agent-interface/ -t ${IMAGE_NAME}:${IMAGE_TAG}
-          docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest
           docker push ${IMAGE_NAME}:${IMAGE_TAG}
         env:
           DOCKER_U: ${{ secrets.DOCKER_USER }}
           DOCKER_P: ${{ secrets.DOCKER_HUB_TOKEN }}
           DOCKER_REG: ${{ secrets.DOCKER_REGISTRY }}
-          DOCKER_R: athenadecisionsystems
+          DOCKER_R: ${{ secrets.DOCKER_REPOSITORY }}
           DOCKER_I: athena-owl-frontend
-          IMAGE_TAG: 1.0.0
+          IMAGE_TAG: latest
 
