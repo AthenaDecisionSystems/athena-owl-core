@@ -3,15 +3,19 @@ logging_level: DEBUG
 logging_level_int: 10
 
 app_index_path: ./src/athena/routers/index.html
-owl_prompts_key_name: default_prompt
+
+owl_glossary_path: ./src/athena/config/glossary.json
 owl_agents_path: ./src/athena/config/agents.yaml
 owl_tools_path: ./src/athena/config/tools.yaml
 owl_prompts_path: ./tests/ut/config/prompts.yaml
-owl_glossary_path: ./src/athena/config/glossary.json
-owl_agent_llm_history_length: 5
+
 owl_agent_content_collection_name: base_collection
-owl_agent_content_file_path: ./tests/ut/file_content
-owl_agent_vs_url: http://localhost:8010
+owl_agent_content_file_path: ./tests/ut/data/file_content
+#owl_agent_vs_url: http://localhost:8010
+owl_agent_vs_path: ./tests/ut/data/vs_db/
+owl_agent_vs_class_name: langchain_milvus.Milvus
 owl_agent_vs_embedding_fct: OpenAIEmbeddings
 owl_agent_vs_embedding_fct_model: text-embedding-3-large
 owl_agent_tool_factory_class:  athena.llm.tools.tool_mgr.DefaultToolInstanceFactory
+
+owl_agent_llm_history_length: 5

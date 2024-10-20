@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { AspectRatio, Column, OverflowMenu, OverflowMenuItem, Popover, PopoverContent, IconButton } from '@carbon/react';
 import { Documentation } from '@carbon/pictograms-react';
 
-export const DocumentMap = ({ rows, query }) => {
+export const FileMap = ({ rows }) => {
     const [openPopoverTable, setOpenPopoverTable] = useState([]);
 
     useEffect(() => {
@@ -16,8 +16,9 @@ export const DocumentMap = ({ rows, query }) => {
 
     return (
         <>
-            {rows.length === 0 && query !== "" && <Column lg={3} md={2} sm={2} >
-                <h4>No documents found for </h4>
+            {rows.length === 0 && <Column lg={3} md={2} sm={2} >
+                <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
+                <h4>No File found</h4>
             </Column>}
 
             {rows.map((row, i) => (
@@ -30,11 +31,12 @@ export const DocumentMap = ({ rows, query }) => {
                                 <OverflowMenuItem hasDivider isDelete itemText="Delete" disabled />
                             </OverflowMenu>
                         </div>
-                        {/* <div className="card-name">{row?.id}</div> */}
-                        <div className="card-label">Chunk source: {row.metadata["source"]}</div>
+                        <div className="card-name">{row.name}</div>
+                        <div className="card-label">Description: {row.description}</div>
 
-                        <div className="card-label">Chunk content:</div>
-                        <div className="card-description" style={{ maxHeight: "10rem" }}>{row.page_content.length > 256 ? row.page_content.substring(0, 256) + "..." : row.page_content}</div>
+                        <div className="card-label">Type: {row.type}</div>
+                        <div className="card-label">File base URI: {row.file_base_uri}</div>
+                        <div className="card-label">Collection: {row.collection_name}</div>
                     </AspectRatio>
                 </Column>
             ))}
@@ -42,4 +44,4 @@ export const DocumentMap = ({ rows, query }) => {
     );
 };
 
-export default DocumentMap;
+export default FileMap;

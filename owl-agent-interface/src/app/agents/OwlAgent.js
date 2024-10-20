@@ -535,12 +535,12 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                                     <div className="waiting-for-response"><img src={loadingImage.src} alt="Loading..." /> </div> :
                                     message.popup === "explanation" ?
                                         <div>
-                                            <Button renderIcon={Light} onClick={handleClickExplanation}>Explanations</Button>
+                                            <Button renderIcon={Light} onClick={handleClickExplanation}>Justification</Button>
                                             {showPopupExplanation && (
                                                 <div className="popup chat-system-message">
                                                     <div className="popup-content">
                                                         <span className="close" onClick={handleCloseExplanation}>&times;</span>
-                                                        <MarkdownRenderer message={"# Explanations\n\n-----\n\n" + message.text} />
+                                                        <MarkdownRenderer message={"# Justification\n\n-----\n\n" + message.text} />
                                                     </div>
                                                 </div>
                                             )}
@@ -560,7 +560,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                                             message.type === "html" ?
                                                 <div dangerouslySetInnerHTML={{ __html: message.text }} /> :
                                                 message.className && message.className !== "" ?
-                                                    <div className={message.className}>{message.text}</div> :
+                                                    <div dangerouslySetInnerHTML={{ __html: message.text }} className={message.className}>div{message.text}</div> :
                                                     <div>
                                                         <MarkdownRenderer message={message.text} />
                                                         {message.time && <div>

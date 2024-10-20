@@ -44,7 +44,7 @@ class TestDocumentMgt(unittest.TestCase):
         assert rep.text
         print(rep.text)
         
-    def _test_upload_html(self):
+    def test_upload_html(self):
         print("\n\t--- test_upload_md")
         fd= FileDescription(name="claim_complaint_rules", 
                             description="a set of rules to manage complaints", 

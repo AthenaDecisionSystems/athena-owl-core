@@ -31,3 +31,8 @@ async def post_document_for_rag( file_description: FileDescription = Depends(), 
 @router.get("/documents/{collection}/{query}/{top_k}", tags=["Manage documents"])
 def get_documents_from_query(collection : str, query: str, top_k: int =3):
     return get_content_mgr().search(collection, query,top_k)
+
+
+@router.get("/documents/", tags=["Manage documents"])
+def get_all_documents() ->list[FileDescription]:
+    return get_content_mgr().get_documents_with_metadata()

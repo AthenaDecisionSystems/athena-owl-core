@@ -445,3 +445,16 @@
     font-size: 20px;
     cursor: pointer;
 }
+
+.summary {
+    >ul {
+        padding-left: 1rem;
+        list-style-position: inside;
+        list-style-type: disc;
+        line-height: 1.5;
+    }
+
+    >b {
+        font-weight: bold;
+    }
+}
