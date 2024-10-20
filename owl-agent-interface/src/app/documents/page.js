@@ -9,28 +9,54 @@ import { Search } from '@carbon/react/icons';
 import { context } from '../providers';
 import { getEnv } from '../env';
 import UploadDocument from './UploadDocument';
+import FileMap from './FileMap';
 
 const octokitClient = new Octokit({});
 
 function DocumentsPage() {
   let env = context()?.env;
 
+  const [loadingFiles, setLoadingFiles] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState();
   const [query, setQuery] = useState('');
   const [topK, setTopK] = useState(5);
   const [empty, setEmpty] = useState(true);
   const [rows, setRows] = useState([]);
+  const [files, setFiles] = useState([]);
 
   const controlRef = useRef(null);
 
   useEffect(() => {
-    if (!env.backendBaseAPI) {
-      getEnv().then((e) => {
-        env = e;
-      })
-    }
+    try {
+      if (!env.backendBaseAPI) {
+        env = getEnv();
+      }
+      getAllFiles();
+    } finally { }
   }, []);
+
+  const getAllFiles = async () => {
+    try {
+      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/documents/`);
+
+      if (res.status === 200) {
+        setFiles(res.data);
+      } else {
+        setError('Error when getting all documents (' + res.status + ')');
+      }
+    } catch (error) {
+      setError('Error when getting all documents:' + error.message);
+      console.error('Error when getting all documents:' + error.message);
+    } finally {
+      setLoadingFiles(false);
+    }
+  }
+
+  const updateFiles = () => {
+    setLoadingFiles(true);
+    getAllFiles();
+  }
 
   const getDocuments = async () => {
     const collectionName = env.collectionName || "owl_default";
@@ -63,15 +89,24 @@ function DocumentsPage() {
   return (
     <Grid>
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
-        <h1 className="landing-page__heading">Documents</h1>
+        <h1 className="landing-page__heading">Documents in Vector Store</h1>
       </Column>
 
+      {loadingFiles && (
+        <Column lg={3} md={2} sm={2}>
+          <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
+          <SkeletonText className="card" paragraph={true} lineCount={2} />
+        </Column>)}
+
+      {!loadingFiles && (<FileMap rows={files} />)}
+
       <Column lg={16} md={8} sm={4} className="upload-area">
-        <UploadDocument env={env} setError={setError} />
+        <hr style={{ margin: "3rem 0rem" }} />
+        <UploadDocument env={env} updateFiles={updateFiles} setError={setError} />
         <hr style={{ margin: "3rem 0rem" }} />
       </Column>
 
-      <Column lg={13} md={6} sm={2}>
+      {files.length > 0 && <Column lg={13} md={6} sm={2}>
         <TextInput data-modal-primary-focus id="text-input-1"
           labelText="Query"
           placeholder="e.g. loan validation"
@@ -80,8 +115,8 @@ function DocumentsPage() {
           value={query}
           onChange={(e) => { setEmpty(!e.target.value.trim()); setQuery(e.target.value) }}
           onKeyDown={(e) => { if (e.key === 'Enter') searchDocuments(); }} />
-      </Column>
-      <Column lg={3} md={2} sm={2}>
+      </Column>}
+      {files.length > 0 && <Column lg={3} md={2} sm={2}>
         <NumberInput id="number-input-1" ref={controlRef}
           label="Top K"
           value={topK}
@@ -90,12 +125,12 @@ function DocumentsPage() {
           invalid={topK < 1 || topK > 20}
           invalidText="Value must be between 1 and 20"
           onChange={() => setTopK(controlRef.current.value)} />
-      </Column>
-      <Column lg={16} md={8} sm={4}>
+      </Column>}
+      {files.length > 0 && <Column lg={16} md={8} sm={4}>
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
         <Button renderIcon={Search} disabled={empty || topK < 1 || topK > 20} iconDescription="Search" onClick={() => searchDocuments()}>Search</Button>
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
-      </Column>
+      </Column>}
 
       {loading && (
         <Column lg={3} md={2} sm={2}>
@@ -103,12 +138,12 @@ function DocumentsPage() {
         </Column>
       )}
 
-      {!loading && (<DocumentMap rows={rows} />)}
+      {files.length > 0 && !loading && (<DocumentMap rows={rows} query={query} />)}
 
-      <Column lg={16} md={8} sm={4} className="landing-page__banner">
-        {error && (<ToastNotification role="alert" caption={error} timeout={3000} title="Error" subtitle="" />)}
+      < Column lg={16} md={8} sm={4} className="landing-page__banner">
+        {error && (<ToastNotification role="alert" caption={error} title="Error" subtitle="" />)}
       </Column>
-    </Grid>
+    </Grid >
   );
 }
 

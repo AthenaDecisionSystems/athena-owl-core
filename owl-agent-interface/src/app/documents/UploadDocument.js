@@ -3,7 +3,7 @@ import { Document, DocumentMultiple_02, Upload } from "@carbon/react/icons";
 import React, { useRef, useState } from "react";
 import { useTranslation } from 'react-i18next';
 
-const UploadDocument = ({ env, setError }) => {
+const UploadDocument = ({ env, updateFiles, setError }) => {
     const [file, setFile] = useState();
     const [uploadStatus, setUploadStatus] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -46,6 +46,7 @@ const UploadDocument = ({ env, setError }) => {
                 console.log('Response Body:', responseBody);
                 setUploadStatus({ kind: "success", text: file.name + ' uploaded' });
                 setFile();
+                updateFiles();
             } else {
                 setUploadStatus({ kind: "error", text: file.name + ' NOT uploaded. ' + response.statusText });
                 console.error('Upload failed', response.statusText);
@@ -71,9 +72,9 @@ const UploadDocument = ({ env, setError }) => {
             />
             <Button
                 renderIcon={Document}
-                iconDescription="Select a file"
+                iconDescription="Select a file to upload"
                 onClick={() => hiddenFileInputRef.current.click()}
-                style={{ width: "14rem", borderRadius: "1rem", marginBottom: "1rem" }}>Select a file</Button>
+                style={{ width: "14rem", borderRadius: "1rem", marginBottom: "1rem" }}>Select a file to upload</Button>
             {file && <FileUploaderItem name={file.name} status="edit"
                 iconDescription="Delete file"
                 onDelete={() => setFile()}
@@ -81,7 +82,7 @@ const UploadDocument = ({ env, setError }) => {
                 errorSubject="File size exceeds limit" invalid={false} />}
 
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }}>
-                {file && <Button kind="tertiary" renderIcon={Upload} iconDescription="Upload" onClick={() => uploadFile()}>Upload</Button>}
+                {file && <Button kind="tertiary" renderIcon={Upload} iconDescription="Upload to Vector Store" onClick={() => uploadFile()}>Upload to Vector Store</Button>}
                 {loading && <Loading withOverlay={false} small style={{ marginLeft: "1rem" }} />}
             </div>
             {uploadStatus && (
