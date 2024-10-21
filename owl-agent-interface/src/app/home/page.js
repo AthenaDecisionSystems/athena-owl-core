@@ -42,6 +42,14 @@ export default function LandingPage() {
                     and Business Rules that helps you make repeatable,
                     explainable, reliable and accurate decisions.
                   </p>
+                  <p className="landing-page__p">
+                    Contact{' '}
+                    <a href="https://athenadecisions.com/contact-us" target="_blank">
+                      <span style={{ fontWeight: "bold" }}>Athena Decsion Systems</span>{' '}
+                      <Launch width={16} height={16} viewBox="0 0 32 32" />
+                    </a>{' '}
+                    for more information or to provide your feedback.
+                  </p>
                 </Column>
                 <Column md={4} lg={{ span: 8, offset: 8 }} sm={4}>
                   <Image
@@ -65,7 +73,7 @@ export default function LandingPage() {
                   <p className="landing-page__p">
                     Owl Agent was initially designed by{' '}
                     <a href="https://athenadecisions.com" target="_blank">
-                      Athena Decision Systems{' '}
+                      <span style={{ fontWeight: "bold" }}>Athena Decision Systems</span>{' '}
                       <Launch width={16} height={16} viewBox="0 0 32 32" />
                     </a>
                     .

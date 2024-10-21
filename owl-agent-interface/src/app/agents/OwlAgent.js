@@ -246,41 +246,12 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
     const [showPopupExplanation, setShowPopupExplanation] = useState(false);
     const [showPopupRules, setShowPopupRules] = useState(false);
 
-    const handleClickExplanation = () => {
-        setShowPopupExplanation(true);
-    };
-
-    const handleCloseExplanation = () => {
-        setShowPopupExplanation(false);
-    };
-
-    const handleClickRules = () => {
-        setShowPopupRules(true);
-    };
-
-    const handleCloseRules = () => {
-        setShowPopupRules(false);
-    };
-
-    useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [randomNumber]);
 
     useEffect(() => {
         // Random user id
         const uniqueId = `user_${Math.random().toString(36).substr(2, 9)}_${Date.now()}`;
         setUserId(uniqueId);
     }, []);
-
-    useEffect(() => {
-        // Scroll to the end of messages when messages change
-        console.log("Scroll to the end of messages", messages);
-        if (messages.length > 1) {
-            msgEnd.current.scrollIntoView(false);
-        }
-    }, [messages]);
 
     useEffect(() => {
         console.log("AgentId=", agent.agent_id)
@@ -291,6 +262,20 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
             text: "Welcome to the " + (agent.name ? agent.name : agent.agent_id) + ". How can I help you today?", isBot: true
         }]);
     }, [agent]);
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [randomNumber]);
+
+    useEffect(() => {
+        // Scroll to the end of messages when messages change
+        console.log("Scroll to the end of messages", messages);
+        if (messages.length > 1) {
+            msgEnd.current.scrollIntoView(false);
+        }
+    }, [messages]);
 
     const resetChat = () => {
         informUser("---Restart conversation---");
@@ -501,6 +486,22 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
     const restoreTextInputHeight = () => {
         inputRef.current.style.height = "100px";
     }
+
+    const handleClickExplanation = () => {
+        setShowPopupExplanation(true);
+    };
+
+    const handleCloseExplanation = () => {
+        setShowPopupExplanation(false);
+    };
+
+    const handleClickRules = () => {
+        setShowPopupRules(true);
+    };
+
+    const handleCloseRules = () => {
+        setShowPopupRules(false);
+    };
 
     return (
         <div>
