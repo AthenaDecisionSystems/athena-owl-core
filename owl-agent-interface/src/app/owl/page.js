@@ -39,10 +39,10 @@ function AgentsPage() {
   const owlAgentRef = useRef();
 
   useEffect(() => {
-    // Désactiver le défilement
+    // Disable scrolling
     document.body.style.overflow = 'hidden';
     return () => {
-      // Réactiver le défilement lors du démontage du composant
+      // Re-enable scrolling when disassembling a component
       document.body.style.overflow = 'auto';
     };
   }, []);

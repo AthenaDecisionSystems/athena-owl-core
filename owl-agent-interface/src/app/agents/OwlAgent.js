@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import ClosedQuestions from './ClosedQuestions';
 import { context } from '../providers';
 import MarkdownRenderer from '../utils/MarkdownRenderer';
-import { AiExplainability, Idea, Ideate } from "@carbon/pictograms-react";
 
 
 const closedQuestionsDemo = {
@@ -254,7 +253,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
     }, []);
 
     useEffect(() => {
-        console.log("AgentId=", agent.agent_id)
+        console.log("AgentId:", agent.agent_id)
         setResetHistory(true);
         setThreadId(null);
         setReenterInto("");
@@ -270,8 +269,8 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
     }, [randomNumber]);
 
     useEffect(() => {
+        console.log("Messages:", messages);
         // Scroll to the end of messages when messages change
-        console.log("Scroll to the end of messages", messages);
         if (messages.length > 1) {
             msgEnd.current.scrollIntoView(false);
         }
@@ -284,7 +283,6 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
 
     const informUser = (message) => {
         // Inform the user
-        console.log("informUser: " + message);
         if (message === "---Restart conversation---") {
             setResetHistory(true);
             setThreadId(null);
@@ -321,7 +319,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
             setInput("");
             setLastMessage(text);
         } else {
-            console.log("submitMessage: closedAnswers=" + JSON.stringify(closedQuestionAnswers));
+            console.log("submitMessage: closedAnswers:", closedQuestionAnswers);
             text = "**Here are the answers:**\n" +
                 closedQuestionAnswers.map((answer) => ("- " + localizedLabel(answer.key_name) + " `" + answer.input + "`")).join("\n");
         }
@@ -342,7 +340,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
             "thread_id": threadId,
             "chat_history": (resetHistory ? [] : chatHistory)
         }
-        console.log("submitMessage: " + JSON.stringify(body));
+        console.log("submitMessage: Call c/generic_chat:", body);
         const requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'accept': 'application/json' },
@@ -352,7 +350,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
         fetch(backendBaseAPI + "c/generic_chat", requestOptions)
             .then(response => response.json())
             .then(data => {
-                console.log("submitMessage: " + JSON.stringify(data));
+                console.log("submitMessage: Response:", data);
                 let answer = [];
                 let closedQuestions = [];
 
@@ -400,7 +398,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                 }
                 if (closedQuestions.length > 0) {
                     newMessages.push({ questions: closedQuestions, isBot: true, closedQuestions: true });
-                    console.log("submitMessage: closedQuestions=" + JSON.stringify(closedQuestions));
+                    console.log("submitMessage: closedQuestions:", closedQuestions);
                 }
                 setTimeout(() => { setMessages([...messages, ...newMessages]); }, 500);
             })
