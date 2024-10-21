@@ -1,17 +1,17 @@
 name: Build and Publish image to docker
 env:
-  IMAGE_NAME: athena-owl-backend
+  IMAGE_NAME: athena-owl-frontend
   IMAGE_TAG: latest
 on:
   push:
     branches:
       - main
     paths:
-      - 'owl-agent-backend'
+      - 'owl-agent-interface/'
   pull_request:
     branches: [ main ]
     paths:
-      - 'owl-agent-backend'
+      - 'owl-agent-interface/'
 jobs:
   validate-docker-secrets:
     runs-on: ubuntu-latest
@@ -59,30 +59,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      - name: build owl agent backend image
+      - name: build owl agent frontend image
         run: |
           FULL_IMAGE_NAME="${DOCKER_REG}/${DOCKER_R}/${IMAGE_NAME}"
-          docker build owl-agent-backend/src/ -t ${FULL_IMAGE_NAME}:${IMAGE_TAG}
+          docker build owl-agent-interface/ -t ${FULL_IMAGE_NAME}:${IMAGE_TAG}
           docker push ${FULL_IMAGE_NAME}:${IMAGE_TAG}
         env:
           DOCKER_U: ${{ secrets.DOCKER_USER }}
           DOCKER_P: ${{ secrets.DOCKER_HUB_TOKEN }}
           DOCKER_REG: ${{ secrets.DOCKER_REGISTRY }}
           DOCKER_R: ${{ secrets.DOCKER_REPOSITORY }}
-      - name: build owl agent frontend image
-        run: |
-          IMAGE_NAME="${DOCKER_REG}/${DOCKER_R}/${DOCKER_I}"
-          docker login -u ${DOCKER_U} -p ${DOCKER_P} ${DOCKER_REG}
-          if [ -z "$IMAGE_TAG" ]; then
-            IMAGE_TAG=latest
-          fi
-          docker build owl-agent-interface/ -t ${IMAGE_NAME}:${IMAGE_TAG}
-          docker push ${IMAGE_NAME}:${IMAGE_TAG}
-        env:
-          DOCKER_U: ${{ secrets.DOCKER_USER }}
-          DOCKER_P: ${{ secrets.DOCKER_HUB_TOKEN }}
-          DOCKER_REG: ${{ secrets.DOCKER_REGISTRY }}
-          DOCKER_R: ${{ secrets.DOCKER_REPOSITORY }}
-          DOCKER_I: athena-owl-frontend
-          IMAGE_TAG: latest
+    
 
