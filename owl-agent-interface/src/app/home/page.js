@@ -45,7 +45,7 @@ export default function LandingPage() {
                   <p className="landing-page__p">
                     Contact{' '}
                     <a href="https://athenadecisions.com/contact-us" target="_blank">
-                      <span style={{ fontWeight: "bold" }}>Athena Decsion Systems</span>{' '}
+                      <span style={{ fontWeight: "bold" }}>Athena Decision Systems</span>{' '}
                       <Launch width={16} height={16} viewBox="0 0 32 32" />
                     </a>{' '}
                     for more information or to provide your feedback.

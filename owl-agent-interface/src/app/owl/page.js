@@ -225,10 +225,8 @@ function AgentsPage() {
 
             </Stack>
           </AccordionItem>
-          <AccordionItem key="2" title="Documents" className="owl-agent-config-accordion-item" open={showDocuments} onClick={() => { setShowSettings(false); setShowDocuments(true) }}>
+          <AccordionItem key="2" title="Document(s)" className="owl-agent-config-accordion-item" open={showDocuments} onClick={() => { setShowSettings(false); setShowDocuments(true) }}>
             <p><a target="_blank" href="/IBUpolicies.pdf">IBU Policies document</a></p>
-            <p><a target="_blank" href="/IBUpolicies-onepage.pdf">IBU Policies document (one page)</a></p>
-            <p><a target="_blank" href="/DemoScenario.pdf">IBU Demo Scenario</a></p>
           </AccordionItem>
         </Accordion>
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '1rem' }} />

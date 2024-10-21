@@ -10,7 +10,7 @@ export NEXT_PUBLIC_DEMO_TEXT="*I received this email from my customer. What shou
 
 Dear IBU,
 
-During the recent water leak at my house (cf claim 2), my expensive Moroccan carpet was damaged by the water.  You told me that this damage is not covered by my policy.  I’m very disappointed.  What do you propose?
+During the recent water leak at my house (cf claim 250303), my expensive Moroccan carpet was damaged by the water.  You told me that this damage is not covered by my policy.  I’m very disappointed.  What do you propose?
 
 Thank you!
 
