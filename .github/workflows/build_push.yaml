@@ -7,11 +7,11 @@ on:
     branches:
       - main
     paths:
-      - 'owl-agent-backend'
+      - 'owl-agent-backend/**'
   pull_request:
     branches: [ main ]
     paths:
-      - 'owl-agent-backend'
+      - 'owl-agent-backend/**'
 jobs:
   validate-docker-secrets:
     runs-on: ubuntu-latest
