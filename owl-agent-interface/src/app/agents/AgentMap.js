@@ -106,7 +106,7 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
                 <Agent backendBaseAPI={backendBaseAPI} mode="edit" agent={rows[editAgent]} agents={rows} prompts={prompts} runnerClassNames={runnerClassNames} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />
             )}
             {rows.filter(row => showHiddenAgents ? true : !row.hidden_to_ui).map((row, i) => (<Column key={i} lg={3} md={2} sm={2} >
-                <AspectRatio className="card" ratio="4x3" onDoubleClick={() => startEdition(i)}>
+                <AspectRatio className="card card-agent" ratio="4x3" onDoubleClick={() => startEdition(i)}>
                     <div className="card-header" >
                         <WatsonxData style={{ padding: "0.5rem", cursor: "pointer" }} onClick={() => startOwlAgent(i)} />
                         <OverflowMenu className="card-menu">
@@ -125,7 +125,7 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: "space-between" }}>
                         {(row.modelClassName && row.modelName) && <span>
                             <Popover title="Display LLM parameters" align="bottom-left" open={openPopoverLLMTable[i]}>
-                                <a style={{ cursor: "pointer" }} onClick={() => displayPopoverLLMTable(i, true)}>LLM Parameters</a>
+                                <a style={{ cursor: "pointer" }} onClick={() => displayPopoverLLMTable(i, true)}>LLM settings</a>
                                 <PopoverContent className="card-popover-content">
                                     <IconButton label="Close" renderIcon={Close} align="top-right" kind="ghost" onClick={() => displayPopoverLLMTable(i, false)} />
                                     <div className="card-detail-large">

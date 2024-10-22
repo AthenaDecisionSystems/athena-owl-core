@@ -1,4 +1,4 @@
-import { Button, Dropdown, DropdownSkeleton, Modal, MultiSelect, NumberInput, Popover, PopoverContent, Select, SelectItem, TextArea, TextInput } from '@carbon/react';
+import { Button, Dropdown, DropdownSkeleton, Modal, MultiSelect, NumberInput, Popover, PopoverContent, Select, SelectItem, TextArea, TextInput, Toggle } from '@carbon/react';
 import React, { useEffect, useState } from 'react';
 import { AiGovernancePrompt, WatsonxData } from '@carbon/pictograms-react';
 import { Octokit } from '@octokit/core';
@@ -24,6 +24,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
     const [agentTopK, setAgentTopK] = useState(1);
     const [agentTopP, setAgentTopP] = useState(1);
     const [toolSelectedItems, setToolSelectedItems] = useState({ selectedItems: [] });
+    const [hiddenToUI, setHiddenToUI] = useState(false);
 
     const [dropdownItemsPromptRef, setDropdownItemsPromptRef] = useState([]);
 
@@ -44,6 +45,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
             setAgentTopK(agent.top_k);
             setAgentTopP(agent.top_p);
             setToolSelectedItems({ selectedItems: [...agent.tools] });
+            setHiddenToUI(agent.hidden_to_ui);
         } else {
             setCurrentItemPromptRef("");
             setToolSelectedItems({ selectedItems: [] });
@@ -78,7 +80,8 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
                 temperature: parseInt(agentTemperature),
                 top_k: parseInt(agentTopK),
                 top_p: parseInt(agentTopP),
-                tools: toolSelectedItems.selectedItems || (mode === "create" ? [] : agent.tools)
+                tools: toolSelectedItems.selectedItems || (mode === "create" ? [] : agent.tools),
+                hidden_to_ui: hiddenToUI
             });
 
             if (res.status === 200) {
@@ -112,6 +115,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
             setAgentTopK(1);
             setAgentTopP(1);
             setToolSelectedItems({ selectedItems: [] });
+            setHiddenToUI(false);
 
             setOpenState(false);
         }
@@ -165,6 +169,13 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
                 value={agentDescription}
                 onChange={(e) => setAgentDescription(e.target.value)}
                 placeholder="e.g. This is the new IBU agent that uses LLM and Business Rules to make intelligent decisions..." />
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
+
+            <Toggle id="toggle-hidden-to-ui"
+                labelText="Hidden to UI"
+                labelA="No"
+                labelB="Yes"
+                onToggle={(e) => setHiddenToUI(e)} />
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
 
             <Select id="select-runner-class-name"
@@ -252,6 +263,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '1rem' }} />
 
             <AgentTools backendBaseAPI={backendBaseAPI} toolSelectedItems={toolSelectedItems} setToolSelectedItems={setToolSelectedItems} setError={setError} />
+            <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '10rem' }} />
         </Modal >
     )
 };
