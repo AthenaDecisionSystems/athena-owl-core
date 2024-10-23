@@ -203,6 +203,29 @@ const closedQuestionsDemoBool = {
     closedQuestions: true
 };
 
+const closedQuestionsDemo2Bool = {
+    questions: [{
+        "question_id": "4cf3f2a0-862a-4340-86d3-47099321e293", "key_name": "the customer.multipleContracts",
+        "labels": [
+            { "locale": "en", "text": "Does the customer have another contract?" },
+            { "locale": "fr", "text": "Est-ce que le client a un autre contrat ?" }
+        ],
+        "data_type": "Boolean",
+        "restrictions": null,
+        "default_value": false
+    }, {
+        "question_id": "4cf3f2a0-862a-4340-86d3-47099321e294", "key_name": "the customer.intentionToLeave",
+        "labels": [
+            { "locale": "en", "text": "Does the customer have intention to leave?" },
+            { "locale": "fr", "text": "Est-ce que le client a l'intention de partir ?" }
+        ],
+        "data_type": "Boolean",
+        "restrictions": null,
+    }],
+    isBot: true,
+    closedQuestions: true
+};
+
 
 const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecisionServices, openState, randomNumber, setError }, ref) => {
     useImperativeHandle(ref, () => ({
@@ -475,6 +498,10 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                 setLastMessage("cqbool");
                 e.target.value = "";
                 setMessages([...messages, closedQuestionsDemoBool]);
+            } else if (e.target.value.trim() === "cq2bool") {
+                setLastMessage("cq2bool");
+                e.target.value = "";
+                setMessages([...messages, closedQuestionsDemo2Bool]);
             } else if (e.target.value.trim() === "show chat history" || e.target.value.trim() === "sch") {
                 setLastMessage("show chat history");
                 e.target.value = "";

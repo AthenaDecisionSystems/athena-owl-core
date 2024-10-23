@@ -194,15 +194,15 @@ const ClosedQuestion = forwardRef(({ messageIndex, index, question, disabled }, 
     }));
 
     if (dataType === 'Boolean') return (
-        <RadioButtonGroup id={keyName + "-" + messageIndex}
-            legendText={localizedLabel()} name={"radio-button-yes-no-" + messageIndex}
+        <RadioButtonGroup id={keyName + "-" + messageIndex + "-" + index}
+            legendText={localizedLabel()} name={"radio-button-yes-no-" + messageIndex + "-" + index}
             value={inputValue}
             defaultSelected={inputValue}
             invalid={inputValue === null}
             invalidText={"You must select an option"}
             disabled={disabled} >
-            <RadioButton labelText={"Yes"} value={true} id={"radio-yes-" + messageIndex} onClick={() => setInputValue(true)} />
-            <RadioButton labelText={"No"} value={false} id={"radio-no-" + messageIndex} onClick={() => setInputValue(false)} />
+            <RadioButton labelText={"Yes"} value={true} id={"radio-yes-" + messageIndex + "-" + index} onClick={() => setInputValue(true)} />
+            <RadioButton labelText={"No"} value={false} id={"radio-no-" + messageIndex + "-" + index} onClick={() => setInputValue(false)} />
         </RadioButtonGroup >
     )
     if (dataType === 'Text' && enumeration) return (
