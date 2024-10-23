@@ -186,7 +186,7 @@ function AgentsPage() {
           disabled={false} />}
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '1rem' }} />
 
-        <Accordion>
+        {false && <Accordion>
           <AccordionItem key="1" title="Settings" className="owl-agent-config-accordion-item" open={showSettings} onClick={() => { setShowSettings(Trusted); setShowDocuments(false) }}>
             <Stack gap={4} style={{ width: "100%" }}>
               <Toggle id={"UseFileSearch"}
@@ -229,7 +229,7 @@ function AgentsPage() {
             <p><a target="_blank" href="/IBUpolicies.pdf">IBU Policies document</a></p>
             <p><a target="_blank" href="/IBUpolicies-onepage.pdf">IBU Policies document (one page)</a></p>
           </AccordionItem>
-        </Accordion>
+        </Accordion>}
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '1rem' }} />
 
         <Button renderIcon={Reset} size="sm" kind="tertiary" onClick={() => { owlAgentRef.current.resetConversation() }}>{"Reset Conversation History"}</Button>
