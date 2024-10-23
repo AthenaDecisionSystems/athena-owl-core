@@ -4,7 +4,7 @@ import { Send } from '@carbon/react/icons';
 import { useTranslation } from 'react-i18next';
 import ClosedQuestion from './ClosedQuestion';
 
-const ClosedQuestions = ({ lastMessage, questions, feedback }) => {
+const ClosedQuestions = ({ messageIndex, lastMessage, questions, feedback }) => {
     const questionRefs = useRef([]);
 
     const { t } = useTranslation();
@@ -33,6 +33,7 @@ const ClosedQuestions = ({ lastMessage, questions, feedback }) => {
                 <div key={i}>
                     <ClosedQuestion
                         ref={el => questionRefs.current[i] = el}
+                        messageIndex={messageIndex}
                         index={i}
                         question={question}
                         disabled={!lastMessage} />

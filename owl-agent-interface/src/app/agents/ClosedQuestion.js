@@ -1,9 +1,8 @@
 import React, { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react';
-import { DatePicker, DatePickerInput, Dropdown, NumberInput, TextInput, TimePicker, Toggle } from '@carbon/react';
-import ReactMarkdown from 'react-markdown';
+import { DatePicker, DatePickerInput, Dropdown, NumberInput, RadioButton, RadioButtonGroup, TextInput, TimePicker } from '@carbon/react';
 import { useTranslation } from 'react-i18next';
 
-const ClosedQuestion = forwardRef(({ index, question, disabled }, ref) => {
+const ClosedQuestion = forwardRef(({ messageIndex, index, question, disabled }, ref) => {
     const [keyName, setKeyName] = useState('');
     const [labels, setLabels] = useState([]);
     const [dataType, setDataType] = useState('');
@@ -41,9 +40,9 @@ const ClosedQuestion = forwardRef(({ index, question, disabled }, ref) => {
             }
         }
         if (question.data_type === 'Boolean') {
-            setInputValue(question.default_value || false);
+            setInputValue(question.default_value || null);
         } else if (question.data_type === 'Text' && question.restrictions.enumeration) {
-            setInputValue(question.default_value || question.restrictions.enumeration.possible_values[0].value);
+            setInputValue(question.default_value || null);
         } else if ((question.data_type === 'Integer' || question.data_type === 'Number') && typeof question.default_value == 'number') {
             setInputValue("" + question.default_value);
         } else if (question.data_type === 'DateTime' && question.default_value) {
@@ -195,19 +194,25 @@ const ClosedQuestion = forwardRef(({ index, question, disabled }, ref) => {
     }));
 
     if (dataType === 'Boolean') return (
-        <Toggle id={keyName + Math.random().toString(36)}
-            labelText={localizedLabel()}
-            defaultToggled={inputValue}
-            labelA="No"
-            labelB="Yes"
-            onClick={() => { setInputValue(!inputValue); return true; }}
-            disabled={disabled} />
+        <RadioButtonGroup id={keyName + "-" + messageIndex}
+            legendText={localizedLabel()} name={"radio-button-yes-no-" + messageIndex}
+            value={inputValue}
+            defaultSelected={inputValue}
+            invalid={inputValue === null}
+            invalidText={"You must select an option"}
+            disabled={disabled} >
+            <RadioButton labelText={"Yes"} value={true} id={"radio-yes-" + messageIndex} onClick={() => setInputValue(true)} />
+            <RadioButton labelText={"No"} value={false} id={"radio-no-" + messageIndex} onClick={() => setInputValue(false)} />
+        </RadioButtonGroup >
     )
     if (dataType === 'Text' && enumeration) return (
         <Dropdown id={keyName}
             titleText={localizedLabel()}
             items={enumeration.possible_values}
             selectedItem={inputValue ? enumeration.possible_values.find(item => item.value === inputValue) : null}
+            invalid={!inputValue}
+            invalidText={"You must select an option"}
+            // {" Gérer le set invalid et modifier selectedItem si la valeur n'est pas dans le set"}
             itemToString={item => item ? item.labels.find(label => label.locale === i18n.language).text : ''}
             onChange={({ selectedItem }) => setInputValue(selectedItem.value)}
             disabled={disabled} />

@@ -365,7 +365,14 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                     setResetHistory(false);
                 } else {
                     // Error 500 or other
-                    answer = [{ content: "Status http " + data.status + ": " + data.message + "\n" + data.error, style_class: "chat-msg-error" }];
+                    answer = [{
+                        content: "<div><span style='font-style:italic'>There was an error processing your request</span><br/>" +
+                            "Status http: " +
+                            "<span style='font-weight:bold; padding-right=2rem'>" + data.status + "</span> " +
+                            (data.message ? data.message : "") +
+                            "<br/>" + data.error + "</div>",
+                        style_class: "chat-msg-error"
+                    }];
                 }
 
                 let newMessages = [];
@@ -388,6 +395,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                     const rules = answer[0].content.match(/<rule>(.*?)<\/rule>/s);
                     const rulesContent = rules && rules[1];
 
+                    // If className exists, it is a html message otherwise it is a text or md message
                     newMessages = [message, { text: content, className: answer[0].style_class, time: undefined, isBot: true, }];
                     if (explanationContent) {
                         newMessages.push({ text: explanationContent, popup: "explanation", isBot: true });
@@ -521,7 +529,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                                 <UserAvatar className="chat-icon" />) :
                             <span style={{ width: "2.5rem" }}></span>}
                         {(message.closedQuestions && message.questions.length > 0) ? <div className="closed-questions">
-                            <ClosedQuestions lastMessage={i === messages.length - 1} questions={message.questions} feedback={sendClosedAnswers} />
+                            <ClosedQuestions messageIndex={i} lastMessage={i === messages.length - 1} questions={message.questions} feedback={sendClosedAnswers} />
                         </div> :
                             message.text === "Clear" ?
                                 <div>
@@ -559,7 +567,7 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                                             message.type === "html" ?
                                                 <div dangerouslySetInnerHTML={{ __html: message.text }} /> :
                                                 message.className && message.className !== "" ?
-                                                    <div dangerouslySetInnerHTML={{ __html: message.text }} className={message.className}>div{message.text}</div> :
+                                                    <div dangerouslySetInnerHTML={{ __html: message.text }} className={message.className} /> :
                                                     <div>
                                                         <MarkdownRenderer message={message.text} />
                                                         {message.time && <div>
