@@ -12,9 +12,10 @@ cd owl-agent-interface
 source ./setEnvironmentVariables.sh
 ```
 
-_Note: there are two other environment variables that are processed by the frontend._
-**NEXT_PUBLIC_DEMO_TEXT**_'s content is automatically entered in the chat text area when you enter the string `demo`. See below for an example in IBU Insurance Demo._
-**NEXT_PUBLIC_COLLECTION_NAME** _is the collection name in the vector store associated with your demo. This name is also declared in the config.yaml file. If not provided, `owl_default` is the default value for the frontend._
+_Note: there are other environment variables that are processed by the frontend._  
+**NEXT_PUBLIC_DEMO_TEXT**_'s content is automatically entered in the chat text area when you enter the string `demo`. See below for an example in IBU Insurance Demo._  
+**NEXT_PUBLIC_COLLECTION_NAME** _is the collection name in the vector store associated with your demo. This name is also declared in the config.yaml file. If not provided, `owl_default` is the default value for the frontend._  
+**NEXT_PUBLIC_SHOW_SETTINGS_AND_DOCUMENTS** _indicates with yes or no or true or false whether the accordion with Settings and Documents is displayed or not._  
 
 ### Build
 ```

@@ -186,7 +186,7 @@ function AgentsPage() {
           disabled={false} />}
         <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem', height: '1rem' }} />
 
-        {false && <Accordion>
+        {env.showSettingsAndDocuments && <Accordion>
           <AccordionItem key="1" title="Settings" className="owl-agent-config-accordion-item" open={showSettings} onClick={() => { setShowSettings(Trusted); setShowDocuments(false) }}>
             <Stack gap={4} style={{ width: "100%" }}>
               <Toggle id={"UseFileSearch"}

@@ -17,3 +17,4 @@ Thank you!
 Yours,
 
 **Sonya Smith**"
+export NEXT_PUBLIC_SHOW_SETTINGS_AND_DOCUMENTS=Yes
