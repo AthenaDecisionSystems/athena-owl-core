@@ -6,7 +6,8 @@ import { useTranslation } from 'react-i18next';
 import ClosedQuestions from './ClosedQuestions';
 import { context } from '../providers';
 import MarkdownRenderer from '../utils/MarkdownRenderer';
-
+import DOMPurify from "dompurify";
+import ReactHtmlParser from "react-html-parser";
 
 const closedQuestionsDemo = {
     questions: [{
@@ -592,9 +593,11 @@ const OwlAgent = forwardRef(({ backendBaseAPI, agent, useFileSearch, useDecision
                                                 )}
                                             </div> :
                                             message.type === "html" ?
-                                                <div dangerouslySetInnerHTML={{ __html: message.text }} /> :
+                                                // <div dangerouslySetInnerHTML={{ __html: message.text }} /> :
+                                                <div>{ReactHtmlParser(DOMPurify.sanitize(message.text))}</div> :
                                                 message.className && message.className !== "" ?
-                                                    <div dangerouslySetInnerHTML={{ __html: message.text }} className={message.className} /> :
+                                                    <div className={message.className}>{ReactHtmlParser(DOMPurify.sanitize(message.text))}</div> :
+                                                    // <div dangerouslySetInnerHTML={{ __html: message.text }} className={message.className} /> :
                                                     <div>
                                                         <MarkdownRenderer message={message.text} />
                                                         {message.time && <div>
