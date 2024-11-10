@@ -5,6 +5,7 @@ Copyright 2024 Athena Decision Systems
 from fastapi import File, UploadFile, Depends, APIRouter, Body
 from athena.itg.store.content_mgr import FileDescription, get_content_mgr
 from athena.app_settings import get_config
+from typing import List
 import logging
 LOGGER = logging.getLogger(__name__)
 
@@ -36,3 +37,9 @@ def get_documents_from_query(collection : str, query: str, top_k: int =3):
 @router.get("/documents/", tags=["Manage documents"])
 def get_all_documents() ->list[FileDescription]:
     return get_content_mgr().get_documents_with_metadata()
+
+
+@router.get("/documents/collections", tags=["Manage documents"])
+def get_all_documents() ->list[FileDescription] -> List[str]:
+    return get_content_mgr().get_collections()
+
