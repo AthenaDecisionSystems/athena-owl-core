@@ -6,7 +6,7 @@ os.environ["CONFIG_FILE"] = "./tests/ut/config/config.yaml"
 from dotenv import load_dotenv
 load_dotenv()
 from athena.itg.store.content_mgr import get_content_mgr, FileDescription
-
+from athena.app_settings import get_config
 
 
 def build_file_descriptor(name: str, type: str,fname: str):
@@ -105,6 +105,16 @@ class TestDocumentManager(unittest.TestCase):
         assert documents
         assert len(documents) > 2
         assert documents[0].file_name
+    
+    
+    def test_list_of_collection(self):
+        """
+        get the list of collections defined
+        """
+        collections: list[str] = self.service.get_collections()
+        assert collections
+        assert len(collections) == 1
+        assert collections[0] == get_config().owl_agent_content_collection_name
 
     def test_build_content(self):
         print("\n--> test_build_content\n")

@@ -20,7 +20,7 @@ from athena.app_settings import get_config
 LOGGER = logging.getLogger(__name__)
 LOGGER.setLevel(get_config().logging_level_int)
 DEFAULT_K = 4 
-DEFAULT_COLLECTION_NAME="owl_default"
+DEFAULT_COLLECTION_NAME=get_config().owl_agent_content_collection_name
 """
 Service to manage documents for semantic search in vector data base and to support
 Retrieval Augmented Generation. 
@@ -285,6 +285,10 @@ class ContentManager:
                     fd = FileDescription.model_validate(data)
                     l.append(fd)
         return l
+    
+    def get_collections(self) -> List[str]:
+        # TO DO when we will have more collection then we need to return a list coming from vector store
+        return [get_config().owl_agent_content_collection_name]
 
 
 def get_content_mgr() -> ContentManager:
