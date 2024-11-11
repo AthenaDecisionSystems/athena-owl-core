@@ -26,12 +26,12 @@ async def lifespan(app: FastAPI):
     # Actions when the app stops
     print("Shutting down Owl Agent Backend")
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, redirect_slashes=False)
 
 print("FastAPI will start with current directory =", os.getcwd())
 
 # List of authorized origins
-origins = os.getenv("OWL_CLIENTS", ["http://localhost:3000"])
+origins = os.getenv("OWL_CLIENTS", ["http://owl-frontend:3000,http://localhost:3000,http://localhost:3001"])
 
 app.add_middleware(
     CORSMiddleware,
