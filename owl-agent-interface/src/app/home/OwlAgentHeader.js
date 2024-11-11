@@ -130,6 +130,7 @@ const OwlAgentHeader = () => {
                       <ReactMarkdown>{line}</ReactMarkdown>
                     </div>
                 )}
+                <p>Owl frontend v0.1</p>
               </Stack>
             </div>
           </HeaderPanel>
