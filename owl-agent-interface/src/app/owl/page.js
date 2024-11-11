@@ -80,7 +80,7 @@ function AgentsPage() {
 
   const getAgents = async () => {
     try {
-      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/agents`);
+      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/agents/`);
       if (res.status === 200) {
         return res.data;
       } else {

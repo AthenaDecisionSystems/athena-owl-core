@@ -41,7 +41,7 @@ function AgentsPage() {
 
   const getAgents = async () => {
     try {
-      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/agents`);
+      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/agents/`);
       if (res.status === 200) {
         setRows(res.data);
 
@@ -67,7 +67,7 @@ function AgentsPage() {
 
   const getPrompts = async () => {
     try {
-      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/prompts`);
+      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/prompts/`);
       if (res.status === 200) {
         setPrompts(res.data);
       } else {

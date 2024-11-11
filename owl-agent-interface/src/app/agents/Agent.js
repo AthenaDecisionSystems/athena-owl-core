@@ -69,7 +69,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
 
         try {
             const res = await octokitClient.request(
-                (mode === "create" ? "POST " : "PUT ") + backendBaseAPI + "a/agents" + (mode === "edit" ? "/" + agentId : ""), {
+                (mode === "create" ? "POST " : "PUT ") + backendBaseAPI + "a/agents/" + (mode === "edit" ? agentId : ""), {
                 agent_id: agentId,
                 name: agentName,
                 description: agentDescription,

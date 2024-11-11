@@ -35,7 +35,7 @@ const Tool = ({ mode, tool, tools, openState, setOpenState, onSuccess, setError 
 
         try {
             const res = await octokitClient.request(
-                (mode === "create" ? "POST " : "PUT ") + env.backendBaseAPI + "a/tools" + (mode === "edit" ? "/" + tool.tool_id : ""), {
+                (mode === "create" ? "POST " : "PUT ") + env.backendBaseAPI + "a/tools/" + (mode === "edit" ? tool.tool_id : ""), {
                 tool_id: toolId,
                 tool_name: toolName,
                 tool_description: toolDescription,
