@@ -34,7 +34,7 @@ function ToolsPage() {
 
   const getTools = async () => {
     try {
-      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/tools/`);
+      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/tools`);
       if (res.status === 200) {
         setRows(res.data);
       } else {

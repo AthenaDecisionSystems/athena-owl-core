@@ -12,7 +12,7 @@ from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgent
 router = APIRouter( prefix= get_config().api_route +"/a")
 
 
-@router.get( "/agents/", tags=["Manage agents"])
+@router.get( "/agents", tags=["Manage agents"])
 def get_all_agent_entities() -> List[OwlAgent]:
     all = get_agent_manager().get_agents()
     l = []
@@ -28,7 +28,7 @@ def get_agent_entity_by_id(id: str) -> OwlAgent:
 def get_agent_entity_by_name(name: str) -> OwlAgent | None:
     return get_agent_manager().get_agent_by_name(name)
 
-@router.post("/agents/", tags=["Manage agents"])
+@router.post("/agents", tags=["Manage agents"])
 def new_agent_entity(e: OwlAgent) -> str:
     return get_agent_manager().save_agent(e)
 

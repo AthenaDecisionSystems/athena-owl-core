@@ -13,7 +13,7 @@ router = APIRouter( prefix=get_config().api_route + "/a")
 
 
 
-@router.post("/documents/", tags=["Manage documents"])
+@router.post("/documents", tags=["Manage documents"])
 async def post_document_for_rag( file_description: FileDescription = Depends(), myFile: UploadFile = File(...)):
     """
     given the file description and the uploaded file content, process it by the content manager.
@@ -34,12 +34,12 @@ def get_documents_from_query(collection : str, query: str, top_k: int =3):
     return get_content_mgr().search(collection, query,top_k)
 
 
-@router.get("/documents/", tags=["Manage documents"])
+@router.get("/documents", tags=["Manage documents"])
 def get_all_documents() ->list[FileDescription]:
     return get_content_mgr().get_documents_with_metadata()
 
 
 @router.get("/documents/collections", tags=["Manage documents"])
-def get_all_documents() ->list[FileDescription] -> List[str]:
+def get_collections() -> List[str]:
     return get_content_mgr().get_collections()
 

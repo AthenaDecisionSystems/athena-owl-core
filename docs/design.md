@@ -273,7 +273,7 @@ When a user uploads a document using the chatbot interface, the file is persiste
 The REST resource is in the [document.py file](https://github.com/AthenaDecisionSystems/athena-owl-core/blob/main/owl-agent-backend/src/athena/routers/documents.py). It has two APIs, one for similarity search and one to upload a document. In this snippet, `file_description` represents the file's metadata and `myFile` the binary stream coming from the client application:
 
 ```python
-@router.post("/documents/")
+@router.post("/documents")
 async def post_document_for_rag( file_description: FileDescription = Depends(), myFile: UploadFile = File(...)):
     # delegate to the document manager
 ```

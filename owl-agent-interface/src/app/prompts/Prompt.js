@@ -42,7 +42,7 @@ const Prompt = ({ backendBaseAPI, mode, prompt, prompts, openState, setOpenState
 
         try {
             const res = await octokitClient.request(
-                (mode === "create" ? "POST " : "PUT ") + backendBaseAPI + "a/prompts/", {
+                (mode === "create" ? "POST " : "PUT ") + backendBaseAPI + "a/prompts", {
                 "prompt_key": promptId, // should be prompt_id
                 "name": promptName, // not saved
                 "prompt_locale": locale,

@@ -12,7 +12,7 @@ from athena.llm.tools.tool_mgr import get_tool_entity_manager, OwlToolEntity
 router = APIRouter( prefix= get_config().api_route +"/a")
 
 
-@router.get( "/tools/", tags=["Manage tools"])
+@router.get( "/tools", tags=["Manage tools"])
 def get_all_tools() -> List[OwlToolEntity]:
     all = get_tool_entity_manager().get_tools()
     l = []
@@ -28,7 +28,7 @@ def get_tool_by_id(id: str) -> OwlToolEntity:
 def get_tool_by_function_name(name: str) -> OwlToolEntity | None:
     return get_tool_entity_manager().get_tool_by_function_name(name)
 
-@router.post("/tools/", tags=["Manage tools"])
+@router.post("/tools", tags=["Manage tools"])
 def new_tool_entity(e: OwlToolEntity) -> str:
     return get_tool_entity_manager().save_tool(e)
 

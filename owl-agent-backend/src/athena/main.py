@@ -10,10 +10,11 @@ import os
 from contextlib import asynccontextmanager
 
 
+config = get_config()
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Actions before the app starts
-    config = get_config()
     print(f"Owl Agent Backend v {config.version} starting ")
     print("Override env is set to: ", config.override_env)
 
@@ -26,16 +27,16 @@ async def lifespan(app: FastAPI):
     # Actions when the app stops
     print("Shutting down Owl Agent Backend")
 
-app = FastAPI(lifespan=lifespan, redirect_slashes=False)
+app = FastAPI(lifespan=lifespan)
 
 print("FastAPI will start with current directory =", os.getcwd())
 
 # List of authorized origins
-origins = os.getenv("OWL_CLIENTS", ["http://owl-frontend:3000,http://localhost:3000,http://localhost:3001"])
+origins = os.getenv("OWL_CLIENTS", ["http://owl-frontend:3000","http://localhost:3000","http://localhost:3001"])
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"], #origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

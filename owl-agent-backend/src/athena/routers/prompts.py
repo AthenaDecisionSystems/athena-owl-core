@@ -16,7 +16,7 @@ class PromptRequest(BaseModel):
 router = APIRouter( prefix= get_config().api_route +"/a")
 
 
-@router.get( "/prompts/", tags=["Manage prompts"])
+@router.get( "/prompts", tags=["Manage prompts"])
 def get_all_prompt_entities() -> List[OwlPromptEntity]:
     all = get_prompt_manager().get_prompts()
     l = []
@@ -37,12 +37,12 @@ def get_prompt_using_key_and_locale(prompt_key: str, locale: str) -> str:
 def get_prompt_using_key(prompt_key: str) -> dict[str,str]:
     return get_prompt_manager().get_prompt_locales(prompt_key)
 
-@router.post("/prompts/", tags=["Manage prompts"])
+@router.post("/prompts", tags=["Manage prompts"])
 def add_prompt_using_key_locale(promptRequest: PromptRequest):
     get_prompt_manager().add_prompt(promptRequest.prompt_key,promptRequest.prompt_locale, promptRequest.prompt_content)
 
 
-@router.put("/prompts/", tags=["Manage prompts"])
+@router.put("/prompts", tags=["Manage prompts"])
 def update_prompt_using_key_locale(promptRequest: PromptRequest):
     get_prompt_manager().update_prompt(promptRequest.prompt_key,promptRequest.prompt_locale, promptRequest.prompt_content)
     

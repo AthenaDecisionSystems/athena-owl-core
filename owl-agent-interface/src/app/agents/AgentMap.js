@@ -48,7 +48,8 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
         }
     }
 
-    const deleteAgent = async (index) => {
+    const deleteAgent = async (agentId) => {
+        const index = rows.findIndex(row => row.agent_id === agentId);
         try {
             const res = await octokitClient.request(
                 `DELETE ${backendBaseAPI}a/agents/${rows[index].agent_id}`
@@ -82,7 +83,8 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
         }
     }
 
-    const startEdition = (index) => {
+    const startEdition = (agentId) => {
+        const index = rows.findIndex(row => row.agent_id === agentId);
         setEditAgent(index);
         setOpen(true);
     }
@@ -92,7 +94,8 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
         reloadAgents();
     }
 
-    const startOwlAgent = (index) => {
+    const startOwlAgent = (agentId) => {
+        const index = rows.findIndex(row => row.agent_id === agentId);
         setOwlAgent(index);
         setOpenOwlAgent(true);
     }
@@ -100,7 +103,7 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
     return (
         <>
             {(owlAgent !== -1) && (
-                <OwlAgentModal backendBaseAPI={backendBaseAPI} agent={rows[owlAgent]} promptEnglishContent={getEnglishPromptContent(rows[owlAgent].prompt_ref)} openState={openOwlAgent} setOpenState={setOpenOwlAgent} randomNumber={Math.random()} setError={setError} />
+                <OwlAgentModal backendBaseAPI={backendBaseAPI} agent={rows[owlAgent]} promptEnglishContent={getEnglishPromptContent(rows[owlAgent]?.prompt_ref)} openState={openOwlAgent} setOpenState={setOpenOwlAgent} randomNumber={Math.random()} setError={setError} />
             )}
             {(editAgent !== -1) && (
                 <Agent backendBaseAPI={backendBaseAPI} mode="edit" agent={rows[editAgent]} agents={rows} prompts={prompts} runnerClassNames={runnerClassNames} openState={open} setOpenState={setOpen} onSuccess={endEdition} setError={setError} />
@@ -108,11 +111,11 @@ export const AgentMap = ({ backendBaseAPI, rows, setRows, prompts, runnerClassNa
             {rows.filter(row => showHiddenAgents ? true : !row.hidden_to_ui).map((row, i) => (<Column key={i} lg={3} md={2} sm={2} >
                 <AspectRatio className="card card-agent" ratio="4x3" onDoubleClick={() => startEdition(i)}>
                     <div className="card-header" >
-                        <WatsonxData style={{ padding: "0.5rem", cursor: "pointer" }} onClick={() => startOwlAgent(i)} />
+                        <WatsonxData style={{ padding: "0.5rem", cursor: "pointer" }} onClick={() => startOwlAgent(row.agent_id)} />
                         <OverflowMenu className="card-menu">
-                            <OverflowMenuItem itemText="Edit" onClick={() => startEdition(i)} />
-                            <OverflowMenuItem itemText="Launch" onClick={() => startOwlAgent(i)} />
-                            <OverflowMenuItem hasDivider isDelete itemText="Delete" onClick={() => deleteAgent(i)} />
+                            <OverflowMenuItem itemText="Edit" onClick={() => startEdition(row.agent_id)} />
+                            <OverflowMenuItem itemText="Launch" onClick={() => startOwlAgent(row.agent_id)} />
+                            <OverflowMenuItem hasDivider isDelete itemText="Delete" onClick={() => deleteAgent(row.agent_id)} />
                         </OverflowMenu>
                     </div>
                     <div className="card-name">{row.name}</div>

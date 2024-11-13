@@ -36,7 +36,7 @@ class TestPromptApi(unittest.TestCase):
     def test_post_new_instruction(self):
         print("\ntest_post_new_instruction\n")
         pr= PromptRequest(prompt_key="test_prompt", prompt_locale="en", prompt_content="You are an helpful assistant")
-        response = self.client.post(get_config().api_route + "/a/prompts/",json = pr.model_dump())
+        response = self.client.post(get_config().api_route + "/a/prompts",json = pr.model_dump())
         assert response is not None
         assert response.status_code == 200
         response = self.client.get(get_config().api_route + "/a/prompts/test_prompt/en")

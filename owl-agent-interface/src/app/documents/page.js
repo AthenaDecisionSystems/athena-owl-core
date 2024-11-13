@@ -38,7 +38,7 @@ function DocumentsPage() {
 
   const getAllFiles = async () => {
     try {
-      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/documents/`);
+      const res = await octokitClient.request(`GET ${env.backendBaseAPI}a/documents`);
 
       if (res.status === 200) {
         setFiles(res.data);

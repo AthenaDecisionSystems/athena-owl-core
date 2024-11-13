@@ -1,6 +1,5 @@
 module.exports = {
     output: 'standalone',
-    trailingSlash: true,
     async rewrites() {
         return [
             {

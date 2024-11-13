@@ -35,7 +35,7 @@ function PromptsPage() {
   const getPrompts = async () => {
     try {
       const res = await octokitClient.request(
-        `GET ${env.backendBaseAPI}a/prompts/`);
+        `GET ${env.backendBaseAPI}a/prompts`);
 
       if (res.status === 200) {
         setRows(res.data);

@@ -12,7 +12,7 @@ const AgentTools = ({ backendBaseAPI, toolSelectedItems, setToolSelectedItems, s
         // Preload tools
         async function getTools() {
             try {
-                const res = await octokitClient.request(`GET ${backendBaseAPI}a/tools/`);
+                const res = await octokitClient.request(`GET ${backendBaseAPI}a/tools`);
                 if (res.status === 200) {
                     const items = res.data.map(tool => (tool.tool_id));
                     setDropdownItemsTools(items);
