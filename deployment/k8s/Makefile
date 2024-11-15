@@ -8,7 +8,7 @@ OWL_FRONTEND ?= owl-frontend
 # -------------------------------------------------------
 prepare: create_ns create_secret_from_env
 
-all: prepare
+deploy_all: prepare deploy_owl_backend deploy_owl_frontend
 
 
 ensure_ns = \
@@ -23,7 +23,7 @@ create_ns:
 	$(call ensure_ns, $(DEV_NC))
 
 create_secret_from_env:
-	@kubectl create  secret generic env  --from-env-file=../local/.env -n $(DEV_NS)
+	@kubectl create  secret generic owl-dotenv  --from-env-file=.env -n $(DEV_NS)
 
 deploy_owl_backend:
 	@helm install $(OWL_BACKEND) $(OWL_BACKEND) -n $(DEV_NS)
@@ -31,8 +31,6 @@ deploy_owl_backend:
 upgrade_owl_backend:
 	@helm upgrade $(OWL_BACKEND) $(OWL_BACKEND)  -n $(DEV_NS)
 
-deploy_decision_svc:
-	@helm install -name decision-svc decision-svc -n $(DEV_NS)
 
 deploy_owl_frontend:
 	@helm install -name $(OWL_FRONTEND) $(OWL_FRONTEND) -n $(DEV_NS)
@@ -43,10 +41,6 @@ upgrade_owl_frontend:
 clean:
 	@helm delete $(OWL_FRONTEND) 
 	@helm delete $(OWL_BACKEND)
-	@helm delete decision-svc 
-
-set_k8s_context:
-	@kubectl config  --kubeconfig=/home/jbcodeforce/.kube/config  use-context athena-demo
 
 	
 get_owl_backend_address:

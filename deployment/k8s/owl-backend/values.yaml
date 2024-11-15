@@ -8,14 +8,17 @@ replicaCount: 1
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
   #repository: localhost:5002/athena-owl-backend
-  repository: rg.fr-par.scw.cloud/athena-demo/athena-owl-backend
+  repository: docker.io/athenadecisionsystems/athena-owl-backend
   # This sets the pull policy for images.
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "1.0.0"
 
 # This is for the secretes for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
+envFrom: 
+  - secretRef:
+      name: owl-dotenv
 # This is to override the chart name.
 nameOverride: ""
 fullnameOverride: ""
@@ -42,6 +45,12 @@ podLabels: {}
 podSecurityContext: {}
   # fsGroup: 2000
 
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
 securityContext: {}
   # capabilities:
   #   drop:
@@ -53,7 +62,7 @@ securityContext: {}
 # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-  type: ClusterIP
+  type: LoadBalancer
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
   port: 8000
 
@@ -98,9 +107,9 @@ readinessProbe:
 
 #This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
-  enabled: false
+  enabled: true
   minReplicas: 1
-  maxReplicas: 100
+  maxReplicas: 5
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
@@ -120,6 +129,14 @@ volumeMounts:
     mountPath: /app/config
 
 
+livenessProbe:
+  httpGet:
+    path: /api/v1/health
+    port: http
+readinessProbe:
+  httpGet:
+    path: /api/v1/health
+    port: http
 
 nodeSelector: {}
 

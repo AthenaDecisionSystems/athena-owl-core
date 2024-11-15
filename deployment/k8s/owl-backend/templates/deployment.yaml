@@ -36,29 +36,11 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            {{- toYaml .Values.envFrom | nindent 12 }}
           env:
             - name: CONFIG_FILE
               value: /app/config/config.yaml
-            - name: ANTHROPIC_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: ANTHROPIC_API_KEY
-                  name: env
-            - name: OPENAI_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: OPENAI_API_KEY
-                  name: env
-            - name: TAVILY_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  key: TAVILY_API_KEY
-                  name: env
-            - name: WATSONX_APIKEY
-              valueFrom:
-                secretKeyRef:
-                  key: WATSONX_APIKEY
-                  name: env
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
