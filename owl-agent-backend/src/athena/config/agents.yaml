@@ -37,7 +37,7 @@ openai_graph_agent:
   top_k: 1
   top_p: 1
 
-base_tool_graph_agent:
+k:
   name: "Base Graph OpenAI Agent using tools"
   runner_class_name: athena.llm.agents.base_tool_graph_agent.BaseToolGraphAgent
   modelClassName: langchain_openai.ChatOpenAI
