@@ -23,6 +23,7 @@ class AppSettings(BaseSettings):
     owl_prompts_path: str = "/app/athena/config/prompts.yaml"
     owl_prompts_key_name: str = "default_prompt"
     owl_agents_path: str = "/app/athena/config/agents.yaml"
+    llm_providers_path: str =  "/app/athena/config/llm_providers.yaml"
     owl_tools_path: str = "/app/athena/config/tools.yaml"
     owl_agent_content_collection_name: str = "base_collection"
     owl_agent_content_file_path: str = "/app/file_content"

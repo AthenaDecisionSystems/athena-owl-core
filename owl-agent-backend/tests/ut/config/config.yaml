@@ -5,6 +5,7 @@ logging_level_int: 10
 app_index_path: ./src/athena/routers/index.html
 owl_prompts_key_name: default_prompt
 owl_agents_path: ./src/athena/config/agents.yaml
+llm_providers_path: ./src/athena/config/llm_providers.yaml
 owl_tools_path: ./src/athena/config/tools.yaml
 owl_prompts_path: ./tests/ut/config/prompts.yaml
 owl_glossary_path: ./src/athena/config/glossary.json

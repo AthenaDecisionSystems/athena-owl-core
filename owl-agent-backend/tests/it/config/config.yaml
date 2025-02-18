@@ -8,7 +8,7 @@ owl_glossary_path: ./src/athena/config/glossary.json
 owl_agents_path: ./src/athena/config/agents.yaml
 owl_tools_path: ./src/athena/config/tools.yaml
 owl_prompts_path: ./tests/ut/config/prompts.yaml
-
+llm_providers_path: ./src/athena/config/llm_providers.yaml
 owl_agent_content_collection_name: base_collection
 owl_agent_content_file_path: ./tests/ut/data/file_content
 #owl_agent_vs_url: http://localhost:8010

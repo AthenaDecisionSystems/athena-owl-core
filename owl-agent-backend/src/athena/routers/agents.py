@@ -6,10 +6,18 @@ Copyright 2024 Athena Decision Systems
 from athena.app_settings import get_config
 from fastapi import APIRouter
 from typing import List
-from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgent
+from athena.llm.agents.agent_mgr import get_agent_manager, OwlAgent, LlmProvider
 
-    
 router = APIRouter( prefix= get_config().api_route +"/a")
+
+     
+@router.get("/agents/providers", tags=["Manage agents"])
+def get_agent_provider() -> List[LlmProvider]:
+    all= get_agent_manager().get_llm_providers()
+    l = []
+    for e in all.values():
+        l.append(LlmProvider.model_validate(e))
+    return l
 
 
 @router.get( "/agents", tags=["Manage agents"])

@@ -175,5 +175,13 @@ class TestAgentsManager(unittest.TestCase):
         print(rep.messages[0].content)
         assert "don't know" in rep.messages[0].content
 
+    def test_get_llm_providers(self) -> None:
+        print("\n\n test_get_llm_providers \n")
+        mgr = get_agent_manager()
+        llm_providers = mgr.get_llm_providers()
+        assert llm_providers
+        assert len(llm_providers) > 0
+        print(llm_providers)
+
 if __name__ == '__main__':
     unittest.main()

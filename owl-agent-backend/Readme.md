@@ -4,12 +4,12 @@
 * Updated 6/04/24: extract insurance demo content to make it more generic
 * Updated 6/6/24: remove main as it should be a code template or python module. work on unit tests and content management for RAG supporting pdf, text, and markdown
 * Updated 6/13/24: Add assistant operations, and definition. 
+* Update 2/17/2025: Add API to list the supported models and LLM provider
 
 This backend is based on LangChain Agent APIs. It uses FastAPI routers to defined the different APIs of an agent backend. 
 It is the generic implementation without any domain specific integration or decision service. See IBU insurance for a specific configuration of this server code.
 
 To see the application requirements, architecture diagrams, design decisions and documentation go to the `owl--prod-doc` folder and run `mkdocs serve`.
-
 
 ## Requirements
 
@@ -20,7 +20,7 @@ To see the application requirements, architecture diagrams, design decisions and
 * [x] externalize the locale support in a separate module: .
 * [ ] support Anthropic API
 * [x] Support watsonX.ai API. As of now (5/22) the langchain Watson wrapper bind_tools is not yet supported. 
-* [ ] Support LLama3 Ollama
+* [ ] Support LLama3 running on Ollama
 * [x] support setting the locale from the UI and via API
 * [ ] support setting the LLM backend from ui and via api - default is via config file
 * [ ] use a dummy agent to simulate remote LLM and get all the application logic working.
@@ -28,12 +28,13 @@ To see the application requirements, architecture diagrams, design decisions and
 * [x] implement the RAG. Vector Store is used as backend. 
 
 
-Checked items have unit tests (ut) running successfully. 
+Committed features must have unit tests (ut) running successfully. 
 
 ## Repository organization
 
 * src folder includes Python codes for the components of the backend:
 
+    * **routers** to support the different REST resources.
     * **llm** folder includes the different LLM wrapper classes 
     * **config** folder for the backend unique yaml config file
     * **itg.decisions** folder for decision service integration, use a dummy rule engine
@@ -45,7 +46,7 @@ Checked items have unit tests (ut) running successfully.
 
 For component development purpose, be sure to have docker engine and python 3.11 (Development was done on 3.12.3)
 
-* Prepare your .env file
+* Prepare your .env file with the different LLM provider keys
 
     ```
     Declare your personal keys

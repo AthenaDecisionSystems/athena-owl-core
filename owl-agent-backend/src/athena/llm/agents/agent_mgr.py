@@ -52,6 +52,11 @@ class OwlAgent(BaseModel):
     tools: list[str] = []
     hidden_to_ui: bool = False
 
+class LlmProvider(BaseModel):
+    name: str
+    value: str
+    modelNames: List[str]
+
 
 class OwlAgentDefaultRunner(object):
     agent_id: str  # keep the reference to the owl agent id, in case user change of model
@@ -217,6 +222,7 @@ class AgentManager(object):
     
     def __init__(self):
         self.AGENTS: dict = dict()
+        self.LLM_PROVIDERS: dict = dict()
 
     def save_agent(self, agentEntity: OwlAgent) -> str:
         if agentEntity.agent_id is None:
@@ -227,18 +233,31 @@ class AgentManager(object):
     def load_agents(self, path: str):
         try:
             with open(path, "r", encoding="utf-8") as f:
-                a_dict = yaml.load(f, Loader=yaml.FullLoader)  # a dict with assistant entities
+                a_dict = yaml.load(f, Loader=yaml.FullLoader)  # a dict with agent entities
                 for oa in a_dict:
                     oae=OwlAgent.model_validate(a_dict[oa])
                     oae.agent_id=oa
                     self.AGENTS[oae.agent_id]=oae
         except Exception as e:
-            print(f"@@@> Error {e}")
+            print(f"@@@> Error loading agents.yaml {e}")
     
-    def get_agents(self) -> dict[str,OwlAgent]:
+    def get_agents(self) -> dict[str, OwlAgent]:
         return self.AGENTS
     
+    def get_llm_providers(self) -> dict[str, LlmProvider]:
+        return self.LLM_PROVIDERS
     
+    def load_llm_providers(self, path: str) -> None:
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                a_dict = yaml.load(f, Loader=yaml.FullLoader) 
+                for llm_p in a_dict:
+                    llm_pe = LlmProvider.model_validate(a_dict[llm_p])
+                    self.LLM_PROVIDERS[llm_pe.name]= llm_pe
+        except Exception as e:
+            print(f"@@@> Error in loading LLM provider yaml {e}")
+
+
     def get_agent_by_id(self, id : str) -> OwlAgent:
         return self.AGENTS[id]
     
@@ -293,9 +312,15 @@ def get_agent_manager() -> AgentManager:
     """ Factory to get access to unique instance of Agent manager"""
     global _instance
     if _instance is None:
+        # read agent definitions
         path = get_config().owl_agents_path
         if path is None:
             path="./athena/config/agents.yaml"
         _instance = AgentManager()
         _instance.load_agents(path)
+        # read llm providers
+        path = get_config().llm_providers_path
+        if path is None:
+            path="./athena/config/llm_providers.yaml"
+        _instance.load_llm_providers(path)
     return _instance

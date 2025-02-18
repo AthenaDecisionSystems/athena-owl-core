@@ -4,7 +4,7 @@ openai_chain_agent:
   #class_name: athena.llm.agents.agent_openai.OpenAIAgent
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
   modelClassName: langchain_openai.ChatOpenAI
-  modelName: gpt-4o-2024-08-06
+  modelName: gpt-4o-2024-11-20
   hidden_to_ui: false
   prompt_ref: default_prompt
   temperature: 0
@@ -15,7 +15,7 @@ openai_tool_chain:
   name: OpenAI with tool chain
   description: openai based agent with prompt coming from langchain hub  and tool
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
-  modelName: gpt-4o-2024-08-06
+  modelName: gpt-4o-2024-11-20
   modelClassName: langchain_openai.ChatOpenAI
   prompt_ref: openai_functions_prompt
   hidden_to_ui: false
@@ -30,7 +30,7 @@ openai_graph_agent:
   description: openai based agent using graph and simple prompt 
   runner_class_name: athena.llm.agents.base_graph_agent.BaseGraphAgent
   modelClassName: langchain_openai.ChatOpenAI
-  modelName: gpt-4o-2024-08-06
+  modelName: gpt-4o-2024-11-20
   prompt_ref: default_prompt
   hidden_to_ui: false
   temperature: 0
@@ -42,7 +42,7 @@ base_tool_graph_agent:
   runner_class_name: athena.llm.agents.base_tool_graph_agent.BaseToolGraphAgent
   modelClassName: langchain_openai.ChatOpenAI
   description: A default agent that uses LLM and search tool to do web search
-  modelName:  gpt-4o-2024-08-06
+  modelName:  gpt-4o-2024-11-20
   prompt_ref: graph_prompt
   hidden_to_ui: false
   temperature: 0
@@ -55,7 +55,7 @@ watson_graph_agent:
   name: "Base Graph with Watson Llama 3 Agent"
   runner_class_name: athena.llm.agents.base_graph_agent.BaseGraphAgent
   description: A default agent that uses LLM using WatsonX and Llama3
-  modelName: meta-llama/llama-3-70b-instruct
+  modelName: meta-llama/llama-3-3-70b-instruct
   modelClassName: langchain_ibm.WatsonxLLM
   prompt_ref: default_prompt
   temperature: 0.2
@@ -79,7 +79,7 @@ ollama_mistral:
   name: "Ollama Mistral"
   description: Mistral model running locally with Ollama
   runner_class_name: athena.llm.agents.agent_mgr.OwlAgentDefaultRunner
-  modelName: mistral
+  modelName: open-mixtral-nemo
   modelClassName: langchain_community.chat_models.ChatOllama
   prompt_ref: mistral_rag_prompt
   hidden_to_ui: false
@@ -103,7 +103,7 @@ watson_llama_3_70_agent:
   name: "WatsonX.ai Llam 3 70b Instruct Agent"
   description: WatsonX ai with Llama 3 at 70b parameters
   runner_class_name: athena.llm.agents.adaptive_rag_graph.SequenceOfActionAgent
-  modelName: meta-llama/llama-3-70b-instruct
+  modelName: meta-llama/llama-3-3-70b-instruct
   modelClassName: langchain_ibm.WatsonxLLM
   prompt_ref: llama_base_prompt
   hidden_to_ui: false

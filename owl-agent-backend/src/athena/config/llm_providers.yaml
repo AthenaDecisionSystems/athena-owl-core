@@ -1,0 +1,43 @@
+anthropic:
+  name: Anthropic
+  value: langchain_anthropic.ChatAnthropic
+  modelNames: 
+    - claude-3-opus-20240229
+    - claude-3-5-sonnet-20241022
+    - claude-3-5-haiku-20241022
+mistral:
+  name: Mistral AI 
+  value: langchain_mistralai.chat_models.ChatMistralAI
+  modelNames:
+    - mistral-large-latest
+    - open-mixtral-nemo
+    - mistral-saba-latest
+    - ministral-8b-latest
+open_ai:
+  name: Open AI 
+  value: langchain_openai.ChatOpenAI 
+  modelNames: 
+    - gpt-4o-2024-11-20
+    - gpt-4o-mini
+    - gpt-4o
+
+watsonx:
+  name: Watsonx LLM 
+  value: langchain_ibm.WatsonxLLM
+  modelNames: 
+    - google/flan-t5-xl-3b
+    - google/flan-t5-xxl-11b
+    - google/flan-ul2-20b 
+    - ibm/granite-3b-code-instruct
+    - ibm/granite-3-8b-base
+    - ibm/granite-3-8b-instruct
+    - ibm/granite-13b-instruct-v2 
+    - ibm/granite-20b-code-instruct
+    - ibm/granite-34b-code-instruct 
+    - meta-llama/llama-3-2-3b-instruct 
+    - meta-llama/llama-3-3-70b-instruct
+    - meta-llama/llama-guard-3-11b-vision-instruct 
+    - mistralai/mistral-large
+    - mistralai/mistral-small-24b-instruct-2501
+    - mistralai/mixtral-8x7b-instruct-v01
+    - mistralai/pixtral-12b

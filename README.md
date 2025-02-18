@@ -2,7 +2,7 @@
 
 ## Introduction
 
-LLMs are great tools for processing and generating natural language across all sorts of domains.   But for enterprise applications, they are not full solutions by themselves:   They cannot reason consistently, precisely, and transparently when making critical business decisions for organizations.   Why?
+LLMs are great tools for processing and generating natural language across all sorts of domains.   But for enterprise applications, they are not full solutions by themselves:  They cannot reason consistently, precisely, and transparently when making critical business decisions for organizations.   Why?
 
 First, by themselves, they do not have access to all the information needed to make critical business decisions.   Much of this information is in documents that might be stored in a content management system; the RAG (Retrieval-Augmented Generation) technique exists to help transform these documents into a vector store, index and search them to find relevant information for a specific query, and give access to that information to an LLM to generate an appropriate response to a question.
 

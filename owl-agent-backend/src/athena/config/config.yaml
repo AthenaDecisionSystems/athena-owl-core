@@ -7,6 +7,7 @@ app_index_path: /app/athena/routers/index.html
 # Those paths are absolute from within the container. For testing use another config file
 owl_glossary_path: /app/athena/config/glossary.json
 owl_agents_path: /app/athena/config/agents.yaml
+llm_providers_path: /app/athena/config/llm_providers.yaml
 owl_tools_path: /app/athena/config/tools.yaml
 owl_prompts_path: /app/athena/config/prompts.yaml
 # Content manage is to persist uploaded file, and manage vector store
