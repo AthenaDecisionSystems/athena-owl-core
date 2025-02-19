@@ -9,14 +9,14 @@ import AgentTools from './AgentTools';
 
 const octokitClient = new Octokit({});
 
-const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames, openState, setOpenState, onSuccess, setError }) => {
+const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames, modelClassNames, openState, setOpenState, onSuccess, setError }) => {
     // mode = 'create' or 'edit'
     const [loading, setLoading] = useState(true);
     const [empty, setEmpty] = useState(false);
     const [agentId, setAgentId] = useState("");
     const [agentName, setAgentName] = useState("");
     const [agentDescription, setAgentDescription] = useState("");
-    const [agentModelName, setAgentModelName] = useState("gpt-3.5-turbo");
+    const [agentModelName, setAgentModelName] = useState("");
     const [agentModelClassName, setAgentModelClassName] = useState("langchain_openai.ChatOpenAI");
     const [agentRunnerClassName, setAgentRunnerClassName] = useState("athena.llm.agents.agent_mgr.OwlAgentDefaultRunner");
     const [currentItemPromptRef, setCurrentItemPromptRef] = useState();
@@ -38,8 +38,29 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
             setAgentName(agent.name);
             setAgentDescription(agent.description);
             setAgentRunnerClassName(agent.runner_class_name);
-            setAgentModelClassName(agent.modelClassName);
-            setAgentModelName(agent.modelName);
+
+            if (modelClassNames && modelClassNames.length > 0) {
+                // Check agent.modelClassName and agent.modelName
+                const modelClassName = modelClassNames.find((modelClassName) => (modelClassName.value === agent.modelClassName));
+                if (modelClassName) {
+                    setAgentModelClassName(agent.modelClassName);
+                    // agent.modelClassName is valid
+                    if (modelClassName.modelNames.find((modelName) => (modelName === agent.modelName))) {
+                        // agent.modelName is valid
+                        setAgentModelName(agent.modelName);
+                    } else {
+                        // agent.modelName is invalid, select the first model name
+                        setAgentModelName(modelClassName.modelNames[0]);
+                    }
+                } else {
+                    // agent.modelClassName is invalid, select the first model class name and the first model name
+                    setAgentModelClassName(modelClassNames[0].value);
+                    setAgentModelName(modelClassNames[0].modelNames[0]);
+                }
+            } else {
+                setAgentModelClassName(agent.modelClassName);
+                setAgentModelName(agent.modelName);
+            }
             setCurrentItemPromptRef({ "selectedItem": agent.prompt_ref });
             setAgentTemperature(agent.temperature);
             setAgentTopK(agent.top_k);
@@ -109,7 +130,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
             setAgentDescription("");
             setAgentRunnerClassName("athena.llm.agents.agent_mgr.OwlAgentAbstractRunner");
             setAgentModelClassName("langchain_openai.ChatOpenAI");
-            setAgentModelName("gpt-3.5-turbo");
+            setAgentModelName("");
             setCurrentItemPromptRef("");
             setAgentTemperature(0);
             setAgentTopK(1);
@@ -187,7 +208,7 @@ const Agent = ({ backendBaseAPI, mode, agent, agents, prompts, runnerClassNames,
             </Select>
             <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
 
-            <AgentModel agentModelClassName={agentModelClassName} setAgentModelClassName={setAgentModelClassName} agentModelName={agentModelName} setAgentModelName={setAgentModelName} />
+            <AgentModel modelClassNames={modelClassNames} agentModelClassName={agentModelClassName} setAgentModelClassName={setAgentModelClassName} agentModelName={agentModelName} setAgentModelName={setAgentModelName} setError={setError} />
 
             <NumberInput id="carbon-number-temperature"
                 value={agentTemperature}

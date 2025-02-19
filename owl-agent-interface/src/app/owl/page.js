@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Accordion, AccordionItem, Button, Column, Dropdown, DropdownSkeleton, Grid, Select, SelectItem, Stack, ToastNotification, Toggle } from '@carbon/react';
+import { Accordion, AccordionItem, Button, Column, Dropdown, DropdownSkeleton, Grid, Stack, ToastNotification, Toggle } from '@carbon/react';
 import { Reset, Trusted } from '@carbon/pictograms-react';
 import { Octokit } from '@octokit/core';
 import { context } from '../providers';
@@ -25,16 +25,9 @@ function AgentsPage() {
   const [agentModelClassName, setAgentModelClassName] = useState("");
   const [showSettings, setShowSettings] = useState(true);
   const [showDocuments, setShowDocuments] = useState(false);
+  const [modelClassNames, setModelClassNames] = useState([]);
 
   const { t, i18n } = useTranslation();
-
-  const modelClassNames = [
-    { name: "Anthropic", value: "langchain_anthropic.ChatAnthropic", modelNames: ["claude-3-opus-20240229"] },
-    { name: "Mistral AI", value: "langchain_mistralai.chat_models.ChatMistralAI", modelNames: ["mistral-large-latest", "open-mixtral-8x7b",] },
-    { name: "Open AI", value: "langchain_openai.ChatOpenAI", modelNames: ["gpt-4o-2024-08-06", "gpt-4-turbo", "gpt-3.5-turbo"] },
-    { name: "Watsonx LLM", value: "langchain_ibm.WatsonxLLM", modelNames: ['google/flan-t5-xl', 'google/flan-t5-xxl', 'google/flan-ul2', 'ibm/granite-13b-chat-v2', 'ibm/granite-13b-instruct-v2', 'ibm/granite-20b-multilingual', 'ibm/granite-7b-lab', 'meta-llama/llama-2-13b-chat', 'meta-llama/llama-3-1-70b-instruct', 'meta-llama/llama-3-1-8b-instruct', 'meta-llama/llama-3-70b-instruct', 'meta-llama/llama-3-8b-instruct', 'mistralai/mistral-large', 'mistralai/mixtral-8x7b-instruct-v01'] },
-    { name: "Chat Watsonx", value: "langchain_ibm.ChatWatsonx", modelNames: ['mistralai/mistral-large'] },
-  ];
 
   const owlAgentRef = useRef();
 
@@ -48,12 +41,35 @@ function AgentsPage() {
   }, []);
 
   useEffect(() => {
+    const loadModelClassNames = async () => {
+      // setModelClassNames([
+      //   { name: "Anthropic", value: "langchain_anthropic.ChatAnthropic", modelNames: ["claude-3-opus-20240229"] },
+      //   { name: "Mistral AI", value: "langchain_mistralai.chat_models.ChatMistralAI", modelNames: ["mistral-large-latest", "open-mixtral-8x7b",] },
+      //   { name: "Open AI", value: "langchain_openai.ChatOpenAI", modelNames: ["gpt-4o-2024-08-06", "gpt-4-turbo", "gpt-3.5-turbo"] },
+      //   { name: "Watsonx LLM", value: "langchain_ibm.WatsonxLLM", modelNames: ['google/flan-t5-xl', 'google/flan-t5-xxl', 'google/flan-ul2', 'ibm/granite-13b-chat-v2', 'ibm/granite-13b-instruct-v2', 'ibm/granite-20b-multilingual', 'ibm/granite-7b-lab', 'meta-llama/llama-2-13b-chat', 'meta-llama/llama-3-1-70b-instruct', 'meta-llama/llama-3-1-8b-instruct', 'meta-llama/llama-3-70b-instruct', 'meta-llama/llama-3-8b-instruct', 'mistralai/mistral-large', 'mistralai/mixtral-8x7b-instruct-v01'] },
+      //   { name: "Chat Watsonx", value: "langchain_ibm.ChatWatsonx", modelNames: ['mistralai/mistral-large'] },
+      // ]);
+      try {
+        const res = await fetch(`${env.backendBaseAPI}a/agents/providers`);
+        if (res.ok) {
+          const data = await res.json();
+          setModelClassNames(data);
+        } else {
+          setError('Error obtaining model class names (' + res.status + ')');
+        }
+      } catch (error) {
+        setError('Error obtaining model class names:' + error.message);
+        console.error('Error obtaining model class names:', error);
+      }
+    }
+
     const loadData = async () => {
       const agents = await getAgents();
       setAgents(agents);
       if (agents?.length > 0) {
         setActiveAgent(agents[0]);
       }
+      await loadModelClassNames();
     }
 
     try {
@@ -72,7 +88,7 @@ function AgentsPage() {
       setAgentModelName(activeAgent.modelName);
       setAgentModelClassName(activeAgent.modelClassName);
       if (activeAgent.modelName && activeAgent.modelClassName) {
-        const llm = modelClassNames.find((modelClassName) => (modelClassName.value === activeAgent.modelClassName)).name;
+        const llm = modelClassNames.find((modelClassName) => (modelClassName.value === activeAgent.modelClassName))?.name;
         owlAgentRef.current.informUser(`Agent **${activeAgent.name}** is set to use the LLM **${llm}** with the model **${activeAgent.modelName}**`);
       }
     }
@@ -147,17 +163,6 @@ function AgentsPage() {
     }
   }
 
-  const changeModelName = (e) => {
-    setAgentModelName(e.target.value);
-    updateAgent();
-  }
-
-  const changeModelClassName = (e) => {
-    setAgentModelClassName(e.target.value);
-    setAgentModelName(modelClassNames.find((modelClassName) => (modelClassName.value === e.target.value)).modelNames[0]);
-    updateAgent();
-  }
-
   const toggleUseDecisionServices = () => {
     setUseDecisionServices(!useDecisionServices);
     owlAgentRef.current.resetConversation()
@@ -204,25 +209,6 @@ function AgentsPage() {
                 labelB="Yes"
                 onClick={toggleUseDecisionServices}
                 disabled={false} />
-
-              {/* <div>
-                {agentModelClassName && <Select id="select-model-class-name"
-                  value={agentModelClassName}
-                  labelText="LLM"
-                  onChange={(e) => changeModelClassName(e)}>
-                  {modelClassNames.map((modelClassName, i) => (<SelectItem key={i} value={modelClassName.value} text={modelClassName.name} />))}
-                </Select>}
-                <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
-
-                {agentModelName && <Select id="select-model-name"
-                  value={agentModelName}
-                  labelText="Model Name"
-                  onChange={(e) => changeModelName(e)}>
-                  {modelClassNames.find((modelClassName) => (modelClassName.value === agentModelClassName))?.modelNames.map((modelName, i) => (<SelectItem key={i} value={modelName} text={modelName} />))}
-                </Select>}
-                <div style={{ display: 'flex', alignItems: 'center', marginTop: '1rem' }} />
-              </div> */}
-
             </Stack>
           </AccordionItem>
           <AccordionItem key="2" title="Documents" className="owl-agent-config-accordion-item" open={showDocuments} onClick={() => { setShowSettings(false); setShowDocuments(true) }}>

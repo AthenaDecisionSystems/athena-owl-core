@@ -21,6 +21,7 @@ function AgentsPage() {
   const [rows, setRows] = useState([]);
   const [prompts, setPrompts] = useState([]);
   const [runnerClassNames, setRunnerClassNames] = useState([]);
+  const [modelClassNames, setModelClassNames] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [showHiddenAgents, setShowHiddenAgents] = useState(false);
@@ -34,6 +35,7 @@ function AgentsPage() {
       }
       getAgents();
       getPrompts();
+      loadModelClassNames();
     } finally {
       setLoading(false);
     }
@@ -80,6 +82,28 @@ function AgentsPage() {
     }
   }
 
+  const loadModelClassNames = async () => {
+    // setModelClassNames([
+    //   { name: "Anthropic", value: "langchain_anthropic.ChatAnthropic", modelNames: ["claude-3-opus-20240229"] },
+    //   { name: "Mistral AI", value: "langchain_mistralai.chat_models.ChatMistralAI", modelNames: ["mistral-large-latest", "open-mixtral-8x7b",] },
+    //   { name: "Open AI", value: "langchain_openai.ChatOpenAI", modelNames: ["gpt-4o-2024-08-06", "gpt-4-turbo", "gpt-3.5-turbo"] },
+    //   { name: "Watsonx LLM", value: "langchain_ibm.WatsonxLLM", modelNames: ['google/flan-t5-xl', 'google/flan-t5-xxl', 'google/flan-ul2', 'ibm/granite-13b-chat-v2', 'ibm/granite-13b-instruct-v2', 'ibm/granite-20b-multilingual', 'ibm/granite-7b-lab', 'meta-llama/llama-2-13b-chat', 'meta-llama/llama-3-1-70b-instruct', 'meta-llama/llama-3-1-8b-instruct', 'meta-llama/llama-3-70b-instruct', 'meta-llama/llama-3-8b-instruct', 'mistralai/mistral-large', 'mistralai/mixtral-8x7b-instruct-v01'] },
+    //   { name: "Chat Watsonx", value: "langchain_ibm.ChatWatsonx", modelNames: ['mistralai/mistral-large'] },
+    // ]);
+    try {
+      const res = await fetch(`${env.backendBaseAPI}a/agents/providers`);
+      if (res.ok) {
+        const data = await res.json();
+        setModelClassNames(data);
+      } else {
+        setError('Error obtaining model class names (' + res.status + ')');
+      }
+    } catch (error) {
+      setError('Error obtaining model class names:' + error.message);
+      console.error('Error obtaining model class names:', error);
+    }
+  }
+
   const reloadAgents = () => {
     setLoading(true);
     try {
@@ -97,7 +121,7 @@ function AgentsPage() {
       </Column>
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
         <Button renderIcon={Add} iconDescription="Add Agent" onClick={() => setOpen(true)}>Add Agent</Button>
-        {!loading && (<Agent backendBaseAPI={env.backendBaseAPI} mode="create" agents={rows} agent={null} prompts={prompts} runnerClassNames={runnerClassNames} openState={open} setOpenState={setOpen} onSuccess={reloadAgents} setError={setError} />)}
+        {!loading && (<Agent backendBaseAPI={env.backendBaseAPI} mode="create" agents={rows} agent={null} prompts={prompts} runnerClassNames={runnerClassNames} modelClassNames={modelClassNames} openState={open} setOpenState={setOpen} onSuccess={reloadAgents} setError={setError} />)}
       </Column>
       {loading && (
         <Column lg={3} md={2} sm={2}>
@@ -105,7 +129,7 @@ function AgentsPage() {
         </Column>
       )}
 
-      {!loading && (<AgentMap backendBaseAPI={env.backendBaseAPI} rows={rows} setRows={setRows} prompts={prompts} runnerClassNames={runnerClassNames} showHiddenAgents={showHiddenAgents} setError={setError} reloadAgents={reloadAgents} />)}
+      {!loading && (<AgentMap backendBaseAPI={env.backendBaseAPI} rows={rows} setRows={setRows} prompts={prompts} runnerClassNames={runnerClassNames} modelClassNames={modelClassNames} showHiddenAgents={showHiddenAgents} setError={setError} reloadAgents={reloadAgents} />)}
 
       <Column lg={16} md={8} sm={4} className="landing-page__banner">
         <Toggle id="show-hidden-agents"
